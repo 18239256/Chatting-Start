@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+此项目是AI应用项目，为多行业LLM应用场景提供应用底座。
 
 ## Getting Started
 
