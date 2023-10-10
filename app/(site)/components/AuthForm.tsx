@@ -2,9 +2,10 @@
 
 import Button from "../../components/Button";
 import Input from "../../components/inputs/input";
+import AuthSocialButton from "./AuthSocialButton";
 import { useCallback, useEffect, useState} from "react";
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import AuthSocialButton from "./AuthSocialButton";
+import {BsGithub, BsGoogle} from 'react-icons/bs';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -35,44 +36,60 @@ const AuthForm = () =>{
     });
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        setIsLoading(true);
-      
-        if (variant === 'REGISTER') {
-        //   axios.post('/api/register', data)
-        //   .then(() => signIn('credentials', {
-        //     ...data,
-        //     redirect: false,
-        //   }))
-        //   .then((callback) => {
-        //     if (callback?.error) {
-        //       toast.error('Invalid credentials!');
-        //     }
+      setIsLoading(true);
     
-        //     if (callback?.ok) {
-        //       router.push('/conversations')
-        //     }
-        //   })
-        //   .catch(() => toast.error('Something went wrong!'))
-        //   .finally(() => setIsLoading(false))
-        }
-    
-        if (variant === 'LOGIN') {
-        //   signIn('credentials', {
-        //     ...data,
-        //     redirect: false
-        //   })
-        //   .then((callback) => {
-        //     if (callback?.error) {
-        //       toast.error('Invalid credentials!');
-        //     }
-    
-        //     if (callback?.ok) {
-        //       router.push('/conversations')
-        //     }
-        //   })
-        //   .finally(() => setIsLoading(false))
-        }
-      };
+      if (variant === 'REGISTER') {
+      //   axios.post('/api/register', data)
+      //   .then(() => signIn('credentials', {
+      //     ...data,
+      //     redirect: false,
+      //   }))
+      //   .then((callback) => {
+      //     if (callback?.error) {
+      //       toast.error('Invalid credentials!');
+      //     }
+  
+      //     if (callback?.ok) {
+      //       router.push('/conversations')
+      //     }
+      //   })
+      //   .catch(() => toast.error('Something went wrong!'))
+      //   .finally(() => setIsLoading(false))
+      }
+  
+      if (variant === 'LOGIN') {
+      //   signIn('credentials', {
+      //     ...data,
+      //     redirect: false
+      //   })
+      //   .then((callback) => {
+      //     if (callback?.error) {
+      //       toast.error('Invalid credentials!');
+      //     }
+  
+      //     if (callback?.ok) {
+      //       router.push('/conversations')
+      //     }
+      //   })
+      //   .finally(() => setIsLoading(false))
+      }
+    };
+
+    const socialAction = (action: string) => {
+      setIsLoading(true);
+  
+      // signIn(action, { redirect: false })
+      //   .then((callback) => {
+      //     if (callback?.error) {
+      //       toast.error('Invalid credentials!');
+      //     }
+  
+      //     if (callback?.ok) {
+      //       router.push('/conversations')
+      //     }
+      //   })
+      //   .finally(() => setIsLoading(false));
+    };
 
     return(
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -143,7 +160,18 @@ const AuthForm = () =>{
                 </span>
               </div>
             </div>
-            
+            <div className="mt-6 flex gap-2">
+
+            <AuthSocialButton 
+              icon={BsGithub} 
+              onClick={() => socialAction('github')} 
+            />
+            <AuthSocialButton 
+              icon={BsGoogle} 
+              onClick={() => socialAction('google')} 
+            />
+
+          </div>
           </div>
           <div 
             className="
