@@ -1,5 +1,6 @@
 'use client';
 
+import axios from "axios";
 import Button from "../../components/Button";
 import Input from "../../components/inputs/input";
 import AuthSocialButton from "./AuthSocialButton";
@@ -39,7 +40,7 @@ const AuthForm = () =>{
       setIsLoading(true);
     
       if (variant === 'REGISTER') {
-      //   axios.post('/api/register', data)
+        axios.post('/api/register', data);
       //   .then(() => signIn('credentials', {
       //     ...data,
       //     redirect: false,
