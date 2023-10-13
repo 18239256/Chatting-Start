@@ -4,9 +4,12 @@ import axios from "axios";
 import Button from "../../components/Button";
 import Input from "../../components/inputs/input";
 import AuthSocialButton from "./AuthSocialButton";
+import { signIn, useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState} from "react";
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import {BsGithub, BsGoogle} from 'react-icons/bs';
+
+import { toast } from "react-hot-toast";
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -40,56 +43,59 @@ const AuthForm = () =>{
       setIsLoading(true);
     
       if (variant === 'REGISTER') {
-        axios.post('/api/register', data);
-      //   .then(() => signIn('credentials', {
-      //     ...data,
-      //     redirect: false,
-      //   }))
-      //   .then((callback) => {
-      //     if (callback?.error) {
-      //       toast.error('Invalid credentials!');
-      //     }
+        axios.post('/api/register', data)
+        .then(() => signIn('credentials', {
+          ...data,
+          redirect: false,
+        }))
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error('注册信息错误');
+          }
   
-      //     if (callback?.ok) {
-      //       router.push('/conversations')
-      //     }
-      //   })
-      //   .catch(() => toast.error('Something went wrong!'))
-      //   .finally(() => setIsLoading(false))
+          if (callback?.ok) {
+            toast.success('注册成功');
+            // router.push('/conversations')
+          }
+        })
+        .catch(() => toast.error('出错了!'))
+        .finally(() => setIsLoading(false));
       }
   
       if (variant === 'LOGIN') {
-      //   signIn('credentials', {
-      //     ...data,
-      //     redirect: false
-      //   })
-      //   .then((callback) => {
-      //     if (callback?.error) {
-      //       toast.error('Invalid credentials!');
-      //     }
+        signIn('credentials', {
+          ...data,
+          redirect: false
+        })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error('登录信息错误');
+          }
   
-      //     if (callback?.ok) {
-      //       router.push('/conversations')
-      //     }
-      //   })
-      //   .finally(() => setIsLoading(false))
+          if (callback?.ok) {
+            toast.success('登录成功');
+            // router.push('/conversations')
+          }
+        })
+        .finally(() => setIsLoading(false))
       }
     };
 
     const socialAction = (action: string) => {
       setIsLoading(true);
   
-      // signIn(action, { redirect: false })
-      //   .then((callback) => {
-      //     if (callback?.error) {
-      //       toast.error('Invalid credentials!');
-      //     }
+      signIn(action, { redirect: false })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error('Invalid credentials!');
+          }
   
-      //     if (callback?.ok) {
-      //       router.push('/conversations')
-      //     }
-      //   })
-      //   .finally(() => setIsLoading(false));
+          if (callback?.ok) {
+            toast.success('登录成功');
+            // router.push('/conversations')
+          }
+        })
+        .finally(() => setIsLoading(false));
     };
 
     return(
