@@ -9,14 +9,6 @@ const nextConfig = {
         'res.cloudinary.com', 
         'avatars.githubusercontent.com',
         'lh3.googleusercontent.com'
-      ],
-      remotePatterns:[
-        {
-          protocol:'https',
-          hostname:'res.cloudinary.com',
-          port:'',
-          pathname:'/db372ijc2/**',
-        }
       ]
     }
   }
