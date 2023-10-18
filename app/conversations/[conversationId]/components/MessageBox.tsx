@@ -58,7 +58,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 width="288"
                 // onClick={() => setImageModalOpen(true)} 
                 src={data.image} 
-                loader={()=>{return data.image;}}
+                // loader={()=>{return data.image;}}  //如果出现图片加载失败，打开此处代码即可更正
                 className="
                   object-cover 
                   cursor-pointer 
