@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import Button from "../../components/Button";
-import Input from "../../components/inputs/input";
+import Input from "../../components/inputs/Input";
 import AuthSocialButton from "./AuthSocialButton";
 import { signIn, useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState} from "react";
