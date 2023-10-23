@@ -1,3 +1,6 @@
 export default async function getKnowledges() {
-    return [];
+    return [
+      "LowerCo",
+      "feiknow"
+    ];
   }

@@ -1,6 +1,14 @@
 'use client';
 
-const KnowledgeList = () => {
+import KnowledgeBox from "./KnowledgeBox";
+
+interface KnowledgeListProps {
+    items: string[];
+}
+
+const KnowledgeList: React.FC<KnowledgeListProps> = ({
+    items,
+}) => {
     return (<aside
         className="
       fixed 
@@ -29,6 +37,11 @@ const KnowledgeList = () => {
                     知识库
                 </div>
             </div>
+            {items.map((item) => (
+                <KnowledgeBox
+                    data={item}
+                />
+            ))}
         </div>
     </aside>
     );
