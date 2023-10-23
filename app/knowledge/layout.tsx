@@ -1,18 +1,15 @@
-import getUsers from "../actions/getUsers";
 import Sidebar from "../components/sidebar/Sidebar";
-import UserList from "./components/UserList";
+import KnowledgeList from "./components/KnowledgeList";
 
-export default async function UsersLayout({
+export default async function KnowledgeLayout({
   children
 }: {
   children: React.ReactNode,
 }) {
-  const users = await getUsers();
-
   return (
     <Sidebar>
       <div className="h-full">
-        <UserList items={users} />
+        <KnowledgeList />
         {children}
       </div>
     </Sidebar>
