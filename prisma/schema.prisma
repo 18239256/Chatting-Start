@@ -29,10 +29,11 @@ model User {
 
   accounts Account[]
   messages Message[]
+  // knowledges Knowledge[]
 }
 
 model Account {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
   userId             String   @db.ObjectId
   type               String
   provider           String
@@ -78,4 +79,20 @@ model Message {
   
   senderId String @db.ObjectId
   sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Knowledge{
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  displayName       String
+  // vectorIDName      String
+  // vectorDB          String
+  // embeddingModel    String
+
+  // userId            String   @db.ObjectId
+  // user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
 }

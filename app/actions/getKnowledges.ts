@@ -1,6 +1,7 @@
+import prisma from "@/app/libs/prismadb";
+
 export default async function getKnowledges() {
-    return [
-      "LowerCo",
-      "feiknow"
-    ];
+
+  const knowledges = await prisma.knowledge.findMany();
+    return knowledges;
   }

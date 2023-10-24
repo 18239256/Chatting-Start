@@ -1,9 +1,10 @@
 'use client';
 
+import { Knowledge } from "@prisma/client";
 import KnowledgeBox from "./KnowledgeBox";
 
 interface KnowledgeListProps {
-    items: string[];
+    items: Knowledge[];
 }
 
 const KnowledgeList: React.FC<KnowledgeListProps> = ({
@@ -39,7 +40,7 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
             </div>
             {items.map((item) => (
                 <KnowledgeBox
-                    data={item}
+                    data={item.displayName}
                 />
             ))}
         </div>
