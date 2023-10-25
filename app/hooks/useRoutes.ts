@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
 import { HiArrowLeftOnRectangle, HiBookOpen, HiUsers } from 'react-icons/hi2';
+import {FaRobot} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
 import useConversation from "./useConversation";
 
@@ -21,6 +22,12 @@ const useRoutes = () => {
       href: '/users', 
       icon: HiUsers, 
       active: pathname === '/users'
+    },
+    { 
+      label: 'Robots', 
+      href: '/robots', 
+      icon: FaRobot, 
+      active: pathname === '/robots'
     },
     { 
       label: 'Knowledge', 

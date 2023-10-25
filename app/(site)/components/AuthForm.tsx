@@ -64,7 +64,7 @@ const AuthForm = () =>{
   
           if (callback?.ok) {
             toast.success('注册成功');
-            // router.push('/conversations')
+            router.push('/conversations')
           }
         })
         .catch(() => toast.error('出错了!'))
