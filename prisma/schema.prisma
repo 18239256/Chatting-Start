@@ -29,7 +29,10 @@ model User {
 
   accounts Account[]
   messages Message[]
-  // knowledges Knowledge[]
+
+  isRobot         Boolean?
+  knowledges Knowledge[]
+  robots Robot[]
 }
 
 model Account {
@@ -88,11 +91,33 @@ model Knowledge{
   // vectorDB          String
   // embeddingModel    String
 
-  // userId            String   @db.ObjectId
-  // user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @db.ObjectId
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RobotTemplate{
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  apiUrl            String
+  knowledgeAbility  Boolean?
+  searchAbility     Boolean?
+
+  robots Robot[]
+}
+
+model Robot{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+
+  userId             String   @db.ObjectId
+  user User          @relation(fields: [userId], references: [id])
+
+  robotTempId        String   @db.ObjectId
+  robot RobotTemplate @relation(fields: [robotTempId], references: [id])
 }
 
 enum Role {
   USER
   ADMIN
+  ROBOT
 }
