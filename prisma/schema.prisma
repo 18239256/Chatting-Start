@@ -30,9 +30,9 @@ model User {
   accounts Account[]
   messages Message[]
 
-  isRobot         Boolean?
   knowledges Knowledge[]
   robots Robot[]
+  robotTalks RobotTalk[]
 }
 
 model Account {
@@ -107,14 +107,31 @@ model RobotTemplate{
 
 model Robot{
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name                String
+  name               String
+  createdAt          DateTime @default(now())
 
   userId             String   @db.ObjectId
   user User          @relation(fields: [userId], references: [id])
 
   robotTempId        String   @db.ObjectId
   robot RobotTemplate @relation(fields: [robotTempId], references: [id])
+
+  robotTalks RobotTalk[]
 }
+
+model RobotTalk {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  body String?
+  image String?
+  createdAt DateTime @default(now())
+
+  robotId String @db.ObjectId
+  robot Robot @relation(fields: [robotId], references: [id], onDelete: Cascade)
+  
+  senderId String? @db.ObjectId
+  sender User? @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
 
 enum Role {
   USER
