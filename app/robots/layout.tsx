@@ -1,5 +1,5 @@
-import getRobotTalks from "../actions/getRobotTalks";
-import getRobots from "../actions/getRobots";
+import getConversations from "../actions/getConversations";
+import getRobotTemplates from "../actions/getRobotTemplates";
 import Sidebar from "../components/sidebar/Sidebar";
 import RobotList from "./components/RobotList";
 
@@ -9,16 +9,17 @@ export default async function ConversationsLayout({
   children: React.ReactNode,
 }) {
 
-  const robots = await getRobots();
-  const robotTalks = await getRobotTalks();
+  const robotTmpls = await getRobotTemplates();
+  const conversations = await getConversations();
 
   return (
     // \s*\/\/\s*@ts-expect-error
     <Sidebar>
       <div className="h-full">
       <RobotList 
-        robots={robots}
-        initialTalks={robotTalks}
+        robotTmpls={robotTmpls} 
+        title="Robot" 
+        initialItems={conversations}
       /> 
         {children}
       </div>
