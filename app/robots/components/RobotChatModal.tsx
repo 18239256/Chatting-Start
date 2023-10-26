@@ -50,7 +50,10 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
       
-        axios.post('/api/robots', {
+        // Create new robot user base on current logo in user
+        // Create new 1 by 1 conversation by new robot user
+        console.log(data);
+        axios.post('/api/conversations', {
           ...data,
           isGroup: true
         })
@@ -75,10 +78,10 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 text-gray-900
               "
               >
-                创建一个聊天室
+                创建一个机器人
               </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
-              创建多人聊天室。
+              根据模板创建一个机器人。
             </p>
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
@@ -91,7 +94,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               />
               <Select
                 disabled={isLoading}
-                label="成员" 
+                label="机器人模板" 
                 options={robotTmpls.map((tmpl) => ({ 
                   value: tmpl.id, 
                   label: tmpl.name 

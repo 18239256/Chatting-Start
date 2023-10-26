@@ -15,13 +15,13 @@ import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
 
 
-interface ConversationListProps {
+interface RobotListProps {
     initialItems: FullConversationType[];
     robotTmpls: RobotTemplate[];
     title?: string;
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ 
+const RobotList: React.FC<RobotListProps> = ({ 
     initialItems, 
     robotTmpls
   }) =>{
@@ -115,7 +115,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
           <div className="px-5">
             <div className="flex justify-between mb-4 pt-4">
               <div className="text-2xl font-bold text-neutral-800">
-                消息
+                机器人
               </div>
               <div
                 onClick={() => setIsModalOpen(true)}
@@ -145,4 +145,4 @@ const ConversationList: React.FC<ConversationListProps> = ({
     );
 }
 
-export default ConversationList;
+export default RobotList;

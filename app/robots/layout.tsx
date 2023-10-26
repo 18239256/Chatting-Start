@@ -1,4 +1,4 @@
-import getConversations from "../actions/getConversations";
+import getRobotConversations from "../actions/getRobotConversations";
 import getRobotTemplates from "../actions/getRobotTemplates";
 import Sidebar from "../components/sidebar/Sidebar";
 import RobotList from "./components/RobotList";
@@ -10,7 +10,7 @@ export default async function ConversationsLayout({
 }) {
 
   const robotTmpls = await getRobotTemplates();
-  const conversations = await getConversations();
+  const conversations = await getRobotConversations();
 
   return (
     // \s*\/\/\s*@ts-expect-error
