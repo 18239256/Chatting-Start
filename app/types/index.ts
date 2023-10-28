@@ -10,7 +10,7 @@ export type FullConversationType = Conversation & {
   messages: FullMessageType[]
 };
 
-export type FullRobotType = User & {
-  robot: Robot,
-  robotTmpl: RobotTemplate
-};
+// export type FullRobotType = User & {
+//   robot: Robot,
+//   robotTmpl: RobotTemplate
+// };
