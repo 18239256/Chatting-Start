@@ -11,7 +11,7 @@ export default async function ConversationsLayout({
 
   const robotTmpls = await getRobotTemplates();
   const conversations = await getRobotConversations();
-  console.log(conversations);
+
   return (
     // \s*\/\/\s*@ts-expect-error
     <Sidebar>

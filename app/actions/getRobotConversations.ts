@@ -1,5 +1,6 @@
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "./getCurrentUser";
+import { User } from "@prisma/client";
 
 const getConversations = async () => {
   const currentUser = await getCurrentUser();
@@ -9,13 +10,32 @@ const getConversations = async () => {
   }
 
   try {
+
+    const robotUsersOfCurUser = await prisma.user.findUnique({
+      where: {
+        id: currentUser.id
+      },
+      select: {
+        robotUsers: true
+      }
+    });
+
+    if (robotUsersOfCurUser === null) {
+      return [];
+    }
+   
+    let robotIds : string[] =[];
+    robotUsersOfCurUser.robotUsers.map((r) => {
+      robotIds.push(r.id);
+    })
+
     const conversations = await prisma.conversation.findMany({
       orderBy: {
         lastMessageAt: 'desc',
       },
       where: {
         userIds: {
-          has: currentUser.id
+          hasSome: robotIds
         }
       },
       include: {
