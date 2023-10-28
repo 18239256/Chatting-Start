@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 
 import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 export async function POST(
   request: Request
@@ -10,29 +11,38 @@ export async function POST(
         const body = await request.json();
         
         const {
-            email,
             name,
-            password,
-            LLM
+            robotTmpls,
         } = body;
 
-        if(!email || !name || !password){
+        if(!name || !robotTmpls){
             return new NextResponse('Missing info',{status: 400});
         }
+        // 密码与机器人的名字相同
+        // const hashedPassword = await bcrypt.hash(name, 12);
 
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const currentUser = await getCurrentUser();
 
-        const user = await prisma.user.create({
+        const user = await prisma.robot.create({
             data: {
-                email,
                 name,
-                hashedPassword,
-                isRobot: true,
-                robot: {
+                user:{
+                    create:{
+                        name,
+                        email: name + "@ai.com",
+                        isRobot:true,
+                        robotOwnerId: currentUser?.id
+                    }
+                },
+                robotTemp:{
+                    connect:{
+                        id: robotTmpls[0].value,
+                    }
                 }
             },
-            include: {
-                robot : true
+            include:{
+                user: true,
+                robotTemp: true,
             }
         });
 

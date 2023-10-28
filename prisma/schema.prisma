@@ -118,7 +118,7 @@ model Robot{
   user User          @relation(fields: [userId], references: [id])
 
   robotTempId        String   @db.ObjectId
-  robot RobotTemplate @relation(fields: [robotTempId], references: [id])
+  robotTemp RobotTemplate @relation(fields: [robotTempId], references: [id])
 
 }
 

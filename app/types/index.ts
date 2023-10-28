@@ -1,4 +1,4 @@
-import {  Conversation, Message, User, RobotTalk, Robot } from "@prisma/client";
+import {  Conversation, Message, User, Robot, RobotTemplate } from "@prisma/client";
 
 export type FullMessageType = Message & {
   sender: User, 
@@ -10,7 +10,7 @@ export type FullConversationType = Conversation & {
   messages: FullMessageType[]
 };
 
-export type FullRobotTalkType = RobotTalk & {
+export type FullRobotType = User & {
   robot: Robot,
-  sender: User
+  robotTmpl: RobotTemplate
 };

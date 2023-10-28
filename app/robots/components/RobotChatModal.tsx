@@ -41,7 +41,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
-            members: []
+            robotTmpls: []
         }
     });
 
@@ -50,13 +50,26 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
       
-        // Create new robot user base on current logo in user
-        // Create new 1 by 1 conversation by new robot user
-        console.log(data);
-        axios.post('/api/conversations', {
-          ...data,
-          isGroup: true
+      // Create new robot user base on current logo in user
+      axios.post('/api/robotregister', data)
+        .then((callback) => {
+          if (callback?.status) {
+            toast.error('注册信息错误');
+          }
+
+          if (callback?.status) {
+            toast.success('注册成功');
+            router.push('/conversations')
+          }
         })
+        .catch(() => toast.error('出错了!'))
+        .finally(() => setIsLoading(false));
+
+      // Create new 1 by 1 conversation by new robot user
+      axios.post('/api/conversations', {
+        ...data,
+        isGroup: true
+      })
         .then(() => {
           router.refresh();
           onClose();
@@ -99,7 +112,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                   value: tmpl.id, 
                   label: tmpl.name 
                 }))} 
-                onChange={(value) => setValue('members', value, { 
+                onChange={(value) => setValue('robotTmpls', value, { 
                   shouldValidate: true 
                 })} 
                 value={members}
