@@ -5,7 +5,6 @@ import { FullConversationType } from "@/app/types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
-import { MdOutlineGroupAdd } from 'react-icons/md';
 import clsx from "clsx";
 
 import useConversation from "@/app/hooks/useConversation";
@@ -13,6 +12,7 @@ import RobotBox from "./RobotBox";
 import RobotChatModal from "./RobotChatModal";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
+import { FaRobot } from "react-icons/fa6";
 
 
 interface RobotListProps {
@@ -129,7 +129,7 @@ const RobotList: React.FC<RobotListProps> = ({
                 transition
               "
               >
-                <MdOutlineGroupAdd size={20} />
+                <FaRobot size={20} />
               </div>
             </div>
             {items.map((item) => (
