@@ -6,11 +6,11 @@ export type FullMessageType = Message & {
 };
 
 export type FullConversationType = Conversation & { 
-  users: User[]; 
+  users: User[],
   messages: FullMessageType[]
 };
 
-// export type FullRobotType = User & {
+// export type FullRobotUserType = User & {
 //   robot: Robot,
 //   robotTmpl: RobotTemplate
 // };

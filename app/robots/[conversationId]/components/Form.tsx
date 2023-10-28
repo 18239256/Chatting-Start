@@ -33,6 +33,12 @@ const Form =() => {
         axios.post('/api/messages', {
             ...data,
             conversationId: conversationId
+        });
+
+        //triggle robot to reply
+        axios.post('/api/robottalk', {
+            ...data,
+            conversationId: conversationId
         })
     };
 
