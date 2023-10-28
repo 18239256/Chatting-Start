@@ -14,3 +14,15 @@ export type FullConversationType = Conversation & {
 //   robot: Robot,
 //   robotTmpl: RobotTemplate
 // };
+
+export type OPENAIFastAPIParamType = {
+  model: string,
+  messages: any[],
+  temperature: number,
+  n: number,
+  max_tokens: number,
+  stop: [],
+  stream: boolean,
+  presence_penalty: number,
+  frequency_penalty: number
+}
