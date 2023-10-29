@@ -19,3 +19,18 @@ export const pusherClient = new PusherClient(
     cluster: 'ap3',
   }
 );
+
+export async function PusherTriggerChunked(channel: string, event: string, data: any) {
+  const chunkSize = 9000;  // artificially small! Set it to more like 9000
+  const str = JSON.stringify(data);
+  const msgId = Math.random() + '';
+  for (var i = 0; i*chunkSize < str.length; i++) {
+    // TODO: use pusher.triggerBatch for better performance
+      await pusherServer.trigger(channel, event, { 
+      id: msgId, 
+      index: i, 
+      chunk: str.substring(i*chunkSize, chunkSize), 
+      final: chunkSize*(i+1) >= str.length
+    });
+  }
+}
