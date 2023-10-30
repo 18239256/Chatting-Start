@@ -28,9 +28,9 @@ export async function POST(
     const robotUser = conversation?.users.find((currentValue) => {
         return currentValue.id !== currentUser.id;
     })
-
-    const retMessage = await getRobotAnswer(robotUser?.id,message, conversation?.id);
-
+    
+    const retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id);
+    
     const newMessage = await prisma.message.create({
       include: {
         seen: true,

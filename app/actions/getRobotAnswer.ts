@@ -1,5 +1,5 @@
 import getCurrentUser from "./getCurrentUser";
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 import prisma from "@/app/libs/prismadb";
 import axios from "axios";
 import getMessages from "./getMessages";
@@ -12,10 +12,11 @@ const getRobotAnswer = async (
 ) => {
     try {
         const currentUser = await getCurrentUser();
+        
         const messages = await getMessages(conversationId);
 
         let allMessages: any[] = [];
-        for (let index = messages.length - 6; index < messages.length; index++) {
+        for (let index = (messages.length>6?messages.length- 6 : 0); index < messages.length; index++) {
             const msg = messages[index];
             if(msg.sender.isRobot)
             {
@@ -35,26 +36,12 @@ const getRobotAnswer = async (
             role : 'user',
             content: message
         });
-        // messages.map((msg) => {
-        //     if(msg.sender.isRobot)
-        //     {
-        //         allMessages.push({
-        //             role : 'assistant',
-        //             content: msg.body
-        //         })
-        //     }
-        //     else{
-        //         allMessages.push({
-        //             role : 'user',
-        //             content: msg.body
-        //         })
-        //     }
-        // })
 
+       
 
-        if (!currentUser?.id) {
-            return "";
-        }
+        // if (!currentUser?.id) {
+        //     return "";
+        // }
 
         const robotUserFull = await prisma.user.findMany({
             where: {
@@ -82,6 +69,8 @@ const getRobotAnswer = async (
             presence_penalty: 0,
             frequency_penalty: 0
         }
+        
+        console.log('robotUserFull: ', robotUserFull);
 
         if (robotUserFull[0].robot) {
             await axios.post(robotUserFull[0].robot?.robotTemp.apiUrl, AIParam).then((callback) => {
@@ -89,6 +78,7 @@ const getRobotAnswer = async (
                     reply = callback.data;
             })
         }
+        console.log('reply: ', reply);
 
         return reply;
 
