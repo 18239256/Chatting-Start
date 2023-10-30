@@ -23,7 +23,6 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    console.log(conversationId);
     const {count} = await prisma.message.deleteMany({
         where: {
           conversationId: conversationId

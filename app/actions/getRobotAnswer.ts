@@ -51,7 +51,6 @@ const getRobotAnswer = async (
         //     }
         // })
 
-        console.log(allMessages);
 
         if (!currentUser?.id) {
             return "";
