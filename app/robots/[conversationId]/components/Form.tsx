@@ -51,7 +51,6 @@ const Form =() => {
     };
 
     const handleDelAll = () => {
-        console.log(`/api/messages/${conversationId}/deleteall`);
         axios.post(`/api/messages/${conversationId}/deleteall`);
     };
     

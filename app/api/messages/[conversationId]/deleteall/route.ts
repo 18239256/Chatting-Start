@@ -31,7 +31,7 @@ export async function POST(
       });
 
     // Update last message seen
-    await pusherServer.trigger(conversationId!, 'message:update', {});
+    await pusherServer.trigger(conversationId!, 'message:deleteall', {});
 
     return new NextResponse(`Successfully delete ${count} message(s).`);
   } catch (error) {

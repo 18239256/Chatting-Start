@@ -52,14 +52,23 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
       }))
     };
 
+    const delAllMessageHandler = () => {
+      setMessages((current) => {
+        return []
+      });
+      bottomRef?.current?.scrollIntoView();
+    };
+
 
     pusherClient.bind('messages:new', messageHandler)
     pusherClient.bind('message:update', updateMessageHandler);
+    pusherClient.bind('message:deleteall', delAllMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId)
       pusherClient.unbind('messages:new', messageHandler)
       pusherClient.unbind('message:update', updateMessageHandler)
+      pusherClient.unbind('message:deleteall', delAllMessageHandler)
     }
   }, [conversationId]);
 
