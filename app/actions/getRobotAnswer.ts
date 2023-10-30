@@ -70,8 +70,6 @@ const getRobotAnswer = async (
             frequency_penalty: 0
         }
         
-        console.log('robotUserFull: ', robotUserFull);
-
         if (robotUserFull[0].robot) {
             await axios.post(robotUserFull[0].robot?.robotTemp.apiUrl, AIParam).then((callback) => {
                 if (callback.status === 200)
