@@ -116,7 +116,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                 <IoTrash size={20} />
                                                             </div>
                                                             <div className="text-sm font-light text-neutral-600">
-                                                                Delete
+                                                                删除
                                                             </div>
                                                         </div>
                                                     </div>
@@ -185,7 +185,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                         sm:flex-shrink-0
                                                                     "
                                                                         >
-                                                                            Joined
+                                                                            创建时间
                                                                         </dt>
                                                                         <dd
                                                                             className="

@@ -37,7 +37,7 @@ const Form =() => {
         });
 
         //triggle robot to reply
-        axios.post('/api/robottalk', {
+        axios.post('/api/robot/robottalk', {
             ...data,
             conversationId: conversationId
         })

@@ -51,7 +51,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     setIsLoading(true);
 
     // Create new robot user base on current logo in user
-    axios.post('/api/robotregister', data)
+    axios.post('/api/robot/robotregister', data)
       .then((callback) => {
         console.log(callback);
         if (callback?.status !== 200) {
