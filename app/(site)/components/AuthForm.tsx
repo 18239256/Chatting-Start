@@ -22,7 +22,7 @@ const AuthForm = () =>{
 
     useEffect(() => {
       if (session?.status === 'authenticated') {
-        router.push('/users')
+        router.push('/robots')
       }
     }, [session?.status, router]);
 
@@ -83,7 +83,7 @@ const AuthForm = () =>{
   
           if (callback?.ok) {
             toast.success('登录成功');
-            // router.push('/conversations')
+            // router.push('/robots');
           }
         })
         .finally(() => setIsLoading(false))
