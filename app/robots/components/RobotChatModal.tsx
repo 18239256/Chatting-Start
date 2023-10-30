@@ -59,7 +59,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
         }
 
         if (callback?.status === 200) {
-          toast.success('注册成功');
+          toast.success('创建成功');
 
           // Create new 1 by 1 conversation by new robot user
           axios.post('/api/conversations', { userId: callback?.data.userId })
@@ -70,7 +70,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             .catch(() => toast.error('Something went wrong!'))
             .finally(() => setIsLoading(false));
 
-          router.push('/conversations')
+          router.push('/robots')
         }
       })
       .catch(() => toast.error('出错了!'))
