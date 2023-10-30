@@ -8,8 +8,11 @@ import {
     useForm 
   } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+import { RiDeleteBin4Fill } from "react-icons/ri";
 import { CldUploadButton } from "next-cloudinary";
 import MessageInput from "./MessageInput";
+import deleteAllMessages from "@/app/actions/deleteMessages";
+import toast from "react-hot-toast";
 
 const Form =() => {
 
@@ -48,6 +51,11 @@ const Form =() => {
           conversationId: conversationId
         })
     };
+
+    const handleDelAll = () => {
+        console.log(`/api/messages/${conversationId}/deleteall`);
+        axios.post(`/api/messages/${conversationId}/deleteall`);
+    };
     
     return (
         <div className="
@@ -61,13 +69,28 @@ const Form =() => {
         lg:gap-4 
         w-full
       ">
-            <CldUploadButton
+            {/* <CldUploadButton
                 options={{ maxFiles: 1 }}
                 onUpload={handleUpload}
                 uploadPreset="gvnviy91"
             ><HiPhoto size={30} className="text-sky-500" />
-            </CldUploadButton>
-            
+            </CldUploadButton> */}
+            <button
+                onClick={handleDelAll}
+                className="
+                        rounded-full 
+                        p-2 
+                        bg-gray-500 
+                        cursor-pointer 
+                        hover:bg-red-600
+                        transition
+                    "
+            >
+                <RiDeleteBin4Fill
+                    size={18}
+                    className="text-white"
+                />
+            </button>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex items-center gap-2 lg:gap-4 w-full"
