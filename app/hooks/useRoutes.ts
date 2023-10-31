@@ -9,31 +9,34 @@ import useConversation from "./useConversation";
 const useRoutes = () => {
   const pathname = usePathname();
   const { conversationId } = useConversation();
+  const pathpattern = {
+    conversations: /^\/conversations.*$/,
+  }
 
   const routes = useMemo(() => [
     { 
       label: 'Chat', 
       href: '/conversations', 
       icon: HiChat,
-      active: pathname === '/conversations' || !!conversationId
+      active: /^\/conversations.*$/.test(pathname || "")
     },
     { 
       label: 'Users', 
       href: '/users', 
       icon: HiUsers, 
-      active: pathname === '/users'
+      active: /^\/users.*$/.test(pathname || "")
     },
     { 
       label: 'Robots', 
       href: '/robots', 
       icon: FaRobot, 
-      active: pathname === '/robots'
+      active: /^\/robots.*$/.test(pathname || "")
     },
     { 
       label: 'Knowledge', 
       href: '/knowledge', 
       icon: HiBookOpen, 
-      active: pathname === '/knowledge'
+      active: /^\/knowledge.*$/.test(pathname || "")
     },
     {
       label: 'Logout', 
