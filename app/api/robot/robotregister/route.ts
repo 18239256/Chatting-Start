@@ -31,7 +31,8 @@ export async function POST(
                         name,
                         email: name + "@ai.com",
                         isRobot:true,
-                        robotOwnerId: currentUser?.id
+                        robotOwnerId: currentUser?.id,
+                        image: "/images/robotbaby.jpg",
                     }
                 },
                 robotTemp:{
