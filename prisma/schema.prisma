@@ -115,7 +115,7 @@ model Robot{
   createdAt          DateTime @default(now())
 
   userId             String   @db.ObjectId @unique
-  user User          @relation(fields: [userId], references: [id])
+  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   robotTempId        String   @db.ObjectId
   robotTemp RobotTemplate @relation(fields: [robotTempId], references: [id])

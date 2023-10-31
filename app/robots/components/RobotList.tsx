@@ -75,7 +75,7 @@ const RobotList: React.FC<RobotListProps> = ({
         
         // fresh new codes
         if(conversationId === conversation.id){
-          router.push('/conversations');
+          router.push('/robots');
         }
       }
   
