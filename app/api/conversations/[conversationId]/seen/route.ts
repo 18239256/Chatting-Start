@@ -63,7 +63,13 @@ export async function POST(
             robotOwnerId: true
           }
         },
-        seen: true,
+        seen: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+          }
+        },
       },
       data: {
         seen: {
