@@ -9,9 +9,6 @@ import useConversation from "./useConversation";
 const useRoutes = () => {
   const pathname = usePathname();
   const { conversationId } = useConversation();
-  const pathpattern = {
-    conversations: /^\/conversations.*$/,
-  }
 
   const routes = useMemo(() => [
     { 
