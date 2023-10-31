@@ -55,7 +55,14 @@ export async function POST(
         id: lastMessage.id
       },
       include: {
-        sender: true,
+        sender: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+            robotOwnerId: true
+          }
+        },
         seen: true,
       },
       data: {
