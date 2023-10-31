@@ -34,7 +34,15 @@ export async function POST(
     const newMessage = await prisma.message.create({
       include: {
         seen: true,
-        sender: true
+        sender: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+            robotOwnerId: true,
+            image: true
+          }
+        }
       },
       data: {
         body: retMessage,
