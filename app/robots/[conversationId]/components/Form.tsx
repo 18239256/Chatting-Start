@@ -11,8 +11,12 @@ import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { CldUploadButton } from "next-cloudinary";
 import MessageInput from "./MessageInput";
+import { useState } from "react";
+import DelAllMsgConfirmModal from "./DelAllMsgConfirmModal";
 
 const Form =() => {
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const { conversationId } = useConversation();
 
@@ -50,12 +54,13 @@ const Form =() => {
         })
     };
 
-    const handleDelAll = () => {
-        axios.post(`/api/messages/${conversationId}/deleteall`);
-    };
-    
     return (
-        <div className="
+        <>
+            <DelAllMsgConfirmModal
+                isOpen={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+            />
+            <div className="
         py-4 
         px-4 
         bg-white 
@@ -66,15 +71,15 @@ const Form =() => {
         lg:gap-4 
         w-full
       ">
-            {/* <CldUploadButton
+                {/* <CldUploadButton
                 options={{ maxFiles: 1 }}
                 onUpload={handleUpload}
                 uploadPreset="gvnviy91"
             ><HiPhoto size={30} className="text-sky-500" />
             </CldUploadButton> */}
-            <button
-                onClick={handleDelAll}
-                className="
+                <button
+                    onClick={() => setConfirmOpen(true)}
+                    className="
                         rounded-full 
                         p-2 
                         bg-gray-500 
@@ -82,26 +87,26 @@ const Form =() => {
                         hover:bg-red-600
                         transition
                     "
-            >
-                <RiDeleteBin4Fill
-                    size={18}
-                    className="text-white"
-                />
-            </button>
-            <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex items-center gap-2 lg:gap-4 w-full"
-            >
-                <MessageInput
-                    id="message"
-                    register={register}
-                    errors={errors}
-                    required
-                    placeholder="编写一条消息"
-                />
-                <button
-                    type="submit"
-                    className="
+                >
+                    <RiDeleteBin4Fill
+                        size={18}
+                        className="text-white"
+                    />
+                </button>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex items-center gap-2 lg:gap-4 w-full"
+                >
+                    <MessageInput
+                        id="message"
+                        register={register}
+                        errors={errors}
+                        required
+                        placeholder="编写一条消息"
+                    />
+                    <button
+                        type="submit"
+                        className="
                         rounded-full 
                         p-2 
                         bg-sky-500 
@@ -109,14 +114,14 @@ const Form =() => {
                         hover:bg-sky-600 
                         transition
                     "
-                >
-                    <HiPaperAirplane
-                        size={18}
-                        className="text-white"
-                    />
-                </button>
-            </form>           
-        </div>
+                    >
+                        <HiPaperAirplane
+                            size={18}
+                            className="text-white"
+                        />
+                    </button>
+                </form>
+            </div></>
     )
 }
  
