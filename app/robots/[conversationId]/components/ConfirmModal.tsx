@@ -73,11 +73,11 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             as="h3" 
             className="text-base font-semibold leading-6 text-gray-900"
           >
-            删除聊天室
+            删除机器人
           </Dialog.Title>
           <div className="mt-2">
             <p className="text-sm text-gray-500">
-              确认删除此聊天室？删除操作将不能恢复。
+              确认删除此机器人？删除操作将不能恢复。
             </p>
           </div>
         </div>
