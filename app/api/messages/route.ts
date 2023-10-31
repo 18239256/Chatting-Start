@@ -28,7 +28,8 @@ export async function POST(
             id: true,
             name: true,
             email: true,
-            robotOwnerId: true
+            robotOwnerId: true,
+            image: true
           }
         }
       },
