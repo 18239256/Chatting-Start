@@ -43,7 +43,7 @@ const useRoutes = () => {
     }
   ], [pathname, conversationId]);
 
-  return routes;
+  return routes.slice(2,5);
 };
 
 export default useRoutes;
