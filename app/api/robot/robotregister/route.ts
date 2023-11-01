@@ -12,10 +12,10 @@ export async function POST(
         
         const {
             name,
-            robotTmpls,
+            robotTmpl,
         } = body;
 
-        if(!name || !robotTmpls){
+        if(!name || !robotTmpl){
             return new NextResponse('Missing info',{status: 400});
         }
         // 密码与机器人的名字相同
@@ -37,7 +37,7 @@ export async function POST(
                 },
                 robotTemp:{
                     connect:{
-                        id: robotTmpls[0].value,
+                        id: robotTmpl.id,
                     }
                 }
             },

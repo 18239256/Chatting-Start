@@ -15,11 +15,31 @@ import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import Select from '@/app/components/inputs/Select';
+import { RadioGroup } from '@headlessui/react';
 
 interface RobotChatModalProps {
   isOpen?: boolean;
   onClose: () => void;
   robotTmpls: RobotTemplate[];
+}
+
+function CheckIcon(props:any) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" {...props}>
+      <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
+      <path
+        d="M7 13l3 3 7-7"
+        stroke="#fff"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function compareRobotTmpl(a:RobotTemplate, b:RobotTemplate) {
+  return a.id === b.id;
 }
 
 const RobotChatModal: React.FC<RobotChatModalProps> = ({
@@ -29,6 +49,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [tmpl, setTmpl] = useState(robotTmpls[0]);
 
   const {
     register,
@@ -40,8 +61,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     }
   } = useForm<FieldValues>({
     defaultValues: {
-      name: '',
-      robotTmpls: []
+      name:'',
     }
   });
 
@@ -51,7 +71,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     setIsLoading(true);
 
     // Create new robot user base on current logo in user
-    axios.post('/api/robot/robotregister', data)
+    axios.post('/api/robot/robotregister', {...data,robotTmpl:tmpl})
       .then((callback) => {
         console.log(callback);
         if (callback?.status !== 200) {
@@ -75,8 +95,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
       })
       .catch(() => toast.error('出错了!'))
       .finally(() => setIsLoading(false));
-
-
   }
 
   return (
@@ -106,18 +124,69 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 required
                 register={register}
               />
-              <Select
-                disabled={isLoading}
-                label="机器人模板"
-                options={robotTmpls.map((tmpl) => ({
-                  value: tmpl.id,
-                  label: tmpl.name
-                }))}
-                onChange={(value) => setValue('robotTmpls', value, {
-                  shouldValidate: true
-                })}
-                value={members}
-              />
+
+              <label
+                className="
+                block 
+                text-sm 
+                font-medium 
+                leading-6 
+                text-gray-900
+              "              >
+                选择模型
+              </label>
+
+              <div className="mx-auto w-full max-w-md">
+                <RadioGroup value={tmpl} onChange={setTmpl} by={compareRobotTmpl}>
+                  <RadioGroup.Label className="sr-only">选择模型</RadioGroup.Label>
+                  <div className="space-y-2">
+                    {robotTmpls.map((tmpl) => (
+                      <RadioGroup.Option
+                        key={tmpl.id}
+                        value={tmpl}
+                        className={({ active, checked }) =>
+                          `${active
+                            ? 'ring-2 ring-white/60 ring-offset-2 ring-offset-sky-300'
+                            : ''
+                          }
+                  ${checked ? 'bg-sky-600/75 text-white' : 'bg-white'}
+                    relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`
+                        }
+                      >
+                        {({ active, checked }) => (
+                          <>
+                            <div className="flex w-full items-center justify-between">
+                              <div className="flex items-center">
+                                <div className="text-sm">
+                                  <RadioGroup.Label
+                                    as="p"
+                                    className={`font-medium  ${checked ? 'text-white' : 'text-gray-800'
+                                      }`}
+                                  >
+                                    {tmpl.name}{' / '}{tmpl.description}
+                                  </RadioGroup.Label>
+                                  <RadioGroup.Description
+                                    as="span"
+                                    className={`inline ${checked ? 'text-sky-100' : 'text-gray-400'
+                                      }`}
+                                  >
+                                    <span>{tmpl.apiUrl}</span>
+                                  </RadioGroup.Description>
+                                </div>
+                              </div>
+                              {checked && (
+                                <div className="shrink-0 text-white">
+                                  <CheckIcon className="h-6 w-6" />
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
+              </div>
             </div>
           </div>
         </div>
@@ -137,6 +206,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
       </form>
     </Modal>
   )
+
 }
 
 export default RobotChatModal;
