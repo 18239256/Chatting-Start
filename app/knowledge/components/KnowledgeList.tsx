@@ -38,8 +38,8 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
                     知识库
                 </div>
             </div>
-            {items.map((item) => (
-                <KnowledgeBox
+            {items.map((item, index) => (
+                <KnowledgeBox key={index}
                     data={item.displayName}
                 />
             ))}
