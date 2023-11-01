@@ -14,8 +14,9 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
-import Select from '@/app/components/inputs/Select';
+import Image from "next/image";
 import { RadioGroup } from '@headlessui/react';
+
 
 interface RobotChatModalProps {
   isOpen?: boolean;
@@ -170,10 +171,46 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                     className={`inline ${checked ? 'text-sky-100' : 'text-gray-400'
                                       }`}
                                   >
+                                    <div>
                                     <span>{tmpl.apiUrl}</span>
+                                    </div>
+                                    {tmpl.knowledgeAbility ? 
+                                    <div className="
+                                        relative 
+                                        inline-block 
+                                        rounded-full 
+                                        overflow-hidden
+                                        h-9 
+                                        w-9 
+                                        md:h-11 
+                                        md:w-11
+                                      ">
+                                      <Image
+                                        fill
+                                        src={'/images/knowledge.png'}
+                                        alt="Avatar"
+                                      />
+                                    </div> : null}
+                                    {tmpl.searchAbility ? 
+                                    <div className="
+                                        relative 
+                                        inline-block 
+                                        rounded-full 
+                                        overflow-hidden
+                                        h-9 
+                                        w-9 
+                                        md:h-11 
+                                        md:w-11
+                                      ">
+                                      <Image
+                                        fill
+                                        src={'/images/bing.png'}
+                                        alt="Avatar"
+                                      />
+                                    </div> : null}
                                   </RadioGroup.Description>
                                 </div>
-                              </div>
+                              </div>                              
                               {checked && (
                                 <div className="shrink-0 text-white">
                                   <CheckIcon className="h-6 w-6" />
