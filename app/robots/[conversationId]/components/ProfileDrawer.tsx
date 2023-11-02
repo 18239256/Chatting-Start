@@ -1,22 +1,24 @@
 'use client'
 
 import Avatar from '@/app/components/Avatar';
-import useOtherUser from '@/app/hooks/useOtherUser';
+import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Dialog, Transition } from '@headlessui/react';
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
-import { Fragment, useMemo, useState} from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { IoClose, IoTrash } from 'react-icons/io5';
 
 import ConfirmModal from './ConfirmModal';
 import AvatarGroup from '@/app/components/AvatarGroup';
 import useActiveList from '@/app/hooks/useActiveList';
 
+import { FullUserType } from "@/app/types";
+
 interface ProfileDrawerProps {
     isOpen: boolean;
     onClose: () => void;
     data: Conversation & {
-        users: User[]
+        users: FullUserType[]
     }
 }
 
@@ -25,9 +27,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     onClose,
     data,
 }) => {
-    console.log('data==>', data);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const otherUser = useOtherUser(data);
+    const otherUser = useRobotOtherUser(data);
+    const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
 
@@ -175,7 +177,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                             )}
                                                             {!data.isGroup && (
                                                                 <>
-                                                                    <hr />                                                                    
+                                                                    <hr />
                                                                     <div>
                                                                         <dt
                                                                             className="
@@ -198,16 +200,38 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                         >
                                                                             <time dateTime={joinedDate}>
                                                                                 {joinedDate}
-                                                                            </time>                                                                            
+                                                                            </time>
                                                                         </dd>
                                                                     </div>
                                                                 </>
                                                             )}
                                                             <form>
-
-                                                            <label htmlFor="default-range" className="block mb-2 text-sm font-medium text-gray-500 dark:text-white">Default range</label>
-<input id="default-range" type="range" value="50" className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-red-900" />
-
+                                                                <div>
+                                                                    <dt
+                                                                        className="
+                                                                        text-sm 
+                                                                        font-medium 
+                                                                        text-gray-500 
+                                                                        sm:w-40 
+                                                                        sm:flex-shrink-0
+                                                                    "
+                                                                    >
+                                                                        幻想度
+                                                                    </dt>
+                                                                        <input id="default-range" type="range" min="0" max="1" step="0.1" defaultValue={temperature} onChange={value => setTemperature(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                                                        {temperature}
+                                                                </div>
+                                                                <dt
+                                                                    className="
+                                                                        text-sm 
+                                                                        font-medium 
+                                                                        text-gray-500 
+                                                                        sm:w-40 
+                                                                        sm:flex-shrink-0
+                                                                    "
+                                                                >
+                                                                    历史对话轮数
+                                                                </dt>
                                                             </form>
                                                         </dl>
                                                     </div>

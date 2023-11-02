@@ -1,4 +1,4 @@
-import {  Conversation, Message, User, Robot, RobotTemplate } from "@prisma/client";
+import {  Conversation, Knowledge, Message, Robot, User } from "@prisma/client";
 
 export type FullMessageType = Message & {
   sender: User, 
@@ -6,8 +6,13 @@ export type FullMessageType = Message & {
 };
 
 export type FullConversationType = Conversation & { 
-  users: User[],
+  users: FullUserType[],
   messages: FullMessageType[]
+};
+
+export type FullUserType = User & {
+  knowledges: Knowledge[],
+  robot: Robot
 };
 
 // export type FullRobotUserType = User & {
@@ -25,4 +30,4 @@ export type OPENAIFastAPIParamType = {
   stream: boolean,
   presence_penalty: number,
   frequency_penalty: number
-}
+};
