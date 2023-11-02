@@ -121,6 +121,9 @@ model Robot{
   robotTempId        String   @db.ObjectId
   robotTemp RobotTemplate @relation(fields: [robotTempId], references: [id])
 
+  model              String?
+  temperature        Float?
+  n                  Int?
 }
 
 

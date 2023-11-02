@@ -43,7 +43,7 @@ const getRobotAnswer = async (
         //     return "";
         // }
 
-        const robotUserFull = await prisma.user.findMany({
+        const robotUserFull = await prisma.user.findUnique({
             where: {
                 id: robotUserId,
             },
@@ -61,8 +61,8 @@ const getRobotAnswer = async (
         const AIParam: OPENAIFastAPIParamType = {
             model: "chatglm2-6b",
             messages: allMessages,
-            temperature: 0.7,
-            n: 1,
+            temperature: robotUserFull?.robot?.temperature || 0.7,
+            n: robotUserFull?.robot?.n || 1,
             max_tokens: 1024,
             stop: [],
             stream: false,
@@ -70,8 +70,8 @@ const getRobotAnswer = async (
             frequency_penalty: 0
         }
         
-        if (robotUserFull[0].robot) {
-            await axios.post(robotUserFull[0].robot?.robotTemp.apiUrl, AIParam).then((callback) => {
+        if (robotUserFull?.robot) {
+            await axios.post(robotUserFull.robot.robotTemp.apiUrl, AIParam).then((callback) => {
                 if (callback.status === 200)
                     reply = callback.data;
             })
