@@ -30,6 +30,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [confirmOpen, setConfirmOpen] = useState(false);
     const otherUser = useRobotOtherUser(data);
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
+    const [history, setHistory] = useState(otherUser.robot?.n || 5);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
 
@@ -232,6 +233,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                 >
                                                                     历史对话轮数
                                                                 </dt>
+                                                                <input type="number" id="history" min={1} max={10} defaultValue={history} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
                                                             </form>
                                                         </dl>
                                                     </div>
