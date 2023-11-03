@@ -12,11 +12,12 @@ import useActiveList from "@/app/hooks/useActiveList";
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from './ProfileDrawer';
+import { FullUserType } from '@/app/types';
 
 
 interface HeaderProps {
   conversation: Conversation & {
-    users: User[]
+    users: FullUserType[]
   }
 }
 
