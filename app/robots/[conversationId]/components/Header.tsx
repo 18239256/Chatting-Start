@@ -13,6 +13,7 @@ import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from './ProfileDrawer';
 import { FullUserType } from '@/app/types';
+import { BiMask } from 'react-icons/bi';
 
 
 interface HeaderProps {
@@ -80,6 +81,21 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         <div className="flex flex-col">
           <div>{conversation.name || otherUser.name}</div>
           <div className="text-sm font-light text-neutral-500">
+            {statusText}
+          </div>
+        </div>
+        <div className="flex flex-col">
+        <BiMask
+          size={24}
+          onClick={() => setDrawerOpen(true)}
+          className="
+        text-sky-500
+        cursor-pointer
+        hover:text-sky-600
+        transition
+      "
+        />
+        <div className="text-sm font-light text-neutral-500">
             {statusText}
           </div>
         </div>

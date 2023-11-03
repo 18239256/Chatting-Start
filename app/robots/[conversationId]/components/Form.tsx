@@ -82,9 +82,9 @@ const Form =() => {
                     className="
                         rounded-full 
                         p-2 
-                        bg-gray-500 
+                        bg-gray-200 
                         cursor-pointer 
-                        hover:bg-red-600
+                        hover:bg-red-500
                         transition
                     "
                 >
