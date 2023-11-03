@@ -8,11 +8,11 @@ import {
     useForm 
   } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
-import { RiDeleteBin4Fill } from "react-icons/ri";
 import { CldUploadButton } from "next-cloudinary";
 import MessageInput from "./MessageInput";
 import { useState } from "react";
 import DelAllMsgConfirmModal from "./DelAllMsgConfirmModal";
+import { BsFillEraserFill } from "react-icons/bs";
 
 const Form =() => {
 
@@ -88,7 +88,7 @@ const Form =() => {
                         transition
                     "
                 >
-                    <RiDeleteBin4Fill
+                    <BsFillEraserFill
                         size={18}
                         className="text-white"
                     />

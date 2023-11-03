@@ -124,8 +124,20 @@ model Robot{
   model              String?
   temperature        Float?
   n                  Int?
+
+  maskId            String?   @db.ObjectId
+  mask              RobotMask? @relation(fields: [maskId], references: [id])
 }
 
+model RobotMask{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  title              String
+  createdAt          DateTime @default(now())
+
+  description        String
+
+  refRobots         Robot[]
+}
 
 
 enum Role {
