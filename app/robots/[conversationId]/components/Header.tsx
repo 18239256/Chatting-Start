@@ -123,6 +123,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        key={key}
                         onClick={()=>onMaskItemClick(mask)}
                         className={classNames(
                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
