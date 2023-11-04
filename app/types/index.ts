@@ -10,6 +10,11 @@ export type FullConversationType = Conversation & {
   messages: FullMessageType[]
 };
 
+export type FullRobotConversationType = Conversation & { 
+  users: FullUserType[],
+  messages: FullMessageType[]
+};
+
 export type FullUserType = User & {
   knowledges: Knowledge[],
   robot: Robot

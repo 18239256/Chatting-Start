@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
-import { FullConversationType, FullUserType } from "../types";
+import { FullRobotConversationType } from "../types";
 
-const useRobotOtherUser = (conversation: FullConversationType | { users: FullUserType[] }) => {
+const useRobotOtherUser = (conversation: FullRobotConversationType) => {
   const session = useSession();
 
   const otherUser = useMemo(() => {

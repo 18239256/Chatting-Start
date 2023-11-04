@@ -12,7 +12,7 @@ import useActiveList from "@/app/hooks/useActiveList";
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from './ProfileDrawer';
-import { FullUserType } from '@/app/types';
+import { FullRobotConversationType, FullUserType } from '@/app/types';
 import { BiMask } from 'react-icons/bi';
 import getRobotMasks from '@/app/actions/getRobotMasks';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
@@ -25,9 +25,7 @@ function classNames(...classes:any) {
 
 
 interface HeaderProps {
-  conversation: Conversation & {
-    users: FullUserType[]
-  },
+  conversation: FullRobotConversationType,
   masks: RobotMask[]
 }
 
