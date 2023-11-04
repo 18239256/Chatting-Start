@@ -164,7 +164,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                     className={`font-medium  ${checked ? 'text-white' : 'text-gray-800'
                                       }`}
                                   >
-                                    {tmpl.name}{' / '}{tmpl.description}
+                                    {tmpl.name}
                                   </RadioGroup.Label>
                                   <RadioGroup.Description
                                     as="span"
@@ -172,7 +172,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                       }`}
                                   >
                                     <div>
-                                    <span>{tmpl.apiUrl}</span>
+                                    <span>{tmpl.description}</span>
                                     </div>
                                     {tmpl.knowledgeAbility ? 
                                     <div className="
