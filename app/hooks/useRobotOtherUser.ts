@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 import { FullConversationType, FullUserType } from "../types";
 
-const useOtherUser = (conversation: FullConversationType | { users: FullUserType[] }) => {
+const useRobotOtherUser = (conversation: FullConversationType | { users: FullUserType[] }) => {
   const session = useSession();
 
   const otherUser = useMemo(() => {
@@ -16,4 +16,4 @@ const useOtherUser = (conversation: FullConversationType | { users: FullUserType
   return otherUser;
 };
 
-export default useOtherUser;
+export default useRobotOtherUser;

@@ -133,7 +133,7 @@ model RobotMask{
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   title              String
   createdAt          DateTime @default(now())
-
+  content            String
   description        String
 
   refRobots         Robot[]
