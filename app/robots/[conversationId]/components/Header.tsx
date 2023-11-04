@@ -38,14 +38,14 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   }, [conversation, isActive]);
 
   return (
-  <>
-    <ProfileDrawer
+    <>
+      <ProfileDrawer
         data={conversation}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-    />
-    <div 
-      className="
+      />
+      <div
+        className="
         bg-white 
         w-full 
         flex 
@@ -58,11 +58,11 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         items-center 
         shadow-sm
       "
-    >
-      <div className="flex gap-3 items-center">
-        <Link
-          href="/robots" 
-          className="
+      >
+        <div className="flex gap-3 items-center">
+          <Link
+            href="/robots"
+            className="
             lg:hidden 
             block 
             text-sky-500 
@@ -70,49 +70,40 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
             transition 
             cursor-pointer
           "
-        >
-          <HiChevronLeft size={32} />
-        </Link>
-        {conversation.isGroup ? (
-          <AvatarGroup users={conversation.users} />
-        ) : (
-          <Avatar user={otherUser} />
-        )}
-        <div className="flex flex-col">
-          <div>{conversation.name || otherUser.name}</div>
-          <div className="text-sm font-light text-neutral-500">
-            {statusText}
+          >
+            <HiChevronLeft size={32} />
+          </Link>
+          {conversation.isGroup ? (
+            <AvatarGroup users={conversation.users} />
+          ) : (
+            <Avatar user={otherUser} />
+          )}
+          <div className="flex flex-col">
+            <div>{conversation.name || otherUser.name}</div>
+            <div className="text-sm font-light text-neutral-500">
+              {statusText}
+            </div>
+          </div>
+          <div className="flex flex-col px-6">
+            <span className="inline-flex items-center gap-1 rounded-md bg-green-50 px-3 py-1 text-sm font-semibold text-green-600 cursor-pointer" onClick={() => setDrawerOpen(true)}>
+              <BiMask size={26} />
+              体育领域专家
+            </span>
           </div>
         </div>
-        <div className="flex flex-col">
-        <BiMask
-          size={24}
+        <HiEllipsisHorizontal
+          size={32}
           onClick={() => setDrawerOpen(true)}
           className="
-        text-sky-500
-        cursor-pointer
-        hover:text-sky-600
-        transition
-      "
-        />
-        <div className="text-sm font-light text-neutral-500">
-            {statusText}
-          </div>
-        </div>
-      </div>
-      <HiEllipsisHorizontal
-        size={32}
-        onClick={() => setDrawerOpen(true)}
-        className="
           text-sky-500
           cursor-pointer
           hover:text-sky-600
           transition
         "
-      />
-    </div>
+        />
+      </div>
     </>
   );
 }
- 
+
 export default Header;
