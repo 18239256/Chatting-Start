@@ -12,14 +12,12 @@ import ConfirmModal from './ConfirmModal';
 import AvatarGroup from '@/app/components/AvatarGroup';
 import useActiveList from '@/app/hooks/useActiveList';
 
-import { FullUserType } from "@/app/types";
+import { FullRobotConversationType, FullUserType } from "@/app/types";
 
 interface ProfileDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    data: Conversation & {
-        users: FullUserType[]
-    }
+    data: FullRobotConversationType
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
