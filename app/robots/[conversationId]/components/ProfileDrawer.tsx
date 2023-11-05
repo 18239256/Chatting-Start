@@ -17,7 +17,9 @@ import { FullRobotConversationType, FullUserType } from "@/app/types";
 interface ProfileDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    data: FullRobotConversationType
+    data: Conversation & {
+        users: FullUserType[]
+    }
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({

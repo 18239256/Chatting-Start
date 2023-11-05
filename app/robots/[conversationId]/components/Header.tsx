@@ -4,7 +4,7 @@ import { HiChevronLeft } from 'react-icons/hi'
 import { HiChevronDown, HiEllipsisHorizontal } from 'react-icons/hi2';
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import { Conversation, RobotMask, User } from "@prisma/client";
+import { Conversation, Knowledge, RobotMask, User } from "@prisma/client";
 
 import useOtherUser from "@/app/hooks/useOtherUser";
 import useActiveList from "@/app/hooks/useActiveList";
@@ -25,7 +25,9 @@ function classNames(...classes:any) {
 
 
 interface HeaderProps {
-  conversation: FullRobotConversationType,
+  conversation: Conversation & {
+    users: FullUserType[]
+  }
   masks: RobotMask[]
 }
 

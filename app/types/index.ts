@@ -16,8 +16,7 @@ export type FullRobotConversationType = Conversation & {
 };
 
 export type FullUserType = User & {
-  knowledges: Knowledge[],
-  robot: Robot
+  robot: Robot | null
 };
 
 // export type FullRobotUserType = User & {

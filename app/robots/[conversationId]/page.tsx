@@ -15,7 +15,9 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     const conversation = await getRobotConversationById(params.conversationId);
     const messages = await getMessages(params.conversationId);
     const masks = await getRobotMasks();
-
+    
+    console.log("conversation = >" ,conversation);
+    
     if (!conversation) {
         return (
           <div className="lg:pl-80 h-full">
