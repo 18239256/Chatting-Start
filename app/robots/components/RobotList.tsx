@@ -13,6 +13,7 @@ import RobotChatModal from "./RobotChatModal";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
 import { FaRobot } from "react-icons/fa6";
+import { BiSolidMessageRoundedAdd } from "react-icons/bi";
 
 
 interface RobotListProps {
@@ -122,14 +123,15 @@ const RobotList: React.FC<RobotListProps> = ({
                 className="
                 rounded-full 
                 p-2 
-                bg-gray-100 
-                text-gray-600 
+                bg-sky-500 
+                hover:bg-sky-600 
+                text-white
                 cursor-pointer 
                 hover:opacity-75 
                 transition
               "
               >
-                <FaRobot size={20} />
+                <BiSolidMessageRoundedAdd size={20} />
               </div>
             </div>
             {items.map((item) => (
