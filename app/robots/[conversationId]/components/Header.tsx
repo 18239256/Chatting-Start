@@ -17,6 +17,8 @@ import { BiMask } from 'react-icons/bi';
 import getRobotMasks from '@/app/actions/getRobotMasks';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Menu, Transition } from '@headlessui/react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -48,8 +50,11 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
   }, [conversation, isActive]);
 
   const onMaskItemClick = (maskItem: RobotMask) => {
-    
-    return setMask(maskItem.title);
+    axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem.id})
+        .then(() => setMask(maskItem.title))
+        .catch(() => toast.error('出错了!'))
+        .finally();
+    return
   };
 
   return (

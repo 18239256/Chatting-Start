@@ -10,15 +10,33 @@ export async function POST(
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
-      name,
-      image,
+      robotId,
+      temperature,
+      n,
+      model,
+      robotTempId,
+      maskId
     } = body;
 
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+    console.log(body);
+    
+    const updateRobot = await prisma.robot.update({
+      where: {
+        id: robotId,
+      },
+      data: {
+        temperature,
+        n,
+        model,
+        robotTempId,
+        maskId
+      },
+    })
 
-    return NextResponse.json({})
+    return NextResponse.json(updateRobot);
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
     return new NextResponse('Error', { status: 500 });
