@@ -13,6 +13,10 @@ const getRobotAnswer = async (
     try {
         const currentUser = await getCurrentUser();
         
+        if (!currentUser?.id) {
+            return "";
+        }
+        
         const messages = await getMessages(conversationId);
 
         let allMessages: any[] = [];
@@ -37,12 +41,6 @@ const getRobotAnswer = async (
             content: message
         });
 
-       
-
-        // if (!currentUser?.id) {
-        //     return "";
-        // }
-
         const robotUserFull = await prisma.user.findUnique({
             where: {
                 id: robotUserId,
@@ -50,11 +48,20 @@ const getRobotAnswer = async (
             include:{
                 robot: {
                     include:{
-                        robotTemp: true
+                        robotTemp: true,
+                        mask: true
                     }
                 }
             }
         });
+
+        //Insert mask infor into message history
+        allMessages.splice(0, 0, {
+            role: 'system',
+            content: robotUserFull?.robot?.mask?.content
+        });
+
+        console.log('allMessages==>', allMessages);
 
         let reply: string ="";
         

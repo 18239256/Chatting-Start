@@ -22,7 +22,13 @@ export async function POST(
 
     const newMessage = await prisma.message.create({
       include: {
-        seen: true,
+        seen: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
         sender: {
           select:{
             id: true,
@@ -64,10 +70,18 @@ export async function POST(
         }
       },
       include: {
-        users: true,
+        users: {
+          select:{
+            id: true,
+            name: true,
+            email: true
+          }
+        },
         messages: {
-          include: {
-            seen: true
+          select: {
+            id: true,
+            body: true,
+            image: true
           }
         }
       }
