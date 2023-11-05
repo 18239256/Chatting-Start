@@ -8,7 +8,6 @@ import useConversation from "./useConversation";
 
 const useRoutes = () => {
   const pathname = usePathname();
-  const { conversationId } = useConversation();
 
   const routes = useMemo(() => [
     { 
@@ -41,7 +40,7 @@ const useRoutes = () => {
       href: '#',
       icon: HiArrowLeftOnRectangle, 
     }
-  ], [pathname, conversationId]);
+  ], [pathname]);
 
   return routes.slice(2,5);
 };
