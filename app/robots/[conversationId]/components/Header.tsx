@@ -19,6 +19,7 @@ import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -34,10 +35,11 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
+
+  const router = useRouter();
   const robotUser = useRobotOtherUser(conversation);
   const [mask, setMask] = useState(masks.find((m) => m.id === robotUser.robot?.maskId)?.title || "");
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   const { members } = useActiveList();
   const isActive = members.indexOf(robotUser?.email!) !== -1;
 
@@ -51,7 +53,9 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
 
   const onMaskItemClick = (maskItem: RobotMask) => {
     axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem.id})
-        .then(() => setMask(maskItem.title))
+        .then(() => {setMask(maskItem.title);
+          router.refresh();
+          })
         .catch(() => toast.error('出错了!'))
         .finally();
     return

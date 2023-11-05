@@ -21,8 +21,7 @@ export async function POST(
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    console.log(body);
-    
+
     const updateRobot = await prisma.robot.update({
       where: {
         id: robotId,
