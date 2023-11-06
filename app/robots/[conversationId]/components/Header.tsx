@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           })
         .catch((err) => toast.error('出错了!',err))
         .finally();
-    return
+    return;
   };
 
   return (
@@ -151,10 +151,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
               <Menu.Item>
                 {({ active }) => (
                   <button
-<<<<<<< HEAD
                     onClick={()=>onMaskItemClick()}
-=======
->>>>>>> 22f10555863e67bec9632dbc75e8c145e5e668a3
                     className={`${
                       active ? ' bg-sky-600 text-gray-100 justify-center' : 'inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer justify-center'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
