@@ -38,13 +38,15 @@ const Form =() => {
         axios.post('/api/messages', {
             ...data,
             conversationId: conversationId
-        });
+        }).then(()=>
+            //triggle robot to reply
+            axios.post('/api/robot/robottalk', {
+                ...data,
+                conversationId: conversationId
+            })
+        );
 
-        //triggle robot to reply
-        axios.post('/api/robot/robottalk', {
-            ...data,
-            conversationId: conversationId
-        })
+        
     };
 
     const handleUpload = (result: any) => {

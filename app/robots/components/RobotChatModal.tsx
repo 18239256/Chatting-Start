@@ -85,13 +85,12 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
           // Create new 1 by 1 conversation by new robot user
           axios.post('/api/conversations', { userId: callback?.data.userId })
             .then(() => {
+              router.push('/robots')
               router.refresh();
               onClose();
             })
             .catch(() => toast.error('Something went wrong!'))
             .finally(() => setIsLoading(false));
-
-          router.push('/robots')
         }
       })
       .catch(() => toast.error('出错了!'))

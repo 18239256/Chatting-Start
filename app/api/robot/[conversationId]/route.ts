@@ -25,7 +25,14 @@ export async function DELETE(
         id: conversationId
       },
       include: {
-        users: true
+        users: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+            isRobot: true
+          }
+        }
       }
     });
 

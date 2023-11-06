@@ -42,7 +42,13 @@ export async function POST(
           }
         },
         include: {
-          users: true,
+          users: {
+            select:{
+              id: true,
+              name: true,
+              email: true
+            }
+          }
         }
       });
 
@@ -93,7 +99,13 @@ export async function POST(
         }
       },
       include: {
-        users: true
+        users: {
+          select:{
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       }
     });
 

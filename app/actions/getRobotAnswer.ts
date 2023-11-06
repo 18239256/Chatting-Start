@@ -36,10 +36,12 @@ const getRobotAnswer = async (
                 })
             }
         }
-        allMessages.push({
-            role : 'user',
-            content: message
-        });
+        
+        if (allMessages.slice(-1)[0].content !== message)
+            allMessages.push({
+                role: 'user',
+                content: message
+            });
 
         const robotUserFull = await prisma.user.findUnique({
             where: {
@@ -58,10 +60,10 @@ const getRobotAnswer = async (
         //Insert mask infor into message history
         allMessages.splice(0, 0, {
             role: 'system',
-            content: robotUserFull?.robot?.mask?.content
+            content: robotUserFull?.robot?.mask?.content || ''
         });
 
-        console.log('allMessages==>', allMessages);
+        console.log('<==messages history==>\n', allMessages);
 
         let reply: string ="";
         
