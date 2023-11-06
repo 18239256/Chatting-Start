@@ -51,12 +51,12 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
     return isActive ? '在线' : '离线'
   }, [conversation, isActive]);
 
-  const onMaskItemClick = (maskItem: RobotMask) => {
-    axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem.id})
-        .then(() => {setMask(maskItem.title);
+  const onMaskItemClick = (maskItem?: RobotMask) => {
+    axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem?.id || null})
+        .then(() => {setMask(maskItem?.title || '');
           router.refresh();
           })
-        .catch(() => toast.error('出错了!'))
+        .catch((err) => toast.error('出错了!',err))
         .finally();
     return
   };
@@ -110,10 +110,10 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           </div>
           <Menu as="div" className="relative inline-block text-left">
             <div className="flex flex-col px-6">
-              <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-green-50 px-3 py-1 text-sm font-semibold text-green-600 cursor-pointer" >
+              <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer" >
                 <BiMask size={26} />
                 {mask}
-                <HiChevronDown className="-mr-1 h-5 w-5 text-green-600" aria-hidden="true" />
+                <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
               </Menu.Button>
             </div>
 
@@ -127,7 +127,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
               leaveTo="transform opacity-0 scale-95"
             >
               <Menu.Items className="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
+                <div className="px-1 py-1">
                 {masks.map((mask) => (
                   <Menu.Item key={mask.id}>
                     {({ active }) => (
@@ -138,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
                           'block px-4 py-2 text-md text-justify'
                         )}
                       >
-                        <div className='inline-flex items-center gap-1 rounded-md bg-green-50 py-1 text-sm font-semibold text-green-600'>
+                        <div className='inline-flex items-center gap-1 rounded-md bg-blue-50 py-1 text-sm font-semibold text-sky-500'>
                           <BiMask size={26} />
                           {mask.title}</div>
                         <div className='text-gray-400'>{mask.content}</div>
@@ -146,6 +146,20 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
                     )}
                   </Menu.Item>
                 ))}
+              </div>
+              <div className="px-1 py-1">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={()=>onMaskItemClick()}
+                    className={`${
+                      active ? ' bg-sky-600 text-gray-100 justify-center' : 'inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer justify-center'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                  >
+                    清除
+                  </button>
+                )}
+              </Menu.Item>
               </div>
               </Menu.Items>
             </Transition>
