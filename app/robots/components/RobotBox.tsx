@@ -64,7 +64,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             return lastMessage?.body
         }
 
-        return 'Started a conversation';
+        return '请开始对话';
     }, [lastMessage]);
 
     return (
