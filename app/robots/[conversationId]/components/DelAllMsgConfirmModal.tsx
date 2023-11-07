@@ -15,28 +15,30 @@ interface DelAllMsgConfirmModalProps {
   onClose: () => void;
 }
 
-const DelAllMsgConfirmModal: React.FC<DelAllMsgConfirmModalProps> = ({ 
-  isOpen, 
-  onClose 
+const DelAllMsgConfirmModal: React.FC<DelAllMsgConfirmModalProps> = ({
+  isOpen,
+  onClose
 }) => {
+  const router = useRouter();
   const { conversationId } = useConversation();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const onDelete = useCallback(() => {
     setIsLoading(true);
 
     axios.post(`/api/messages/${conversationId}/deleteall`)
-    .then(() => {
-      onClose();
-    })
-    .catch(() => toast.error('出错了!'))
-    .finally(() => setIsLoading(false))
+      .then(() => {
+        onClose();
+        router.refresh();
+      })
+      .catch(() => toast.error('出错了!'))
+      .finally(() => setIsLoading(false))
   }, [conversationId, onClose]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="sm:flex sm:items-start">
-        <div 
+        <div
           className="
             mx-auto 
             flex 
@@ -52,12 +54,12 @@ const DelAllMsgConfirmModal: React.FC<DelAllMsgConfirmModalProps> = ({
             sm:w-10
           "
         >
-          <FiAlertTriangle 
-            className="h-6 w-6 text-red-600" 
+          <FiAlertTriangle
+            className="h-6 w-6 text-red-600"
             aria-hidden="true"
           />
         </div>
-        <div 
+        <div
           className="
             mt-3 
             text-center 
@@ -66,8 +68,8 @@ const DelAllMsgConfirmModal: React.FC<DelAllMsgConfirmModalProps> = ({
             sm:text-left
           "
         >
-          <Dialog.Title 
-            as="h3" 
+          <Dialog.Title
+            as="h3"
             className="text-base font-semibold leading-6 text-gray-900"
           >
             删除所有消息
