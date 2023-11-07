@@ -51,14 +51,14 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
     return isActive ? '在线' : '离线'
   }, [conversation, isActive]);
 
-  const onMaskItemClick = (maskItem: RobotMask) => {
-    axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem.id})
-        .then(() => {setMask(maskItem.title);
+  const onMaskItemClick = (maskItem?: RobotMask) => {
+    axios.post('/api/robot/robotupdate', {robotId:robotUser.robot?.id,maskId:maskItem?.id || null})
+        .then(() => {setMask(maskItem?.title || '');
           router.refresh();
           })
-        .catch(() => toast.error('出错了!'))
+        .catch((err) => toast.error('出错了!',err))
         .finally();
-    return
+    return;
   };
 
   return (
@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           </div>
           <Menu as="div" className="relative inline-block text-left">
             <div className="flex flex-col px-6">
-              <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer" >
+              <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm sm:text-xs  font-semibold text-sky-500 cursor-pointer" >
                 <BiMask size={26} />
                 {mask}
                 <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
@@ -151,6 +151,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
               <Menu.Item>
                 {({ active }) => (
                   <button
+                    onClick={()=>onMaskItemClick()}
                     className={`${
                       active ? ' bg-sky-600 text-gray-100 justify-center' : 'inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer justify-center'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
