@@ -219,7 +219,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                 <div className="space-y-12">
                                                                     <div className="col-span-full">
                                                                         <label htmlFor="temprange" className="block text-sm font-medium leading-6 text-gray-500">
-                                                                            幻想度 <p className="text-sky-600">{temperature}</p>
+                                                                            幻想度 <b className="text-sky-600">{temperature}</b>
                                                                         </label>
                                                                         <input id="default-range" type="range" min="0" max="1" step="0.1" defaultValue={temperature} onChange={value => setTemperature(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
                                                                     </div>
