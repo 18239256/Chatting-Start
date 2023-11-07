@@ -8,7 +8,7 @@ const useRobotOtherUser = (conversation: FullRobotConversationType | { users: Fu
   const otherUser = useMemo(() => {
     const currentUserEmail = session.data?.user?.email;
 
-    const otherUser = conversation.users.filter((user) => user.email !== currentUserEmail);
+    const otherUser = conversation.users.filter((user) => user.isRobot == true);
 
     return otherUser[0];
   }, [session.data?.user?.email, conversation.users]);

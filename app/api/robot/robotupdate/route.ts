@@ -12,7 +12,7 @@ export async function POST(
     const {
       robotId,
       temperature,
-      n,
+      historyRound,
       model,
       robotTempId,
       maskId
@@ -28,7 +28,7 @@ export async function POST(
       },
       data: {
         temperature,
-        n,
+        historyRound,
         model,
         robotTempId,
         maskId

@@ -5,14 +5,16 @@ import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Dialog, Transition } from '@headlessui/react';
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { IoClose, IoTrash } from 'react-icons/io5';
 
 import ConfirmModal from './ConfirmModal';
 import AvatarGroup from '@/app/components/AvatarGroup';
 import useActiveList from '@/app/hooks/useActiveList';
 
-import { FullRobotConversationType, FullUserType } from "@/app/types";
+import {FullUserType } from "@/app/types";
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -33,6 +35,13 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
+
+    useEffect(() => {
+        axios.post('/api/robot/robotupdate', {robotId: otherUser.robot?.id, temperature: temperature, historyRound: history })
+            .then()
+            .catch((err) => toast.error('保存修改时出错了!', err))
+            .finally();
+    }, [history, temperature]);
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
@@ -210,7 +219,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                 <div className="space-y-12">
                                                                     <div className="col-span-full">
                                                                         <label htmlFor="temprange" className="block text-sm font-medium leading-6 text-gray-500">
-                                                                            幻想度 <a className="text-sky-600">{temperature}</a>
+                                                                            幻想度 <p className="text-sky-600">{temperature}</p>
                                                                         </label>
                                                                         <input id="default-range" type="range" min="0" max="1" step="0.1" defaultValue={temperature} onChange={value => setTemperature(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
                                                                     </div>
@@ -218,7 +227,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                         <label htmlFor="history" className="block text-sm font-medium leading-6 text-gray-500">
                                                                             历史对话轮数
                                                                         </label>
-                                                                        <input type="number" id="history" min={1} max={10} defaultValue={history} onChange={value => setTemperature(Number(value.target.value) || 0)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
+                                                                        <input type="number" id="history" min={1} max={10} defaultValue={history} onChange={value => setHistory(Number(value.target.value) || 0)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
                                                                     </div>
                                                                 </div>
                                                             </form>

@@ -1,5 +1,4 @@
 import getCurrentUser from "./getCurrentUser";
-// import { User } from "@prisma/client";
 import prisma from "@/app/libs/prismadb";
 import axios from "axios";
 import getMessages from "./getMessages";
@@ -19,8 +18,22 @@ const getRobotAnswer = async (
         
         const messages = await getMessages(conversationId);
 
-        let allMessages: any[] = [];
-        for (let index = (messages.length>6?messages.length- 6 : 0); index < messages.length; index++) {
+        const robotUserFull = await prisma.user.findUnique({
+            where: {
+                id: robotUserId,
+            },
+            include:{
+                robot: {
+                    include:{
+                        robotTemp: true,
+                        mask: true,
+                    }
+                }
+            }
+        });
+        let allMessages: any[] = [];        
+        let historyRound:number = robotUserFull?.robot?.historyRound || 6;
+        for (let index = (messages.length>historyRound? messages.length - historyRound : 0); index < messages.length; index++) {
             const msg = messages[index];
             if(msg.sender.isRobot)
             {
@@ -43,20 +56,7 @@ const getRobotAnswer = async (
                 content: message
             });
 
-        const robotUserFull = await prisma.user.findUnique({
-            where: {
-                id: robotUserId,
-            },
-            include:{
-                robot: {
-                    include:{
-                        robotTemp: true,
-                        mask: true
-                    }
-                }
-            }
-        });
-
+        
         //Insert mask infor into message history
         allMessages.splice(0, 0, {
             role: 'system',
