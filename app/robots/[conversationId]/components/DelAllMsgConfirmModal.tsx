@@ -33,7 +33,7 @@ const DelAllMsgConfirmModal: React.FC<DelAllMsgConfirmModalProps> = ({
       })
       .catch(() => toast.error('出错了!'))
       .finally(() => setIsLoading(false))
-  }, [conversationId, onClose]);
+  }, [conversationId, onClose, router]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
