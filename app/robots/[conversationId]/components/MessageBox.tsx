@@ -9,6 +9,8 @@ import Avatar from "@/app/components/Avatar";
 import { format } from "date-fns";
 import ImageModal from "./ImageModal";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import gfm from 'remark-gfm'
 
 interface MessageBoxProps {
     data: FullMessageType;
@@ -70,7 +72,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 "
               />
             ) : (
-              <div>{data.body}</div>
+              <div><ReactMarkdown remarkPlugins={[gfm]}>{data.body}</ReactMarkdown></div>
             )}
           </div>
           {isLast && isOwn && seenList.length > 0 && (
