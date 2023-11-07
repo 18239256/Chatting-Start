@@ -155,7 +155,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
                       active ? ' bg-sky-600 text-gray-100 justify-center' : 'inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 text-sm font-semibold text-sky-500 cursor-pointer justify-center'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                   >
-                    清除
+                    清  除
                   </button>
                 )}
               </Menu.Item>
