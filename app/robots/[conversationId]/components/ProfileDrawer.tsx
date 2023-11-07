@@ -41,7 +41,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             .then()
             .catch((err) => toast.error('保存修改时出错了!', err))
             .finally();
-    }, [history, temperature]);
+    }, [history, temperature, otherUser]);
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
