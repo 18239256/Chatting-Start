@@ -30,7 +30,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [confirmOpen, setConfirmOpen] = useState(false);
     const otherUser = useRobotOtherUser(data);
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
-    const [history, setHistory] = useState(otherUser.robot?.n || 5);
+    const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
 
@@ -178,7 +178,6 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                             )}
                                                             {!data.isGroup && (
                                                                 <>
-                                                                    <hr />
                                                                     <div>
                                                                         <dt
                                                                             className="
@@ -206,34 +205,22 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                     </div>
                                                                 </>
                                                             )}
+                                                            <hr />
                                                             <form>
-                                                                <div>
-                                                                    <dt
-                                                                        className="
-                                                                        text-sm 
-                                                                        font-medium 
-                                                                        text-gray-500 
-                                                                        sm:w-40 
-                                                                        sm:flex-shrink-0
-                                                                    "
-                                                                    >
-                                                                        幻想度
-                                                                    </dt>
+                                                                <div className="space-y-12">
+                                                                    <div className="col-span-full">
+                                                                        <label htmlFor="temprange" className="block text-sm font-medium leading-6 text-gray-500">
+                                                                            幻想度 <a className="text-sky-600">{temperature}</a>
+                                                                        </label>
                                                                         <input id="default-range" type="range" min="0" max="1" step="0.1" defaultValue={temperature} onChange={value => setTemperature(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
-                                                                        {temperature}
+                                                                    </div>
+                                                                    <div className="col-span-full">
+                                                                        <label htmlFor="history" className="block text-sm font-medium leading-6 text-gray-500">
+                                                                            历史对话轮数
+                                                                        </label>
+                                                                        <input type="number" id="history" min={1} max={10} defaultValue={history} onChange={value => setTemperature(Number(value.target.value) || 0)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
+                                                                    </div>
                                                                 </div>
-                                                                <dt
-                                                                    className="
-                                                                        text-sm 
-                                                                        font-medium 
-                                                                        text-gray-500 
-                                                                        sm:w-40 
-                                                                        sm:flex-shrink-0
-                                                                    "
-                                                                >
-                                                                    历史对话轮数
-                                                                </dt>
-                                                                <input type="number" id="history" min={1} max={10} defaultValue={history} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
                                                             </form>
                                                         </dl>
                                                     </div>

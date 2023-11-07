@@ -71,7 +71,7 @@ const getRobotAnswer = async (
             model: "chatglm2-6b",
             messages: allMessages,
             temperature: robotUserFull?.robot?.temperature || 0.7,
-            n: robotUserFull?.robot?.n || 1,
+            n: robotUserFull?.robot?.historyRound || 1,
             max_tokens: 1024,
             stop: [],
             stream: false,

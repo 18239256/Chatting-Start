@@ -123,7 +123,7 @@ model Robot{
 
   model              String?
   temperature        Float?
-  n                  Int?
+  historyRound       Int?
 
   maskId            String?   @db.ObjectId
   mask              RobotMask? @relation(fields: [maskId], references: [id])
