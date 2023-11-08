@@ -6,15 +6,13 @@ import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { Conversation, Knowledge, RobotMask, User } from "@prisma/client";
 
-import useOtherUser from "@/app/hooks/useOtherUser";
 import useActiveList from "@/app/hooks/useActiveList";
 
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from './ProfileDrawer';
-import { FullRobotConversationType, FullUserType } from '@/app/types';
+import { FullUserType } from '@/app/types';
 import { BiMask } from 'react-icons/bi';
-import getRobotMasks from '@/app/actions/getRobotMasks';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
@@ -24,8 +22,6 @@ import { useRouter } from 'next/navigation';
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
 }
-
-
 
 interface HeaderProps {
   conversation: Conversation & {
