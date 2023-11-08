@@ -42,7 +42,7 @@ const useRoutes = () => {
     }
   ], [pathname]);
 
-  return routes.slice(2,5);
+  return routes.slice(1,5);
 };
 
 export default useRoutes;
