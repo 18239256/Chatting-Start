@@ -85,7 +85,7 @@ const getRobotAnswer = async (
                     reply = callback.data;
             })
         }
-        console.log('reply: ', reply);
+        console.log('AI says: ', reply);
 
         return reply;
 
