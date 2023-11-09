@@ -11,14 +11,14 @@ import { find } from "lodash";
 import { Knowledge } from "@prisma/client";
 
 interface BodyProps {
-    knowledge:Knowledge
+    files: string[]
 }
   
-const Body: React.FC<BodyProps> = ({ knowledge = [] }) => {
-    
+const Body: React.FC<BodyProps> = ({ files = [] }) => {
+    console.log('files', files);
     return (
         <div className="flex-1 overflow-y-auto">
-           knowledge body
+           {files}
         </div>
     )
 }

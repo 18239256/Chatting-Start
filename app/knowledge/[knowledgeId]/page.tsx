@@ -24,11 +24,12 @@ const ConversationId = async ({ params }: { params: IParams }) => {
 
     const fileList = await getKnowledgeFileList(knowledge?.realName);
 
+    console.log('fileList', fileList);
     return ( 
     <div className="lg:pl-80 h-full">
         <div className="h-full flex flex-col">
             <Header knowledge={knowledge} />
-            <Body knowledge={knowledge} />
+            <Body files={fileList} />
       </div>
     </div>
   );

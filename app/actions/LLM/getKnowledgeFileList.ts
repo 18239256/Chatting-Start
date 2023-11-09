@@ -6,10 +6,11 @@ const getKnowledgeFileList = async (
     knowledgeId: string
 ) => {
     try {
+        let ret : string[] = [];
         const currentUser = await getCurrentUser();
         
         if (!currentUser?.id) {
-            return "";
+            return ret;
         }
         
 
@@ -28,15 +29,14 @@ const getKnowledgeFileList = async (
                 }
             });
 
-            axios.get(apiUrl).then((callback) => {
-                if (callback.status === 200 && callback.data.code === 200)
-                    console.log('LLM says: ', callback.data.data);
-                return callback.data;
-            })
+            const result = await axios.get(apiUrl);
+            if(result.status === 200 && result.data.code === 200)
+                    ret = result.data.data;
         }
+        return ret;
 
     } catch (error: any) {
-        return "";
+        return [];
     }
 };
 

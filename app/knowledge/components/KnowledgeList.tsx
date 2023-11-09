@@ -13,7 +13,6 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
     items,
 }) => {
     const { knowledgeId, isOpen } = useKnowledge();
-    console.log('isOpen:', isOpen);
     return (<aside
         className={clsx(`
         fixed 
