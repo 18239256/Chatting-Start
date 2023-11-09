@@ -44,6 +44,7 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
             {items.map((item, index) => (
                 <KnowledgeBox key={item.id}
                     data={item}
+                    selected={knowledgeId === item.id}
                 />
             ))}
         </div>
