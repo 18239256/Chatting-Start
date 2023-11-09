@@ -1,38 +1,14 @@
 'use client';
 
 import { HiChevronLeft } from 'react-icons/hi'
-import { HiEllipsisHorizontal } from 'react-icons/hi2';
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Conversation, User } from "@prisma/client";
-
-import useOtherUser from "@/app/hooks/useOtherUser";
-import useActiveList from "@/app/hooks/useActiveList";
-
-import Avatar from "@/app/components/Avatar";
-import AvatarGroup from "@/app/components/AvatarGroup";
-
+import { Knowledge} from "@prisma/client";
 
 interface HeaderProps {
-  conversation: Conversation & {
-    users: User[]
-  }
+  knowledge:Knowledge
 }
 
-const Header: React.FC<HeaderProps> = ({ conversation }) => {
-  const otherUser = useOtherUser(conversation);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const { members } = useActiveList();
-  const isActive = members.indexOf(otherUser?.email!) !== -1;
-
-  const statusText = useMemo(() => {
-    if (conversation.isGroup) {
-      return `${conversation.users.length} 个成员`;
-    }
-
-    return isActive ? '在线' : '离线'
-  }, [conversation, isActive]);
+const Header: React.FC<HeaderProps> = ({ knowledge }) => {
 
   return (
   <>
@@ -53,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
     >
       <div className="flex gap-3 items-center">
         <Link
-          href="/conversations" 
+          href="/knowledge" 
           className="
             lg:hidden 
             block 
@@ -65,28 +41,14 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         >
           <HiChevronLeft size={32} />
         </Link>
-        {conversation.isGroup ? (
-          <AvatarGroup users={conversation.users} />
-        ) : (
-          <Avatar user={otherUser} />
-        )}
         <div className="flex flex-col">
-          <div>{conversation.name || otherUser.name}</div>
+          <div>{knowledge.displayName}</div>
           <div className="text-sm font-light text-neutral-500">
-            {statusText}
+            {knowledge.realName}
           </div>
         </div>
       </div>
-      <HiEllipsisHorizontal
-        size={32}
-        onClick={() => setDrawerOpen(true)}
-        className="
-          text-sky-500
-          cursor-pointer
-          hover:text-sky-600
-          transition
-        "
-      />
+     
     </div>
     </>
   );

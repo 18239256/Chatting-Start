@@ -1,6 +1,6 @@
 import { Knowledge } from "@prisma/client";
 import getCurrentUser from "../actions/getCurrentUser";
-import getKnowledges from "../actions/getKnowledges";
+import getKnowledgesByUserId from "../actions/getKnowledgesByUserId";
 import Sidebar from "../components/sidebar/Sidebar";
 import KnowledgeList from "./components/KnowledgeList";
 
@@ -13,7 +13,7 @@ export default async function KnowledgeLayout({
   const user = await getCurrentUser();
   let knowledges: Knowledge[];
   if(user)
-    knowledges = await getKnowledges(user?.id);
+    knowledges = await getKnowledgesByUserId(user?.id);
   else
     knowledges=[]
   return (

@@ -1,19 +1,17 @@
-import getConversationById from "@/app/actions/getConversationById";
-import getMessages from "@/app/actions/getMessages";
 import EmptyState from "@/app/components/EmptyState";
 import Body from "./components/Body";
 import Header from "./components/Header";
+import getKnowledgesById from "@/app/actions/getKnowledgesById";
 
 
 interface IParams {
-  conversationId: string;
+  knowledgeId: string;
 }
 
 const ConversationId = async ({ params }: { params: IParams }) => {
-    const conversation = await getConversationById(params.conversationId);
-    const messages = await getMessages(params.conversationId);
+    const knowledge = await getKnowledgesById(params.knowledgeId);
 
-    if (!conversation) {
+    if (!knowledge) {
         return (
           <div className="lg:pl-80 h-full">
             <div className="h-full flex flex-col">
@@ -26,8 +24,8 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     return ( 
     <div className="lg:pl-80 h-full">
         <div className="h-full flex flex-col">
-            <Header conversation={conversation} />
-            <Body initialMessages={messages} />
+            <Header knowledge={knowledge} />
+            <Body knowledge={knowledge} />
       </div>
     </div>
   );
