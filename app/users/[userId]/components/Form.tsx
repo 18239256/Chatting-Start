@@ -9,9 +9,9 @@ import {
   } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { CldUploadButton } from "next-cloudinary";
-import MessageInput from "./MessageInput";
+// import MessageInput from "./MessageInput";
 import { useState } from "react";
-import DelAllMsgConfirmModal from "./DelAllMsgConfirmModal";
+// import DelAllMsgConfirmModal from "./DelAllMsgConfirmModal";
 import { BsFillEraserFill } from "react-icons/bs";
 
 const Form =() => {
@@ -58,10 +58,10 @@ const Form =() => {
 
     return (
         <>
-            <DelAllMsgConfirmModal
+            {/* <DelAllMsgConfirmModal
                 isOpen={confirmOpen}
                 onClose={() => setConfirmOpen(false)}
-            />
+            /> */}
             <div className="
         py-4 
         px-4 
@@ -99,13 +99,13 @@ const Form =() => {
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex items-center gap-2 lg:gap-4 w-full"
                 >
-                    <MessageInput
+                    {/* <MessageInput
                         id="message"
                         register={register}
                         errors={errors}
                         required
                         placeholder="编写一条消息"
-                    />
+                    /> */}
                     <button
                         type="submit"
                         className="
