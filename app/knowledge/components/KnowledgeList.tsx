@@ -40,7 +40,7 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
             </div>
             {items.map((item, index) => (
                 <KnowledgeBox key={index}
-                    data={item.displayName}
+                    data={item}
                 />
             ))}
         </div>
