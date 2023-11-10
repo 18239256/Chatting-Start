@@ -35,3 +35,9 @@ export type OPENAIFastAPIParamType = {
   presence_penalty: number,
   frequency_penalty: number
 };
+
+export type knowledgeFileArrayType={
+  index: number,
+  fileName: string,
+  ext: string,
+};
