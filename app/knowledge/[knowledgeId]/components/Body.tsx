@@ -197,6 +197,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                               "border-0",
                               "text-black/90 dark:text-white/90",
                               "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+                              "focus:ring-0",
                             ],
                             innerWrapper: "bg-transparent",
                             inputWrapper: [
@@ -252,7 +253,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                     <label className="flex items-center text-default-400 text-small">
                         每页行数:
                         <select
-                            className="bg-transparent outline-none text-default-400 text-small border-0"
+                            className="bg-transparent outline-none text-default-400 text-small border-0 focus:ring-0"
                             onChange={onRowsPerPageChange}
                         >
                             <option value="5">5</option>
