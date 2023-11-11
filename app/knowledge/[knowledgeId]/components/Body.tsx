@@ -273,7 +273,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                         ? "选中所有文件"
                         : `${selectedKeys.size} / ${filteredItems.length} 被选择`}
                 </span>
-                <Pagination
+                {pages > 1 ? (<><Pagination
                     isCompact
                     showControls
                     showShadow
@@ -281,15 +281,14 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                     page={page}
                     total={pages}
                     onChange={setPage}
-                />
-                <div className="hidden sm:flex w-[30%] justify-end gap-2">
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                        上一页
-                    </Button>
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-                        下一页
-                    </Button>
-                </div>
+                /> <div className="hidden sm:flex w-[30%] justify-end gap-2">
+                        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+                            上一页
+                        </Button>
+                        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+                            下一页
+                        </Button>
+                    </div></>) : ""}
             </div>
         );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
