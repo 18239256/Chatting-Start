@@ -111,7 +111,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
         return filteredFiles;
       }, [filesArray, filterValue, statusFilter]);
 
-    const pages = Math.ceil(filesArray.length / rowsPerPage);
+    const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
