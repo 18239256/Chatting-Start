@@ -179,11 +179,34 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
 
     const topContent = React.useMemo(() => {
         return (
-            <div className="flex flex-col gap-4">
-                <div className="flex justify-between gap-3 items-end">
+            <div className="flex flex-col gap-4 pt-4 ">
+                <div className="flex justify-between gap-3 items-stretch">
                     <Input
                         isClearable
-                        className="w-full sm:max-w-[44%]"
+                        classNames={{
+                            label: "text-black/50 dark:text-white/90",
+                            input: [
+                              "bg-transparent",
+                              "border-0",
+                              "text-black/90 dark:text-white/90",
+                              "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+                            ],
+                            innerWrapper: "bg-transparent",
+                            inputWrapper: [
+                              "shadow-xl",
+                              "bg-default-200/50",
+                              "dark:bg-default/60",
+                              "backdrop-blur-xl",
+                              "backdrop-saturate-200",
+                              "hover:bg-default-200/70",
+                              "dark:hover:bg-default/70",
+                              "group-data-[focused=true]:bg-default-200/50",
+                              "dark:group-data-[focused=true]:bg-default/60",
+                              "!cursor-text",
+                              "sm:max-w-[60%]",
+                            ],
+                          }}
+                        variant="flat"
                         placeholder="搜索文档..."
                         startContent={<SearchIcon />}
                         value={filterValue}
@@ -222,7 +245,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                     <label className="flex items-center text-default-400 text-small">
                         每页行数:
                         <select
-                            className="bg-transparent outline-none text-default-400 text-small"
+                            className="bg-transparent outline-none text-default-400 text-small border-0"
                             onChange={onRowsPerPageChange}
                         >
                             <option value="5">5</option>
@@ -244,7 +267,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
 
     const bottomContent = React.useMemo(() => {
         return (
-            <div className="py-2 px-2 flex justify-between items-center">
+            <div className="py-2 px-4 flex justify-between items-center">
                 <span className="w-[30%] text-small text-default-400">
                     {selectedKeys === "all"
                         ? "选中所有文件"
@@ -272,7 +295,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
     return (
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto px-4">
             <Table 
                 aria-label="当前知识库中还没有上传文件!" 
                 isHeaderSticky
@@ -302,7 +325,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={filteredItems} emptyContent={"没有找到文件"} >
+                <TableBody items={sortedItems} emptyContent={"没有找到文件"}>
                     {(item) => (
                         <TableRow key={item.index}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
