@@ -28,7 +28,7 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     <div className="lg:pl-80 h-full">
         <div className="h-full flex flex-col">
             <Header knowledge={knowledge} />
-            <Body knowledgeName={knowledge.displayName} files={fileList} />
+            <Body knowledge={knowledge} files={fileList} />
       </div>
     </div>
   );

@@ -29,6 +29,8 @@ import {ChevronDownIcon} from "./resource/ChevronDownIcon";
 import {SearchIcon} from "./resource/SearchIcon";
 import {capitalize} from "./utils";
 import UploadfileModal from "./UploadfileModal";
+import { useRouter } from "next/navigation";
+import { Knowledge } from "@prisma/client";
 
 const columns = [
     {
@@ -50,11 +52,13 @@ const columns = [
   
 
 interface BodyProps {
-    knowledgeName: string;
+    knowledge: Knowledge;
     files: string[];
 }
 
-const Body: React.FC<BodyProps> = ({ knowledgeName="", files = [] }) => {
+const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
+    
+    const router = useRouter();
 
     const [uploadOpen, setUploadOpen] = React.useState(false);
     const [filterValue, setFilterValue] = React.useState("");
@@ -300,8 +304,8 @@ const Body: React.FC<BodyProps> = ({ knowledgeName="", files = [] }) => {
         <>
         <UploadfileModal
                 isOpen={uploadOpen}
-                onClose={()=>setUploadOpen(false)}
-                knowledgeName= {knowledgeName}
+                onClose={()=>{setUploadOpen(false); router.refresh();}}
+                knowledge= {knowledge}
             />
         <div className="flex-1 overflow-y-auto px-4">
             <Table 
@@ -313,7 +317,7 @@ const Body: React.FC<BodyProps> = ({ knowledgeName="", files = [] }) => {
                 bottomContent={bottomContent}
                 bottomContentPlacement="outside"
                 classNames={{
-                    wrapper: "max-h-[382px]",
+                    wrapper: "max-h-full",
                 }}
                 selectedKeys={selectedKeys}
                 sortDescriptor={sortDescriptor}
