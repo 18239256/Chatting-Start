@@ -28,6 +28,7 @@ import {VerticalDotsIcon} from "./resource/VerticalDotsIcon";
 import {ChevronDownIcon} from "./resource/ChevronDownIcon";
 import {SearchIcon} from "./resource/SearchIcon";
 import {capitalize} from "./utils";
+import UploadfileModal from "./UploadfileModal";
 
 const columns = [
     {
@@ -49,11 +50,13 @@ const columns = [
   
 
 interface BodyProps {
-    files: string[]
+    knowledgeName: string;
+    files: string[];
 }
 
-const Body: React.FC<BodyProps> = ({ files = [] }) => {
+const Body: React.FC<BodyProps> = ({ knowledgeName="", files = [] }) => {
 
+    const [uploadOpen, setUploadOpen] = React.useState(false);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
@@ -235,7 +238,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
-                        <Button color="primary" endContent={<PlusIcon />}>
+                        <Button color="primary" endContent={<PlusIcon />} onClick={()=>setUploadOpen(true)}>
                             添加文件
                         </Button>
                     </div>
@@ -294,6 +297,12 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
     return (
+        <>
+        <UploadfileModal
+                isOpen={uploadOpen}
+                onClose={()=>setUploadOpen(false)}
+                knowledgeName= {knowledgeName}
+            />
         <div className="flex-1 overflow-y-auto px-4">
             <Table 
                 aria-label="当前知识库中还没有上传文件!" 
@@ -332,7 +341,7 @@ const Body: React.FC<BodyProps> = ({ files = [] }) => {
                     )}
                 </TableBody>
             </Table>
-        </div>
+        </div></>
     )
 }
 
