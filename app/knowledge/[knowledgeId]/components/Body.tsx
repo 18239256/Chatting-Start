@@ -15,22 +15,25 @@ import {
     DropdownMenu,
     DropdownItem,
     Chip,
-    User,
     Pagination,
     Selection,
     ChipProps,
-    SortDescriptor
+    SortDescriptor,
+    Tooltip
   } from "@nextui-org/react";
 import React, {useMemo } from "react";
 
 import {PlusIcon} from "./resource/PlusIcon";
 import {VerticalDotsIcon} from "./resource/VerticalDotsIcon";
+import { RiDeleteBinLine } from "react-icons/ri";
 import {ChevronDownIcon} from "./resource/ChevronDownIcon";
 import {SearchIcon} from "./resource/SearchIcon";
 import {capitalize} from "./utils";
 import UploadfileModal from "./UploadfileModal";
 import { useRouter } from "next/navigation";
 import { Knowledge } from "@prisma/client";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const columns = [
     {
@@ -48,13 +51,19 @@ const columns = [
       label: "类型",
       sortable: true,
     },
+    {
+      key: "actions",
+      label: "操作",
+      sortable: false,
+    },
+    
   ];
   
-
 interface BodyProps {
     knowledge: Knowledge;
     files: string[];
 }
+
 
 const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
     
@@ -138,6 +147,17 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
         });
       }, [sortDescriptor, items]);
 
+    const removeDoc = (knowledgeRN: string, file_names: string[]) => {
+        if (confirm("确认删除?"))   //后续优化这个确认对话框
+            axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
+                .then((ret) => {
+                    toast.success(`${file_names[0]} 已经成功删除`);
+                    router.refresh();
+                })
+                .catch(() => toast.error('出错了!'))
+                .finally()
+        return;
+    };
     
     const renderCell = React.useCallback((file: knowledgeFileArrayType, columnKey: React.Key) => {
         const cellValue = file[columnKey as keyof knowledgeFileArrayType];
@@ -147,6 +167,16 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                     <Chip className="capitalize" color={extColorMap[file.ext]} size="sm" variant="flat">
                         {cellValue}
                     </Chip>
+                );
+            case "actions":
+                return (
+                    <div className="relative flex items-center gap-2">
+                        <Tooltip color="danger" content="删除文档">
+                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>removeDoc(knowledge.realName, [file.fileName])}>
+                                <RiDeleteBinLine />
+                            </span>
+                        </Tooltip>
+                    </div>
                 );
             default:
                 return cellValue;
@@ -300,6 +330,8 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
             </div>
         );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+
+    
 
     return (
         <>
