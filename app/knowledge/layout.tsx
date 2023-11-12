@@ -19,7 +19,7 @@ export default async function KnowledgeLayout({
   return (
     <Sidebar>
       <div className="h-full">
-        <KnowledgeList items={knowledges} />
+        <KnowledgeList items={knowledges} curUser={user}/>
         {children}
       </div>
     </Sidebar>
