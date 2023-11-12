@@ -35,7 +35,6 @@ import { Knowledge } from "@prisma/client";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { format } from "url";
-import fs from "os";
 
 const columns = [
     {
