@@ -25,7 +25,7 @@ import React, {useMemo } from "react";
 
 import {PlusIcon} from "./resource/PlusIcon";
 import {VerticalDotsIcon} from "./resource/VerticalDotsIcon";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { RiDeleteBinLine, RiEyeLine } from "react-icons/ri";
 import {ChevronDownIcon} from "./resource/ChevronDownIcon";
 import {SearchIcon} from "./resource/SearchIcon";
 import {capitalize} from "./utils";
@@ -34,6 +34,8 @@ import { useRouter } from "next/navigation";
 import { Knowledge } from "@prisma/client";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { format } from "url";
+import fs from "os";
 
 const columns = [
     {
@@ -147,7 +149,38 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
         });
       }, [sortDescriptor, items]);
 
-    const removeDoc = (knowledgeRN: string, file_names: string[]) => {
+    const doweloadDoc = async (knowledgeRN: string, file_name: string) => {
+        const apiUrl = format({
+            protocol: process.env.LLM_API_PROTOCOL,
+            hostname: "region-31.seetacloud.com",
+            port: "38744",
+            pathname: "/api/knowledge_base/download_doc",
+            query: {
+                knowledge_base_name: knowledgeRN,
+                file_name: file_name,
+                preview: false
+            }
+        });
+
+        try {
+            
+            const result = await fetch(apiUrl);
+            const blob = await result.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = file_name;
+            link.click();
+            window.URL.revokeObjectURL(url);
+            
+        } catch (error) {
+            toast.error(`下载出错了：${error}}`);
+        }
+
+        return;
+    };
+    
+    const removeDoc = async (knowledgeRN: string, file_names: string[]) => {
         if (confirm("确认删除?"))   //后续优化这个确认对话框
             axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
                 .then((ret) => {
@@ -171,6 +204,11 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
             case "actions":
                 return (
                     <div className="relative flex items-center gap-2">
+                        <Tooltip color="primary" content="下载文档">
+                            <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={()=>doweloadDoc(knowledge.realName, file.fileName)}>
+                                <RiEyeLine />
+                            </span>
+                        </Tooltip>
                         <Tooltip color="danger" content="删除文档">
                             <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={()=>removeDoc(knowledge.realName, [file.fileName])}>
                                 <RiDeleteBinLine />
