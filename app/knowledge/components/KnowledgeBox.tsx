@@ -4,6 +4,10 @@ import { Knowledge } from "@prisma/client";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import format from "date-fns/format";
+import { AiFillDatabase } from "react-icons/ai";
+import { TbDatabaseShare } from "react-icons/tb";
 
 interface KnowledgeBoxProps {
   data: Knowledge,
@@ -16,7 +20,7 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
 }) => {
   const router = useRouter();
   const handleClick = useCallback(() => {
-      router.push(`/knowledge/${data.id}`);
+    router.push(`/knowledge/${data.id}`);
   }, [data, router]
   );
 
@@ -40,14 +44,29 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
         )}
       >
         <div className="min-w-0 flex-1">
-          <div className="focus:outline-none">
-            <span className="absolute inset-0" aria-hidden="true" />
-            <div className="flex justify-between items-center mb-1">
-              <p className="text-md font-medium text-gray-900">
-                {data.displayName}
-              </p>
-            </div>
-          </div>
+          <Card className={clsx(`
+          max-w
+          hover:bg-neutral-100
+          `,
+          selected ? 'bg-neutral-100' : 'bg-white'
+        )}
+          >
+            <CardHeader className="flex gap-3">
+              <AiFillDatabase className="h-10 w-10" />
+              <div className="flex flex-col">
+                <p className="text-md">{data.displayName}</p>
+                <p className="text-small text-default-500">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</p>
+              </div>
+            </CardHeader>
+            <Divider />
+            <CardBody>
+              <p>知识库描述信息.</p>
+            </CardBody>
+            <Divider />
+            <CardFooter>
+              <TbDatabaseShare className="h-6 w-6 text-sky-500" />
+            </CardFooter>
+          </Card>
         </div>
       </div>
     </>
