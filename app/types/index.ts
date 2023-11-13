@@ -40,7 +40,7 @@ export type OPENAIFastAPIKBParamType = {
   query: string,
   knowledge_base_name: string,
   top_k: number,
-  score_threshold: number,
+  score_threshold: num
   model_name: string,
   history: any[],
   temperature: number,

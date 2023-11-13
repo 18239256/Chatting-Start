@@ -55,7 +55,7 @@ export async function DELETE(
       }
 
       if(user.isRobot){
-        //机器人用户，关联机器人配置数据会自动prisma被清理
+        //机器人用户，关联机器人配置数据会自动被prisma清理
         const deletedRobotUser = prisma.user.delete({
           where: {
             id: user.id,
