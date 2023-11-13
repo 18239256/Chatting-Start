@@ -5,6 +5,7 @@ import { pusherServer } from '@/app/libs/pusher'
 import prisma from "@/app/libs/prismadb";
 import getConversationById from "@/app/actions/getConversationById";
 import getRobotAnswer from "@/app/actions/getRobotAnswer";
+import { json } from "stream/consumers";
 
 export async function POST(
   request: Request,
@@ -47,7 +48,7 @@ export async function POST(
       data: {
         body: retMessage.answer,
         image: image,
-        referenceDocs: retMessage.docs,
+        referenceDocs: JSON.stringify(retMessage.docs),
         conversation: {
           connect: { id: conversationId }
         },

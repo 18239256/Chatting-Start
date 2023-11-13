@@ -11,6 +11,8 @@ import ImageModal from "./ImageModal";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import gfm from 'remark-gfm'
+import React from "react";
+import { Accordion, AccordionItem, Link } from "@nextui-org/react";
 
 interface MessageBoxProps {
     data: FullMessageType;
@@ -38,6 +40,29 @@ const MessageBox: React.FC<MessageBoxProps> = ({
         isOwn ? 'bg-sky-500 text-white' : 'bg-gray-100',
         data.image ? 'rounded-md p-0' : 'rounded-lg py-2 px-3'
     );
+
+    const renderRefDocs = React.useMemo(() => {
+      if(!data.referenceDocs)
+        return "";
+
+      const reg = RegExp(/\[(.*?)\]/);
+      const refDocs: string[] = JSON.parse(data.referenceDocs);
+      return (
+        <Accordion>
+          <AccordionItem key="1" aria-label="mathresult" title="匹配详情" className="text-sm">
+            <ul className="list-reset">
+              {refDocs.map((ref) => {
+                const fistStrip = ref.split("\n\n");
+                const secondStrip = fistStrip[0].split(" ");
+                const fileName = secondStrip[2].match(reg);
+                if (fileName)
+                  return (<li key={secondStrip[1]} className="leading-10 text-base">{secondStrip[1]} <Link href="#">{fileName[1]}</Link><p>{fistStrip[1]}</p></li>);
+              })}
+            </ul>
+          </AccordionItem>
+        </Accordion>
+      );
+    },[data]);
 
     return (
         <div className={container}>
@@ -72,9 +97,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 "
               />
             ) : (
-              <div><ReactMarkdown remarkPlugins={[gfm]}>{data.body}</ReactMarkdown></div>
+              <div><ReactMarkdown remarkPlugins={[gfm]}>{data.body}</ReactMarkdown>
+              {renderRefDocs}</div>    
             )}
-          </div>
+          </div>          
           {isLast && isOwn && seenList.length > 0 && (
             <div 
               className="
