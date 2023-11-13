@@ -86,6 +86,8 @@ model Message {
   
   senderId String @db.ObjectId
   sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  referenceDocs  String?
 }
 
 model Knowledge{
@@ -129,6 +131,8 @@ model Robot{
   model              String?
   temperature        Float?
   historyRound       Int?
+  knowledgeBaseName  String?
+  topK               Int?
 
   maskId            String?   @db.ObjectId
   mask              RobotMask? @relation(fields: [maskId], references: [id])

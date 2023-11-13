@@ -45,8 +45,9 @@ export async function POST(
         }
       },
       data: {
-        body: retMessage,
+        body: retMessage.answer,
         image: image,
+        referenceDocs: retMessage.docs,
         conversation: {
           connect: { id: conversationId }
         },

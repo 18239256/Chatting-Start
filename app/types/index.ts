@@ -36,6 +36,18 @@ export type OPENAIFastAPIParamType = {
   frequency_penalty: number
 };
 
+export type OPENAIFastAPIKBParamType = {
+  query: string,
+  knowledge_base_name: string,
+  top_k: number,
+  score_threshold: number,
+  model_name: string,
+  history: any[],
+  temperature: number,
+  stream: boolean,
+  local_doc_url: boolean,
+};
+
 export type knowledgeFileArrayType={
   index: number,
   fileName: string,
