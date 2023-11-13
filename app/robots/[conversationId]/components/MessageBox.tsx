@@ -98,7 +98,12 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               const secondStrip = fistStrip[0].split(" ");
               const fileName = secondStrip[2].match(reg);
               if (fileName)
-                return (<li key={secondStrip[1]} className="leading-loose text-base">{secondStrip[1]} <Link href="#" className="text-sky-500" onClick={() => downloadDoc("John", fileName[1])}>{fileName[1]}</Link><p>{fistStrip[1]}</p></li>);
+                return (
+                <li key={secondStrip[1]} className="leading-loose text-base">
+                  {secondStrip[1]} 
+                  <Link href="#" className="text-sky-500" onClick={() => downloadDoc("John", fileName[1])}>{fileName[1]}</Link>
+                  <p>{fistStrip[1]}</p>
+                </li>);
             })}
           </ul>
         </AccordionItem>
