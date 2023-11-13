@@ -14,7 +14,6 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
-import Select from '@/app/components/inputs/Select';
 
 interface KnowledgeModalProps {
     isOpen?: boolean;
@@ -41,22 +40,25 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
-            members: []
+            description: '知识库的说明'
         }
     });
 
-    const members = watch('members');
-
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
+
+        const param = {
+          knowledgeBaseDisplayName: data.name,
+          knowledgeBaseRealName: `${data.name}_${curUser.id.slice(0,6)}`,
+          knowledgeBaseDesc: data.description,
+          belongToUserId: curUser.id,
+        };
       
-        axios.post('/api/conversations', {
-          ...data,
-          isGroup: true
-        })
-        .then(() => {
+        axios.post('/api/knowledges', param)
+        .then((ret) => {
           router.refresh();
           onClose();
+          console.log('ret', ret);
         })
         .catch(() => toast.error('Something went wrong!'))
         .finally(() => setIsLoading(false));
@@ -86,6 +88,18 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
                 label="名称" 
                 id="name" 
                 errors={errors} 
+                required 
+                register={register}
+              />
+             
+            </div>
+            <div className="mt-10 flex flex-col gap-y-8">
+              <Input
+                disabled={isLoading}
+                label="说明" 
+                id="description" 
+                errors={errors} 
+                type='textarea'
                 required 
                 register={register}
               />
