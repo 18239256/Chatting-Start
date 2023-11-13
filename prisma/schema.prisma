@@ -94,7 +94,7 @@ model Knowledge{
   // vectorIDName      String
   // vectorDB          String
   // embeddingModel    String
-  realName          String
+  realName          String  @unique
   createdAt         DateTime @default(now())
   image             String?
   description       String?
