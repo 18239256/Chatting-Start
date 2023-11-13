@@ -126,7 +126,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
           );
         }
         return filteredFiles;
-      }, [filesArray, filterValue, statusFilter]);
+      }, [filesArray, filterValue, statusFilter, extsOptions, hasSearchFilter]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -218,7 +218,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
             default:
                 return cellValue;
         };
-    },[]);
+    },[extColorMap, knowledge, removeDoc]);
 
     const onNextPage = React.useCallback(() => {
         if (page < pages) {
@@ -338,6 +338,8 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
         onRowsPerPageChange,
         filesArray.length,
         hasSearchFilter,
+        extsOptions,
+        onClear
     ]);
 
     const bottomContent = React.useMemo(() => {
@@ -366,9 +368,8 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                     </div>
             </div>
         );
-    }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+    }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
 
-    
 
     return (
         <>

@@ -8,6 +8,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Tooltip } from '@nextui-org/react';
 
 
 interface HeaderProps {
@@ -77,9 +78,10 @@ const Header: React.FC<HeaderProps> = ({ knowledge }) => {
             </div>
           </div>
         </div>
-        <button
-          onClick={delBTNClick}
-          className="
+        <Tooltip  content="删除知识库" className='bg-red-500  text-gray-200'>
+          <button
+            onClick={delBTNClick}
+            className="
                         rounded-full 
                         p-2 
                         bg-gray-200 
@@ -87,12 +89,13 @@ const Header: React.FC<HeaderProps> = ({ knowledge }) => {
                         hover:bg-red-500
                         transition
                     "
-        >
-          <TbDatabaseX
-            size={18}
-            className="text-white"
-          />
-        </button>
+          >
+            <TbDatabaseX
+              size={18}
+              className="text-white"
+            />
+          </button>
+        </Tooltip>
       </div>
     </>
   );
