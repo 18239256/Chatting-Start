@@ -76,10 +76,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   };
 
   const itemClasses = {
-    base: "py-0 w-full",
+    base: "py-0 w-full ",
     title: "font-normal text-medium text-sky-500",
-    trigger: "px-2 py-0 data-[hover=true]:bg-default-100 rounded-lg h-14 flex items-center",
-    indicator: "text-medium",
+    trigger: "px-2 py-0 data-[hover=true]:bg-default-100 rounded-lg h-14 flex items-center ",
+    indicator: "text-medium text-sky-500",
     content: "text-small px-2",
   };
 
@@ -98,7 +98,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               const secondStrip = fistStrip[0].split(" ");
               const fileName = secondStrip[2].match(reg);
               if (fileName)
-                return (<li key={secondStrip[1]} className="leading-10 text-base">{secondStrip[1]} <Link href="#" className="text-sky-500" onClick={() => downloadDoc("John", fileName[1])}>{fileName[1]}</Link><p>{fistStrip[1]}</p></li>);
+                return (<li key={secondStrip[1]} className="leading-loose text-base">{secondStrip[1]} <Link href="#" className="text-sky-500" onClick={() => downloadDoc("John", fileName[1])}>{fileName[1]}</Link><p>{fistStrip[1]}</p></li>);
             })}
           </ul>
         </AccordionItem>
