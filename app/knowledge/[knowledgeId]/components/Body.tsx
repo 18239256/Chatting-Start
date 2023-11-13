@@ -148,7 +148,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
         });
       }, [sortDescriptor, items]);
 
-    const doweloadDoc = async (knowledgeRN: string, file_name: string) => {
+    const downloadDoc = async (knowledgeRN: string, file_name: string) => {
         const apiUrl = format({
             protocol: process.env.LLM_API_PROTOCOL,
             hostname: "region-31.seetacloud.com",
@@ -204,7 +204,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                 return (
                     <div className="relative flex items-center gap-2">
                         <Tooltip color="primary" content="下载文档">
-                            <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={()=>doweloadDoc(knowledge.realName, file.fileName)}>
+                            <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={()=>downloadDoc(knowledge.realName, file.fileName)}>
                                 <RiEyeLine />
                             </span>
                         </Tooltip>
