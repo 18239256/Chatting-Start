@@ -160,7 +160,6 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
               </div>
               </Menu.Items>
             </Transition>
-
           </Menu>
                  
         </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import {
   FieldValues,
@@ -15,8 +15,13 @@ import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import Image from "next/image";
-import { RadioGroup } from '@headlessui/react';
+import { Menu, RadioGroup, Transition } from '@headlessui/react';
+import { HiChevronDown } from 'react-icons/hi2';
+import { TbDatabase } from 'react-icons/tb';
 
+function classNames(...classes:any) {
+  return classes.filter(Boolean).join(' ')
+}
 
 interface RobotChatModalProps {
   isOpen?: boolean;
@@ -53,6 +58,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [tmpl, setTmpl] = useState(robotTmpls[0]);
+  const [know, setKnow] = useState(()=>{return knowledges.length>0 && knowledges[0].displayName});
 
   const {
     register,
@@ -73,8 +79,16 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
+    let param = {};
+    if(tmpl.knowledgeAbility)
+    {
+      const selectKnow = knowledges.find((k)=>{return k.displayName === know});
+      param = {...data,robotTmpl:tmpl, knowledgeBaseName: selectKnow?.realName};
+    }
+    else
+      param = {...data,robotTmpl:tmpl};
     // Create new robot user base on current logo in user
-    axios.post('/api/robot/robotregister', {...data,robotTmpl:tmpl})
+    axios.post('/api/robot/robotregister', param)
       .then((callback) => {
         console.log(callback);
         if (callback?.status !== 200) {
@@ -99,6 +113,59 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
       .finally(() => setIsLoading(false));
   }
 
+  const onKnowItemClick = (knowItem?: Knowledge) => {
+    setKnow(knowItem?.displayName || '');
+    console.log('knowItem', knowItem);
+    return;
+  };
+
+  const knowContent = React.useMemo(() => {
+    return (
+      <Menu as="div" className="relative inline-block text-left">
+        <div className="flex flex-col px-6">
+          <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm sm:text-xs  font-semibold text-sky-500 cursor-pointer" >
+            <TbDatabase size={26} />
+            {know}
+            <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
+          </Menu.Button>
+        </div>
+
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-100"
+          enterFrom="transform opacity-0 scale-95"
+          enterTo="transform opacity-100 scale-100"
+          leave="transition ease-in duration-75"
+          leaveFrom="transform opacity-100 scale-100"
+          leaveTo="transform opacity-0 scale-95"
+        >
+          <Menu.Items className="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div className="px-1 py-1">
+              {knowledges.map((k) => (
+                <Menu.Item key={k.id}>
+                  {({ active }) => (
+                    <button
+                      onClick={() => onKnowItemClick(k)}
+                      className={classNames(
+                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                        'block px-4 py-2 text-md text-justify'
+                      )}
+                    >
+                      <div className='inline-flex items-center gap-1 rounded-md bg-blue-50 py-1 text-sm font-semibold text-sky-500'>
+                        <TbDatabase size={26} />
+                        {k.displayName}</div>
+                      <div className='text-gray-400'>{k.description}</div>
+                    </button>
+                  )}
+                </Menu.Item>
+              ))}
+            </div>           
+          </Menu.Items>
+        </Transition>
+      </Menu>
+    );
+  },[know]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -117,6 +184,8 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             <p className="mt-1 text-sm leading-6 text-gray-600">
               根据模板创建一个机器人。
             </p>
+            
+          {knowContent}
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
                 disabled={isLoading}
@@ -176,22 +245,9 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                     <span>{tmpl.description}</span>
                                     </div>
                                     {tmpl.knowledgeAbility ? 
-                                    <div className="
-                                        relative 
-                                        inline-block 
-                                        rounded-full 
-                                        overflow-hidden
-                                        h-9 
-                                        w-9 
-                                        md:h-11 
-                                        md:w-11
-                                      ">
-                                      <Image
-                                        fill
-                                        src={'/images/knowledge.png'}
-                                        alt="Avatar"
-                                      />
-                                    </div> : null}
+                                    <div className='justify-end'>
+                                                                          
+                                    </div>: null}
                                     {tmpl.searchAbility ? 
                                     <div className="
                                         relative 

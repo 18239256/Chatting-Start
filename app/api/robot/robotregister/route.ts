@@ -13,6 +13,7 @@ export async function POST(
         const {
             name,
             robotTmpl,
+            knowledgeBaseName,
         } = body;
 
         if(!name || !robotTmpl){
@@ -26,6 +27,7 @@ export async function POST(
         const user = await prisma.robot.create({
             data: {
                 name,
+                knowledgeBaseName,
                 user:{
                     create:{
                         name,
@@ -39,7 +41,7 @@ export async function POST(
                     connect:{
                         id: robotTmpl.id,
                     }
-                }
+                },
             },
             include:{
                 user: true,
