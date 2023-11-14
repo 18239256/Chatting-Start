@@ -1,7 +1,7 @@
 'use client';
 
 import { RobotTemplate } from "@prisma/client";
-import { FullConversationType } from "@/app/types";
+import { FullConversationType, FullRobotConversationType } from "@/app/types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
@@ -17,7 +17,7 @@ import { BiSolidMessageRoundedAdd } from "react-icons/bi";
 
 
 interface RobotListProps {
-    initialItems: FullConversationType[];
+    initialItems: FullRobotConversationType[];
     robotTmpls: RobotTemplate[];
     title?: string;
 }
@@ -59,7 +59,7 @@ const RobotList: React.FC<RobotListProps> = ({
         }));
       }
   
-      const newHandler = (conversation: FullConversationType) => {
+      const newHandler = (conversation: FullRobotConversationType) => {
         setItems((current) => {
           if (find(current, { id: conversation.id })) {
             return current;

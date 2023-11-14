@@ -38,7 +38,11 @@ const getConversations = async () => {
         }
       },
       include: {
-        users: true,
+        users: {
+          include:{
+            robot:true
+          }
+        },
         messages: {
           include: {
             sender: true,

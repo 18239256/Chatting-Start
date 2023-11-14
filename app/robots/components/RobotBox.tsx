@@ -9,11 +9,11 @@ import clsx from "clsx";
 
 import Avatar from "@/app/components/Avatar";
 import AvatarGroup from "@/app/components/AvatarGroup";
-import { FullConversationType } from "@/app/types";
+import { FullConversationType, FullRobotConversationType } from "@/app/types";
 import useOtherUser from "@/app/hooks/useOtherUser";
 
 interface RobotBoxProps {
-    data: FullConversationType,
+    data: FullRobotConversationType,
     selected?: boolean;
 }
 
