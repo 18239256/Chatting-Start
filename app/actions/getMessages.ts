@@ -9,7 +9,11 @@ const getMessages = async (
         conversationId: conversationId
       },
       include: {
-        sender: true,
+        sender: {
+          include:{
+            robot: true
+          }
+        },
         seen: true,
       },
       orderBy: {

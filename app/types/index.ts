@@ -1,7 +1,7 @@
 import {  Conversation, Knowledge, Message, Robot, User } from "@prisma/client";
 
 export type FullMessageType = Message & {
-  sender: User, 
+  sender: FullUserType, 
   seen: User[]
 };
 
@@ -40,7 +40,7 @@ export type OPENAIFastAPIKBParamType = {
   query: string,
   knowledge_base_name: string,
   top_k: number,
-  score_threshold: num
+  score_threshold: number
   model_name: string,
   history: any[],
   temperature: number,

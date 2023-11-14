@@ -27,7 +27,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
 }) => {
   const session = useSession();
   const [imageModalOpen, setImageModalOpen] = useState(false);
-
+  
   const isOwn = session.data?.user?.email === data?.sender?.email
   const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
@@ -91,7 +91,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     const refDocs: string[] = JSON.parse(data.referenceDocs);
     return (
       <Accordion itemClasses={itemClasses}>
-        <AccordionItem key="1" aria-label="mathresult" title="匹配详情" className="text-xs">
+        <AccordionItem key="1" aria-label="mathresult" title="信息源" className="text-xs">
           <ul className="list-reset">
             {refDocs.map((ref) => {
               const fistStrip = ref.split("\n\n");
@@ -100,8 +100,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
               if (fileName)
                 return (
                 <li key={secondStrip[1]} className="leading-loose text-base">
-                  {secondStrip[1]} 
-                  <Link href="#" className="text-sky-500" onClick={() => downloadDoc("John", fileName[1])}>{fileName[1]}</Link>
+                  {secondStrip[1]}
+                  <Link href="#" className="text-sky-500" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>
                   <p>{fistStrip[1]}</p>
                 </li>);
             })}
