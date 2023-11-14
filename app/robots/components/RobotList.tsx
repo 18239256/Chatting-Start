@@ -1,6 +1,6 @@
 'use client';
 
-import { RobotTemplate } from "@prisma/client";
+import { Knowledge, RobotTemplate } from "@prisma/client";
 import { FullConversationType, FullRobotConversationType } from "@/app/types";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -17,12 +17,14 @@ import { BiSolidMessageRoundedAdd } from "react-icons/bi";
 
 
 interface RobotListProps {
+    knowledges:Knowledge[];
     initialItems: FullRobotConversationType[];
     robotTmpls: RobotTemplate[];
     title?: string;
 }
 
 const RobotList: React.FC<RobotListProps> = ({ 
+    knowledges,
     initialItems, 
     robotTmpls
   }) =>{
@@ -97,6 +99,7 @@ const RobotList: React.FC<RobotListProps> = ({
     return (
       <>
         <RobotChatModal
+          knowledges={knowledges}
           robotTmpls={robotTmpls}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

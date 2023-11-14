@@ -84,7 +84,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           selected ? 'bg-neutral-100' : 'bg-white'
         )}
       >
-        { Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
+        { otherRobotUser && Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
           <AvatarWithKB user={otherRobotUser} />
         ) : (
           <Avatar user={otherRobotUser} />
@@ -94,7 +94,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             <span className="absolute inset-0" aria-hidden="true" />
             <div className="flex justify-between items-center mb-1">
               <p className="text-md font-medium text-gray-900">
-                {data.name || otherRobotUser.name}
+                {data.name || (otherRobotUser && otherRobotUser.name)}
               </p>
               {lastMessage?.createdAt && (
                 <p 

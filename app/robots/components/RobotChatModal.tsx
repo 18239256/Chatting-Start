@@ -8,7 +8,7 @@ import {
   SubmitHandler,
   useForm
 } from 'react-hook-form';
-import { RobotTemplate } from "@prisma/client";
+import { Knowledge, RobotTemplate } from "@prisma/client";
 
 import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
@@ -22,6 +22,7 @@ interface RobotChatModalProps {
   isOpen?: boolean;
   onClose: () => void;
   robotTmpls: RobotTemplate[];
+  knowledges: Knowledge[];
 }
 
 function CheckIcon(props:any) {
@@ -46,7 +47,8 @@ function compareRobotTmpl(a:RobotTemplate, b:RobotTemplate) {
 const RobotChatModal: React.FC<RobotChatModalProps> = ({
   isOpen,
   onClose,
-  robotTmpls = []
+  robotTmpls = [],
+  knowledges =[]
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
