@@ -61,7 +61,7 @@ const getRobotAnswer = async (
         if (robotUserFull?.robot?.robotTemp.knowledgeAbility) {
             const AIParam: OPENAIFastAPIKBParamType = {
                 query: message,
-                knowledge_base_name: robotUserFull?.robot?.knowledgeBaseName || "John",
+                knowledge_base_name: robotUserFull?.robot?.knowledgeBaseName || "",
                 model_name: "chatglm2-6b",
                 history: allMessages,
                 temperature: robotUserFull?.robot?.temperature || 0.7,
