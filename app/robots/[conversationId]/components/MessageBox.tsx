@@ -56,9 +56,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
       }
     });
 
-
     try {
-
       const result = await fetch(apiUrl);
       const blob = await result.blob();
       const url = window.URL.createObjectURL(blob);
@@ -101,7 +99,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 return (
                 <li key={secondStrip[1]} className="leading-loose text-base">
                   {secondStrip[1]}
-                  <Link href="#" className="text-sky-500" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>
+                  <Link className="text-sky-500 cursor-pointer" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>
                   <p>{fistStrip[1]}</p>
                 </li>);
             })}
