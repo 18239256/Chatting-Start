@@ -18,6 +18,7 @@ import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import AvatarWithKB from '@/app/components/AvatarWithKB';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -93,8 +94,8 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           >
             <HiChevronLeft size={32} />
           </Link>
-          {conversation.isGroup ? (
-            <AvatarGroup users={conversation.users} />
+          {Boolean(robotUser.robot?.knowledgeBaseName) ? (
+            <AvatarWithKB user={robotUser} />
           ) : (
             <Avatar user={robotUser} />
           )}

@@ -2,15 +2,14 @@
 
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Conversation, Message, User } from "@prisma/client";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
 import Avatar from "@/app/components/Avatar";
-import AvatarGroup from "@/app/components/AvatarGroup";
-import { FullConversationType, FullRobotConversationType } from "@/app/types";
-import useOtherUser from "@/app/hooks/useOtherUser";
+import {FullRobotConversationType } from "@/app/types";
+import useRobotOtherUser from "@/app/hooks/useRobotOtherUser";
+import AvatarWithKB from "@/app/components/AvatarWithKB";
 
 interface RobotBoxProps {
     data: FullRobotConversationType,
@@ -21,10 +20,10 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     data,
     selected
 }) => {
-    const otherUser = useOtherUser(data);
+    const otherRobotUser = useRobotOtherUser(data);
     const session = useSession();
     const router = useRouter();
-
+    
     const handleClick = useCallback(() => {
         router.push(`/robots/${data.id}`);
     }, [data, router]
@@ -85,17 +84,17 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           selected ? 'bg-neutral-100' : 'bg-white'
         )}
       >
-        {data.isGroup ? (
-          <AvatarGroup users={data.users} />
+        { Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
+          <AvatarWithKB user={otherRobotUser} />
         ) : (
-          <Avatar user={otherUser} />
+          <Avatar user={otherRobotUser} />
         )}
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />
             <div className="flex justify-between items-center mb-1">
               <p className="text-md font-medium text-gray-900">
-                {data.name || otherUser.name}
+                {data.name || otherRobotUser.name}
               </p>
               {lastMessage?.createdAt && (
                 <p 
