@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { FullMessageType } from "@/app/types";
+import { FullMessageType, FullRobotMessageType } from "@/app/types";
 import { useSession } from "next-auth/react";
 
 import Avatar from "@/app/components/Avatar";
@@ -17,7 +17,7 @@ import { format as url_format } from "url";
 import toast from "react-hot-toast";
 
 interface MessageBoxProps {
-  data: FullMessageType;
+  data: FullRobotMessageType;
   isLast?: boolean;
 }
 

@@ -1,7 +1,7 @@
 import {  Conversation, Knowledge, Message, Robot, User } from "@prisma/client";
 
 export type FullMessageType = Message & {
-  sender: FullUserType, 
+  sender: User, 
   seen: User[]
 };
 
@@ -17,6 +17,11 @@ export type FullRobotConversationType = Conversation & {
 
 export type FullUserType = User & {
   robot: Robot | null
+};
+
+export type FullRobotMessageType = Message & {
+  sender: FullUserType, 
+  seen: User[]
 };
 
 // export type FullRobotUserType = User & {
