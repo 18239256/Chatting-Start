@@ -1,7 +1,7 @@
 'use client';
 
 import useConversation from "@/app/hooks/useConversation";
-import { FullMessageType } from "@/app/types";
+import { FullMessageType, FullRobotMessageType } from "@/app/types";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -11,7 +11,7 @@ import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
 
 interface BodyProps {
-  initialMessages: FullMessageType[];
+  initialMessages: FullRobotMessageType[];
 }
 
 const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
@@ -28,7 +28,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     pusherClient.subscribe(conversationId)
     bottomRef?.current?.scrollIntoView();
 
-    const messageHandler = (message: FullMessageType) => {
+    const messageHandler = (message: FullRobotMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
 
       setMessages((current) => {
@@ -42,7 +42,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
       bottomRef?.current?.scrollIntoView();
     };
 
-    const updateMessageHandler = (newMessage: FullMessageType) => {
+    const updateMessageHandler = (newMessage: FullRobotMessageType) => {
       setMessages((current) => current.map((currentMessage) => {
         if (currentMessage.id === newMessage.id) {
           return newMessage;
