@@ -111,12 +111,13 @@ export async function POST(
       }
     });
 
+    //因为newConversation对象无法获得robot对象，所以要再次查询
     let robotUserId = '';
-    let robotIndex = 0;
+    let robotObj = {};
     newConversation.users.forEach((user,index,arr) => {
       if (user.isRobot) {
         robotUserId = user.id;
-        robotIndex = index;
+        robotObj = user;
         return;
       }
     })
@@ -134,9 +135,7 @@ export async function POST(
       }
     });
 
-    Object.assign(newConversation.users[robotIndex],{robot:robotData});
-
-    console.log('newConversation', newConversation);
+    Object.assign(robotObj,{robot:robotData});
 
     // Update all connections with new conversation
     newConversation.users.map((user) => {
