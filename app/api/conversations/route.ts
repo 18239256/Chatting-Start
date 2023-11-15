@@ -106,10 +106,37 @@ export async function POST(
             email: true,
             image: true,
             isRobot: true,
-          }
+          },
         }
       }
     });
+
+    let robotUserId = '';
+    let robotIndex = 0;
+    newConversation.users.forEach((user,index,arr) => {
+      if (user.isRobot) {
+        robotUserId = user.id;
+        robotIndex = index;
+        return;
+      }
+    })
+
+    const robotData = await prisma.robot.findUnique({
+      where: {
+        userId: robotUserId,
+      },
+      select:{
+        id:true,
+        knowledgeBaseName:true,
+        topK:true,
+        historyRound:true,
+        temperature:true,
+      }
+    });
+
+    Object.assign(newConversation.users[robotIndex],{robot:robotData});
+
+    console.log('newConversation', newConversation);
 
     // Update all connections with new conversation
     newConversation.users.map((user) => {
