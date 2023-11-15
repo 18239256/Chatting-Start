@@ -31,7 +31,7 @@ const RobotList: React.FC<RobotListProps> = ({
 
     const [items, setItems] = useState(initialItems);
     const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
     const router = useRouter();
     const session = useSession();
   

@@ -15,9 +15,10 @@ import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import Image from "next/image";
-import { Menu, RadioGroup, Transition } from '@headlessui/react';
+import { Menu, Transition } from '@headlessui/react';
 import { HiChevronDown } from 'react-icons/hi2';
 import { TbDatabase } from 'react-icons/tb';
+import { RadioGroup, Radio, cn } from '@nextui-org/react';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -57,7 +58,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [tmpl, setTmpl] = useState(robotTmpls[0]);
+  const [tmpl, setTmpl] = useState(robotTmpls[0].id);
   const [know, setKnow] = useState(()=>{return knowledges.length>0 && knowledges[0].displayName});
 
   const {
@@ -75,18 +76,21 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   });
 
   const members = watch('members');
+  
+  const getTmplObjByID = () => {return robotTmpls.find((t)=>{return t.id === tmpl})};
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     let param = {};
-    if(tmpl.knowledgeAbility)
+    if(getTmplObjByID()?.knowledgeAbility)
     {
       const selectKnow = knowledges.find((k)=>{return k.displayName === know});
-      param = {...data,robotTmpl:tmpl, knowledgeBaseName: selectKnow?.realName};
+      param = {...data,robotTmpl:getTmplObjByID(), knowledgeBaseName: selectKnow?.realName};
     }
     else
-      param = {...data,robotTmpl:tmpl};
+      param = {...data,robotTmpl:getTmplObjByID()};
+
     // Create new robot user base on current logo in user
     axios.post('/api/robot/robotregister', param)
       .then((callback) => {
@@ -103,6 +107,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             .then(() => {
               router.push('/robots')
               router.refresh();
+              console.log('router refresh');
               onClose();
             })
             .catch(() => toast.error('Something went wrong!'))
@@ -117,6 +122,25 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     setKnow(knowItem?.displayName || '');
     console.log('knowItem', knowItem);
     return;
+  };
+
+  const CustomRadio = (props:any) => {
+    const {children, ...otherProps} = props;
+  
+    return (
+      <Radio
+        {...otherProps}
+        classNames={{
+          base: cn(
+            "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
+            "flex-row-reverse max-w-[500px] cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent",
+            "data-[selected=true]:border-primary"
+          ),
+        }}
+      >
+        {children}
+      </Radio>
+    );
   };
 
   const knowContent = React.useMemo(() => {
@@ -206,79 +230,12 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               "              >
                 选择模型
               </label>
-
               <div className="mx-auto w-full max-w-md">
-                <RadioGroup value={tmpl} onChange={setTmpl} by={compareRobotTmpl}>
-                  <RadioGroup.Label className="sr-only">选择模型</RadioGroup.Label>
-                  <div className="space-y-2">
-                    {robotTmpls.map((tmpl) => (
-                      <RadioGroup.Option
-                        key={tmpl.id}
-                        value={tmpl}
-                        className={({ active, checked }) =>
-                          `${active
-                            ? 'ring-2 ring-white/60 ring-offset-2 ring-offset-sky-300'
-                            : ''
-                          }
-                  ${checked ? 'bg-sky-600/75 text-white' : 'bg-white'}
-                    relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none`
-                        }
-                      >
-                        {({ active, checked }) => (
-                          <>
-                            <div className="flex w-full items-center justify-between">
-                              <div className="flex items-center">
-                                <div className="text-sm">
-                                  <RadioGroup.Label
-                                    as="p"
-                                    className={`font-medium  ${checked ? 'text-white' : 'text-gray-800'
-                                      }`}
-                                  >
-                                    {tmpl.name}
-                                  </RadioGroup.Label>
-                                  <RadioGroup.Description
-                                    as="span"
-                                    className={`inline ${checked ? 'text-sky-100' : 'text-gray-400'
-                                      }`}
-                                  >
-                                    <div>
-                                    <span>{tmpl.description}</span>
-                                    </div>
-                                    {tmpl.knowledgeAbility ? 
-                                    <div className='justify-end'>
-                                                                          
-                                    </div>: null}
-                                    {tmpl.searchAbility ? 
-                                    <div className="
-                                        relative 
-                                        inline-block 
-                                        rounded-full 
-                                        overflow-hidden
-                                        h-9 
-                                        w-9 
-                                        md:h-11 
-                                        md:w-11
-                                      ">
-                                      <Image
-                                        fill
-                                        src={'/images/bing.png'}
-                                        alt="Avatar"
-                                      />
-                                    </div> : null}
-                                  </RadioGroup.Description>
-                                </div>
-                              </div>                              
-                              {checked && (
-                                <div className="shrink-0 text-white">
-                                  <CheckIcon className="h-6 w-6" />
-                                </div>
-                              )}
-                            </div>
-                          </>
-                        )}
-                      </RadioGroup.Option>
-                    ))}
-                  </div>
+                <RadioGroup value={tmpl} onValueChange={setTmpl} >
+                  {robotTmpls.map((t) => (
+                    <CustomRadio description={t.description} value={t.id} key={t.id}>
+                      {t.name}
+                    </CustomRadio>))}
                 </RadioGroup>
               </div>
             </div>

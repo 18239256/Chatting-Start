@@ -41,7 +41,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
         />
       </div>
       <div
-        key={user?.id}
+        key={1}
         className={`
             absolute
             inline-block 
