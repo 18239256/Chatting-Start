@@ -41,11 +41,6 @@ const RobotList: React.FC<RobotListProps> = ({
       return session.data?.user?.email
     }, [session.data?.user?.email])
 
-    useEffect(()=>{
-      router.push('/robots');
-    },[items]);
-
-
     useEffect(() => {
       if (!pusherKey) {
         return;
