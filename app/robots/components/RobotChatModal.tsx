@@ -77,19 +77,19 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
   const members = watch('members');
   
-  const getTmplObjByID = () => {return robotTmpls.find((t)=>{return t.id === tmpl})};
+  const getTmplObj = () => {return robotTmpls.find((t)=>{return t.id === tmpl})};
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     let param = {};
-    if(getTmplObjByID()?.knowledgeAbility)
+    if(getTmplObj()?.knowledgeAbility)
     {
       const selectKnow = knowledges.find((k)=>{return k.displayName === know});
-      param = {...data,robotTmpl:getTmplObjByID(), knowledgeBaseName: selectKnow?.realName};
+      param = {...data,robotTmpl:getTmplObj(), knowledgeBaseName: selectKnow?.realName};
     }
     else
-      param = {...data,robotTmpl:getTmplObjByID()};
+      param = {...data,robotTmpl:getTmplObj()};
 
     // Create new robot user base on current logo in user
     axios.post('/api/robot/robotregister', param)
@@ -205,8 +205,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             <p className="mt-1 text-sm leading-6 text-gray-600">
               根据模板创建一个机器人。
             </p>
-            
-          {knowContent}
+                   
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
                 disabled={isLoading}
@@ -231,7 +230,10 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 <RadioGroup value={tmpl} onValueChange={setTmpl} >
                   {robotTmpls.map((t) => (
                     <CustomRadio description={t.description} value={t.id} key={t.id}>
+                      <p>
                       {t.name}
+                      {t.knowledgeAbility && getTmplObj()?.knowledgeAbility ? knowContent : null}
+                      </p>
                     </CustomRadio>))}
                 </RadioGroup>
               </div>
