@@ -94,7 +94,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     // Create new robot user base on current logo in user
     axios.post('/api/robot/robotregister', param)
       .then((callback) => {
-        console.log(callback);
         if (callback?.status !== 200) {
           toast.error('注册信息错误');
         }
@@ -107,7 +106,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             .then(() => {
               router.push('/robots')
               router.refresh();
-              console.log('router refresh');
               onClose();
             })
             .catch(() => toast.error('Something went wrong!'))
@@ -120,7 +118,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
   const onKnowItemClick = (knowItem?: Knowledge) => {
     setKnow(knowItem?.displayName || '');
-    console.log('knowItem', knowItem);
     return;
   };
 
