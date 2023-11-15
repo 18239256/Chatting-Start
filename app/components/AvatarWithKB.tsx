@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FullUserType } from "../types";
 import { TbDatabase } from "react-icons/tb";
 import { FaDatabase } from "react-icons/fa";
+import { Badge } from "@nextui-org/react";
 
 interface AvatarGroupProps {
   user?: FullUserType;
@@ -51,7 +52,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
             w-[21px]
             ${positionMap[2]}
           `}>
-        <FaDatabase className="h-4 w-5 text-sky-800 bg-gray-100" />
+        <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
       </div>
     </div>
   );
