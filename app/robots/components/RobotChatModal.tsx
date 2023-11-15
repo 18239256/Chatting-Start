@@ -14,7 +14,6 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
-import Image from "next/image";
 import { Menu, Transition } from '@headlessui/react';
 import { HiChevronDown } from 'react-icons/hi2';
 import { TbDatabase } from 'react-icons/tb';
@@ -104,8 +103,8 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
           // Create new 1 by 1 conversation by new robot user
           axios.post('/api/conversations', { userId: callback?.data.userId })
             .then(() => {
-              router.push('/robots')
               onClose();
+              router.push('/robots');
             })
             .catch(() => toast.error('Something went wrong!'))
             .finally(() => setIsLoading(false));

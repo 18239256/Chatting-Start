@@ -103,7 +103,9 @@ export async function POST(
           select:{
             id: true,
             name: true,
-            email: true
+            email: true,
+            image: true,
+            isRobot: true,
           }
         }
       }

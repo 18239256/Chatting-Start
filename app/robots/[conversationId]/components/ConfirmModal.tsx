@@ -30,7 +30,6 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     .then(() => {
       onClose();
       router.push('/robots');
-      router.refresh();
     })
     .catch(() => toast.error('出错了!'))
     .finally(() => setIsLoading(false))

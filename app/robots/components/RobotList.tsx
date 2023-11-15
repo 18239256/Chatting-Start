@@ -41,6 +41,11 @@ const RobotList: React.FC<RobotListProps> = ({
       return session.data?.user?.email
     }, [session.data?.user?.email])
 
+    useEffect(()=>{
+      router.push('/robots');
+    },[items]);
+
+
     useEffect(() => {
       if (!pusherKey) {
         return;
@@ -66,7 +71,6 @@ const RobotList: React.FC<RobotListProps> = ({
           if (find(current, { id: conversation.id })) {
             return current;
           }
-  
           return [conversation, ...current]
         });
       }

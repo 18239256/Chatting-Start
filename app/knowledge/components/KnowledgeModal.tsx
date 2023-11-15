@@ -58,7 +58,6 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
         .then((ret) => {
           router.refresh();
           onClose();
-          console.log('ret', ret);
         })
         .catch(() => toast.error('Something went wrong!'))
         .finally(() => setIsLoading(false));

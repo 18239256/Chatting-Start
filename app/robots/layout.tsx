@@ -12,9 +12,9 @@ export default async function ConversationsLayout({
 }) {
 
   const robotTmpls = await getRobotTemplates();
-  const conversations = await getRobotConversations();
+  let conversations = await getRobotConversations();
   const knowledges = await getKnowledges();
-  
+
   return (
     // \s*\/\/\s*@ts-expect-error
     <Sidebar>
