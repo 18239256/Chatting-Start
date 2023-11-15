@@ -105,7 +105,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
           axios.post('/api/conversations', { userId: callback?.data.userId })
             .then(() => {
               router.push('/robots')
-              router.refresh();
               onClose();
             })
             .catch(() => toast.error('Something went wrong!'))
