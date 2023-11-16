@@ -35,7 +35,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
         if (find(current, { id: message.id })) {
           return current;
         }
-
         return [...current, message]
       });
 
@@ -61,7 +60,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
 
 
     pusherClient.bind('messages:new', messageHandler)
-    pusherClient.bind('message:update', updateMessageHandler);
+    // pusherClient.bind('message:update', updateMessageHandler);
     pusherClient.bind('message:deleteall', delAllMessageHandler);
 
     return () => {
