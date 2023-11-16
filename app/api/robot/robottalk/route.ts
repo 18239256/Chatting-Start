@@ -41,7 +41,8 @@ export async function POST(
             name: true,
             email: true,
             robotOwnerId: true,
-            image: true
+            image: true,
+            robot: true,
           }
         }
       },
@@ -62,7 +63,6 @@ export async function POST(
         },
       }
     });
-
     
     const updatedConversation = await prisma.conversation.update({
       where: {
