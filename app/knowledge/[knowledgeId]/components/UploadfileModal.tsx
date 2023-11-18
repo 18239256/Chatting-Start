@@ -100,7 +100,7 @@ const UploadfileModal: React.FC<UploadfileModalProps> = ({
                             </div>
                         </label>
                         <p><input id="files" type="file" {...register('files')} onChange={fileSelected} className="sr-only" multiple></input></p>
-                        {uploadFiles.map((f)=>(<div>{f}</div>))}
+                        {uploadFiles.map((f,index)=>(<div key={index}>{f}</div>))}
                     </div>
                     <div>
                         <Button disabled={isLoading} type="submit" color="primary" variant="flat">
