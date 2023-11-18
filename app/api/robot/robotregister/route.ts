@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { now } from "next-auth/client/_utils";
 
 export async function POST(
   request: Request
@@ -31,7 +32,7 @@ export async function POST(
                 user:{
                     create:{
                         name,
-                        email: name + "@ai.com",
+                        email: "robot" +  now().toString().slice(-6) + "@ai.com",
                         isRobot:true,
                         robotOwnerId: currentUser?.id,
                         image: "/images/robotbaby.jpg",
