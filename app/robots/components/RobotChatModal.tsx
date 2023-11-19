@@ -116,7 +116,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
   const onKnowItemClick = (knowItem?: Knowledge) => {
     setKnow(knowItem?.displayName || '');
-    return;
   };
 
   const CustomRadio = (props:any) => {
@@ -225,14 +224,19 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 选择模型
               </label>
               <div className="mx-auto w-full max-w-md">
-                <RadioGroup value={tmpl} onValueChange={setTmpl} >
+                <RadioGroup value={tmpl} onValueChange={setTmpl}>
                   {robotTmpls.map((t) => (
-                    <CustomRadio description={t.description} value={t.id} key={t.id}>
-                      <p>
-                      {t.name}
-                      {t.knowledgeAbility && getTmplObj()?.knowledgeAbility ? knowContent : null}
-                      </p>
-                    </CustomRadio>))}
+                    <>
+                      <CustomRadio description={t.description} value={t.id} key={t.id}>
+                        <p>
+                          {t.name}
+                        </p>
+                      </CustomRadio>
+                      <div>
+                        {t.knowledgeAbility && getTmplObj()?.knowledgeAbility ? knowContent : null}
+                      </div>
+                    </>
+                  ))}
                 </RadioGroup>
               </div>
             </div>
