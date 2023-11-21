@@ -16,6 +16,7 @@ import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import { TbDatabase } from 'react-icons/tb';
 import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
+import clsx from 'clsx';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -113,10 +114,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
       .finally(() => setIsLoading(false));
   }
 
-  // const onKnowItemClick = (knowItem?: Knowledge) => {
-  //   setKnow(knowItem?.displayName || '');
-  // };
-
   const CustomRadio = (props: any) => {
     const { children, ...otherProps } = props;
 
@@ -127,7 +124,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
           base: cn(
             "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
             "flex-row-reverse max-w-[500px] cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent",
-            "data-[selected=true]:border-primary"
+            "data-[selected=true]:border-sky-600"
           ),
         }}
       >
@@ -145,6 +142,8 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
         className="max-w-xs"
         onSelectionChange={setKnow}
         variant="bordered"
+        color="default"
+        placeholder="请选择知识库"
         classNames={{
           label: "group-data-[filled=true]:-translate-y-5",
           trigger: "min-h-unit-16",
@@ -200,7 +199,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      {know}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -239,7 +237,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 选择模型
               </label>
               <div className="mx-auto w-full max-w-md">
-                <RadioGroup value={tmpl} onValueChange={setTmpl}>
+                <RadioGroup value={tmpl} onValueChange={setTmpl} color='default'>
                   {robotTmpls.map((t) => (
                     <>
                       <CustomRadio description={t.description} value={t.id} key={t.id}>
