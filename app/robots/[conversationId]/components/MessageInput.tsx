@@ -39,6 +39,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           w-full 
           rounded-full
           focus:outline-none
+          focus:border-sky-600
         "
       />
     </div>
