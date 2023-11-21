@@ -310,7 +310,7 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
-                        <Button color="primary" endContent={<PlusIcon />} onClick={()=>setUploadOpen(true)}>
+                        <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={()=>setUploadOpen(true)}>
                             添加文件
                         </Button>
                     </div>
@@ -358,6 +358,9 @@ const Body: React.FC<BodyProps> = ({knowledge, files = [] }) => {
                     page={page}
                     total={pages}
                     onChange={setPage}
+                    classNames={{
+                        cursor:"bg-sky-500 hover:bg-sky-600"
+                    }}
                 /> <div className="hidden sm:flex w-[30%] justify-end gap-2">
                         <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
                             上一页

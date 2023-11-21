@@ -7,6 +7,7 @@ import useKnowledge from "@/app/hooks/useKnowledge";
 import KnowledgeModal from "./KnowledgeModal";
 import { useState } from "react";
 import { TbDatabasePlus } from "react-icons/tb";
+import { Tooltip } from "@nextui-org/react";
 
 interface KnowledgeListProps {
     items: Knowledge[];
@@ -53,9 +54,10 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
                         >
                             知识库
                         </div>
-                        <div
-                            onClick={() => setIsModalOpen(true)}
-                            className="
+                        <Tooltip content="添加知识库" className='bg-sky-600  text-gray-100'>
+                            <div
+                                onClick={() => setIsModalOpen(true)}
+                                className="
                 rounded-full 
                 p-2 
                 bg-sky-500 
@@ -65,9 +67,10 @@ const KnowledgeList: React.FC<KnowledgeListProps> = ({
                 hover:opacity-75 
                 transition
               "
-                        >
-                            <TbDatabasePlus size={20} />
-                        </div>
+                            >
+                                <TbDatabasePlus size={20} />
+
+                            </div></Tooltip>
                     </div>
                     {items.map((item, index) => (
                         <KnowledgeBox key={item.id}
