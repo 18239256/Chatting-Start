@@ -14,12 +14,10 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
-import { Menu, Transition } from '@headlessui/react';
-import { HiChevronDown } from 'react-icons/hi2';
 import { TbDatabase } from 'react-icons/tb';
-import { RadioGroup, Radio, cn } from '@nextui-org/react';
+import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
 
-function classNames(...classes:any) {
+function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
@@ -30,7 +28,7 @@ interface RobotChatModalProps {
   knowledges: Knowledge[];
 }
 
-function CheckIcon(props:any) {
+function CheckIcon(props: any) {
   return (
     <svg viewBox="0 0 24 24" fill="none" {...props}>
       <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
@@ -45,7 +43,7 @@ function CheckIcon(props:any) {
   )
 }
 
-function compareRobotTmpl(a:RobotTemplate, b:RobotTemplate) {
+function compareRobotTmpl(a: RobotTemplate, b: RobotTemplate) {
   return a.id === b.id;
 }
 
@@ -53,12 +51,12 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   isOpen,
   onClose,
   robotTmpls = [],
-  knowledges =[]
+  knowledges = []
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [tmpl, setTmpl] = useState(robotTmpls[0].id);
-  const [know, setKnow] = useState(()=>{return knowledges.length>0 && knowledges[0].displayName});
+  const [know, setKnow] = useState<Selection>(new Set([]));
 
   const {
     register,
@@ -70,25 +68,26 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     }
   } = useForm<FieldValues>({
     defaultValues: {
-      name:'',
+      name: '',
     }
   });
 
-  const members = watch('members');
-  
-  const getTmplObj = () => {return robotTmpls.find((t)=>{return t.id === tmpl})};
+  // const members = watch('members');
+
+  const getTmplObj = () => { return robotTmpls.find((t) => { return t.id === tmpl }) };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
     let param = {};
-    if(getTmplObj()?.knowledgeAbility)
-    {
-      const selectKnow = knowledges.find((k)=>{return k.displayName === know});
-      param = {...data,robotTmpl:getTmplObj(), knowledgeBaseName: selectKnow?.realName};
+    if (getTmplObj()?.knowledgeAbility) {
+      const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0]});
+      param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName };
     }
     else
-      param = {...data,robotTmpl:getTmplObj()};
+      param = { ...data, robotTmpl: getTmplObj() };
+
+    console.log('param', param);
 
     // Create new robot user base on current logo in user
     axios.post('/api/robot/robotregister', param)
@@ -114,13 +113,13 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
       .finally(() => setIsLoading(false));
   }
 
-  const onKnowItemClick = (knowItem?: Knowledge) => {
-    setKnow(knowItem?.displayName || '');
-  };
+  // const onKnowItemClick = (knowItem?: Knowledge) => {
+  //   setKnow(knowItem?.displayName || '');
+  // };
 
-  const CustomRadio = (props:any) => {
-    const {children, ...otherProps} = props;
-  
+  const CustomRadio = (props: any) => {
+    const { children, ...otherProps } = props;
+
     return (
       <Radio
         {...otherProps}
@@ -139,53 +138,69 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
   const knowContent = React.useMemo(() => {
     return (
-      <Menu as="div" className="relative inline-block text-left">
-        <div className="flex flex-col px-6">
-          <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm sm:text-xs  font-semibold text-sky-500 cursor-pointer" >
-            <TbDatabase size={26} />
-            {know}
-            <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
-          </Menu.Button>
-        </div>
-
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute left-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="px-1 py-1">
-              {knowledges.map((k) => (
-                <Menu.Item key={k.id}>
-                  {({ active }) => (
-                    <button
-                      onClick={() => onKnowItemClick(k)}
-                      className={classNames(
-                        active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                        'block px-4 py-2 text-md text-justify'
-                      )}
-                    >
-                      <div className='inline-flex items-center gap-1 rounded-md bg-blue-50 py-1 text-sm font-semibold text-sky-500'>
-                        <TbDatabase size={26} />
-                        {k.displayName}</div>
-                      <div className='text-gray-400'>{k.description}</div>
-                    </button>
-                  )}
-                </Menu.Item>
-              ))}
-            </div>           
-          </Menu.Items>
-        </Transition>
-      </Menu>
+      <Select
+        items={knowledges}
+        label="知识库"
+        selectedKeys={know}
+        className="max-w-xs"
+        onSelectionChange={setKnow}
+        variant="bordered"
+        classNames={{
+          label: "group-data-[filled=true]:-translate-y-5",
+          trigger: "min-h-unit-16",
+          listboxWrapper: "max-h-[400px]",
+        }}
+        listboxProps={{
+          itemClasses: {
+            base: [
+              "rounded-md",
+              "text-default-500",
+              "transition-opacity",
+              "data-[hover=true]:text-foreground",
+              "data-[hover=true]:bg-default-100",
+              "dark:data-[hover=true]:bg-default-50",
+              "data-[selectable=true]:focus:bg-default-50",
+              "data-[pressed=true]:opacity-70",
+              "data-[focus-visible=true]:ring-default-500",
+            ],
+          },
+        }}
+        popoverProps={{
+          classNames: {
+            base: "before:bg-default-200",
+            content: "p-0 border-small border-divider bg-background",
+          },
+        }}
+        renderValue={(items) => {
+          return items.map((item) => (
+            <div key={item.key} className="flex items-center gap-2">
+              <TbDatabase size={26} />
+              <div className="flex flex-col">
+                <span>{item.data?.displayName}</span>
+                <span className="text-default-500 text-tiny">({item.data?.description})</span>
+              </div>
+            </div>
+          ));
+        }}
+      >
+        {(k) => (
+          <SelectItem key={k.id} textValue={k.displayName}>
+            <div className="flex gap-2 items-center">
+              <TbDatabase size={26} />
+              <div className="flex flex-col">
+                <span className="text-small">{k.displayName}</span>
+                <span className="text-tiny text-default-400">{k.description}</span>
+              </div>
+            </div>
+          </SelectItem>
+        )}
+      </Select>
     );
-  },[know]);
+  }, [know]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
+      {know}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-12">
           <div className="border-b border-gray-900/10 pb-12">
@@ -202,7 +217,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             <p className="mt-1 text-sm leading-6 text-gray-600">
               根据模板创建一个机器人。
             </p>
-                   
+
             <div className="mt-10 flex flex-col gap-y-8">
               <Input
                 disabled={isLoading}
