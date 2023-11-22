@@ -202,10 +202,16 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
     const removeSelectedFiles = async () => {
         let files: string[] = [];
-        Array.from(selectedKeys).map((f) => {
-            console.log('fileName', filteredItems[Number(f) - 1].fileName);
-            files.push(filteredItems[Number(f) - 1].fileName);
-        });
+        if(selectedKeys === 'all'){
+            filteredItems.map((f)=>{
+                files.push(f.fileName);
+            })
+        } else {
+            Array.from(selectedKeys).map((f) => {
+                console.log('fileName', filteredItems[Number(f) - 1].fileName);
+                files.push(filteredItems[Number(f) - 1].fileName);
+            });
+        }
         if (files.length > 0)
             removeDoc(knowledge.realName, files);
         return;
