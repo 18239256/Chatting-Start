@@ -17,10 +17,10 @@ export default function Home() {
     >
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Image
-          height="48"
-          width="48"
+          height="84"
+          width="84"
           className="mx-auto w-auto"
-          src="/images/logo.png"
+          src="/images/chattinglogow.png"
           alt="Logo"
         />
         <h2 
