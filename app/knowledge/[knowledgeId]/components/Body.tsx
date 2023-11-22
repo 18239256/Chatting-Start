@@ -36,7 +36,6 @@ import { RiDeleteBinLine, RiEyeLine } from "react-icons/ri";
 import { ChevronDownIcon } from "./resource/ChevronDownIcon";
 import { SearchIcon } from "./resource/SearchIcon";
 import { capitalize } from "./utils";
-import UploadfileModal from "./UploadfileModal";
 import { useRouter } from "next/navigation";
 import { Knowledge } from "@prisma/client";
 import toast from "react-hot-toast";
@@ -83,7 +82,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [uploadFiles, setUploadFiles] = React.useState(['']);
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "index",
@@ -266,13 +265,28 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         let fileLength = files.length;
         let i = 0;
         let fileNames = [];
+
+        const form = new FormData();
+        form.append("knowledge_base_name", knowledge.realName);
+        
         while (i < fileLength) {
             let file = files[i];
             fileNames.push(file.name);
+            form.append("files", file);
             i++;
         }
         setUploadFiles([...fileNames]);
         onOpen();
+
+        //开始上传任务
+        axios.post('http://region-31.seetacloud.com:38744/api/knowledge_base/upload_docs', form)
+        .then((res)=>{
+            console.log('res', res);
+            toast.success('上传成功!');
+            onClose();
+        })
+        .catch(() => toast.error('出错了!'))
+        .finally(()=>router.refresh());
     }
 
     const topContent = React.useMemo(() => {
@@ -429,11 +443,6 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
     return (
         <>
-            <UploadfileModal
-                isOpen={uploadOpen}
-                onClose={() => { setUploadOpen(false); router.refresh(); }}
-                knowledge={knowledge}
-            />
             <div className="flex-1 overflow-y-auto px-4">
                 <Table
                     aria-label="当前知识库中还没有上传文件!"
