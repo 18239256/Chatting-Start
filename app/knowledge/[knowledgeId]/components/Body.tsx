@@ -31,6 +31,7 @@ import React, { useMemo } from "react";
 
 import { PlusIcon } from "./resource/PlusIcon";
 import { RiDeleteBinLine, RiEyeLine } from "react-icons/ri";
+import { MdDeleteSweep } from "react-icons/md";
 import { ChevronDownIcon } from "./resource/ChevronDownIcon";
 import { SearchIcon } from "./resource/SearchIcon";
 import { capitalize } from "./utils";
@@ -288,6 +289,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         setUploadFiles([...fileNames]);
         onOpen();
 
+        // 👇️ reset file input
+        data.target.value = null;
+
         //开始上传任务
         axios.post('http://region-31.seetacloud.com:38744/api/knowledge_base/upload_docs', form)
         .then((res)=>{
@@ -430,10 +434,10 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                 </span>
                 <Tooltip color="danger" content="删除选中文档">
                     <span className={clsx(
-                        "px-2 text-large text-danger cursor-pointer active:opacity-50",
+                        "px-2 text-3xl text-danger cursor-pointer active:opacity-50",
                         Array.from(selectedKeys).length === 0 ? 'hidden' : ''
                         )} onClick={()=> removeSelectedFiles()}>
-                        <RiDeleteBinLine />
+                        <MdDeleteSweep />
                     </span>
                 </Tooltip>
                 </div>
