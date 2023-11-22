@@ -25,13 +25,11 @@ import {
     ModalContent,
     ModalHeader,
     ModalBody,
-    CircularProgress,
     Progress,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 
 import { PlusIcon } from "./resource/PlusIcon";
-import { VerticalDotsIcon } from "./resource/VerticalDotsIcon";
 import { RiDeleteBinLine, RiEyeLine } from "react-icons/ri";
 import { ChevronDownIcon } from "./resource/ChevronDownIcon";
 import { SearchIcon } from "./resource/SearchIcon";
@@ -41,6 +39,7 @@ import { Knowledge } from "@prisma/client";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { format } from "url";
+import clsx from "clsx";
 
 const columns = [
     {
@@ -189,14 +188,25 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     };
 
     const removeDoc = async (knowledgeRN: string, file_names: string[]) => {
-        if (confirm("确认删除?"))   //后续优化这个确认对话框
+        if (confirm("确认删除选中的文档?"))   //后续优化这个确认对话框
             axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
                 .then((ret) => {
                     toast.success(`${file_names[0]} 已经成功删除`);
                     router.refresh();
                 })
                 .catch(() => toast.error('出错了!'))
-                .finally()
+                .finally(()=>setSelectedKeys(new Set([])))
+        return;
+    };
+
+    const removeSelectedFiles = async () => {
+        let files: string[] = [];
+        Array.from(selectedKeys).map((f) => {
+            console.log('fileName', filteredItems[Number(f) - 1].fileName);
+            files.push(filteredItems[Number(f) - 1].fileName);
+        });
+        if (files.length > 0)
+            removeDoc(knowledge.realName, files);
         return;
     };
 
@@ -412,11 +422,21 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const bottomContent = React.useMemo(() => {
         return (
             <div className="py-2 px-4 flex justify-between items-center">
-                <span className="w-[30%] text-small text-default-400">
+                <div className="flex">
+                <span className="w-[100%] text-small text-default-400">
                     {selectedKeys === "all"
                         ? "选中所有文件"
                         : `${selectedKeys.size} / ${filteredItems.length} 被选择`}
                 </span>
+                <Tooltip color="danger" content="删除选中文档">
+                    <span className={clsx(
+                        "px-2 text-large text-danger cursor-pointer active:opacity-50",
+                        Array.from(selectedKeys).length === 0 ? 'hidden' : ''
+                        )} onClick={()=> removeSelectedFiles()}>
+                        <RiDeleteBinLine />
+                    </span>
+                </Tooltip>
+                </div>
                 <Pagination
                     isCompact
                     showControls
