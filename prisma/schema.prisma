@@ -37,6 +37,9 @@ model User {
   isRobot    Boolean?
   knowledges Knowledge[]
   robot Robot?
+
+  assignRoleIds String[] @db.ObjectId
+  assignRole    Role[] @relation("assign",fields: [assignRoleIds], references: [id])
 }
 
 model Account {
@@ -148,8 +151,20 @@ model RobotMask{
   refRobots         Robot[]
 }
 
+model Role{
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  createdAt          DateTime @default(now())
+  description        String
 
-enum Role {
+  channels           String[]
+
+  assignIds        String[] @db.ObjectId
+  assign           User[] @relation("assign", fields: [assignIds], references: [id])
+}
+
+
+enum RoleType {
   USER
   ADMIN
   ROBOT
