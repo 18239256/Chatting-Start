@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
 import { HiArrowLeftOnRectangle, HiBookOpen, HiUsers } from 'react-icons/hi2';
-import {FaRobot} from 'react-icons/fa6'
+import {FaIdBadge, FaRobot} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
 import useConversation from "./useConversation";
 
@@ -34,6 +34,12 @@ const useRoutes = () => {
       icon: HiBookOpen, 
       active: /^\/knowledge.*$/.test(pathname || "")
     },
+    { 
+      label: 'Roles', 
+      href: '/roles', 
+      icon: FaIdBadge, 
+      active: /^\/role.*$/.test(pathname || "")
+    },
     {
       label: 'Logout', 
       onClick: () => signOut(),
@@ -42,7 +48,7 @@ const useRoutes = () => {
     }
   ], [pathname]);
 
-  return routes.slice(1,5);
+  return routes.slice(1,6);
 };
 
 export default useRoutes;
