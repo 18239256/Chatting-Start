@@ -3,6 +3,7 @@ import EmptyState from "@/app/components/EmptyState";
 import Header from "./components/Header";
 import getRoleById from "@/app/actions/getRoleById";
 import getKnowledgeFileList from "@/app/actions/LLM/getKnowledgeFileList";
+import Body from "./components/Body";
 
 
 interface IParams {
@@ -26,7 +27,7 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     <div className="lg:pl-80 h-full">
         <div className="h-full flex flex-col">
             <Header role={role} />
-            {/* <Body knowledge={role} files={fileList} /> */}
+            <Body role={role}/>
       </div>
     </div>
   );

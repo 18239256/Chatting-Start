@@ -4,13 +4,16 @@ import {  Role } from "@prisma/client";
 
 import AvatarRole from "@/app/components/AvatarRole";
 import LoadingModal from "@/app/components/modals/LoadingModal";
+import clsx from "clsx";
 
 interface RoleBoxProps {
-  data: Role
+  data: Role,
+  selected?: boolean
 }
 
 const RoleBox: React.FC<RoleBoxProps> = ({ 
-  data
+  data,
+  selected
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -26,19 +29,20 @@ const RoleBox: React.FC<RoleBoxProps> = ({
       )}
       <div
         onClick={handleClick}
-        className="
-          w-full 
-          relative 
-          flex 
-          items-center 
-          space-x-3 
-          bg-white 
-          p-3 
-          hover:bg-neutral-100
-          rounded-lg
-          transition
-          cursor-pointer
-        "
+        className={clsx(`
+        w-full 
+        relative 
+        flex 
+        items-center 
+        space-x-3 
+        p-3 
+        hover:bg-neutral-100
+        rounded-lg
+        transition
+        cursor-pointer
+        `,
+        selected ? 'bg-neutral-100' : 'bg-white'
+      )}
       >
         <AvatarRole role={data} />
         <div className="min-w-0 flex-1">
