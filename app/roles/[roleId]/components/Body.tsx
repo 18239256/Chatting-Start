@@ -1,12 +1,13 @@
 'use client';
 
 import { Role, User } from "@prisma/client";
-import { Listbox, ListboxItem, Chip, ScrollShadow, Selection, Button } from "@nextui-org/react";
+import { Listbox, ListboxItem, Chip, ScrollShadow, Selection, Button, Select } from "@nextui-org/react";
 import Avatar from "@/app/components/Avatar";
 import { ListboxWrapper } from "./ListboxWrapper";
 import { Key, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface BodyProps {
     role: Role;
@@ -33,9 +34,13 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     const arrayValues = Array.from(values);
     const [dirty, setDirty] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
-        setDirty(!arrayEqual(role.assignIds, Array.from(values)));
+        if(values === "all")
+            setDirty(!arrayEqual(role.assignIds, [...users.map((u)=>u.id)]));
+        else
+            setDirty(!arrayEqual(role.assignIds, Array.from(values)));
     }, [role.assignIds, values]);
 
     const topContent = useMemo(() => {
@@ -58,9 +63,9 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
         setIsLoading(true);
         const param={
             roleId: role.id,
-            assignIds: values
+            assignIds: values === "all"? [...users.map((u)=>u.id)] : arrayValues
         }
-        axios.post('/api/addUsers', param)
+        axios.post('/api/role/addUsers', param)
         .then((callback) => {
           if (callback?.status !== 200) {
             toast.error('保存失败');
@@ -68,10 +73,14 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
   
           if (callback?.status == 200) {
             toast.success('保存成功');
+            setDirty(false);
           }
         })
-        .catch(() => toast.error('出错了!'))
-        .finally(() => setIsLoading(false));
+        .catch((err) => toast.error(`${err}`))
+        .finally(() => {
+            setIsLoading(false);
+            router.refresh();
+        });
     };
 
     return (
@@ -79,13 +88,11 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
             <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="flex justify-between overflow-y-auto py-4">
                     <div className="py-2">用户管理</div>
-                    {dirty && (
-                        <div>
-                            <Button color="primary" className="bg-sky-500 hover:bg-sky-600" onClick={saveModify}>
-                                保存修改
-                            </Button>
-                        </div>
-                    )}
+                    <div>
+                        <Button color="primary" disabled={!dirty || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
+                            保存修改
+                        </Button>
+                    </div>
                 </div>
                 <ListboxWrapper>
                     <Listbox

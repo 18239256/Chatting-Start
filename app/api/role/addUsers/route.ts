@@ -7,6 +7,7 @@ export async function POST(
   request: Request,
 ) {
   try {
+    
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
@@ -18,20 +19,31 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const newRole = await prisma.role.update({
+    //Clear all connet before.
+    const resultBefore = await prisma.role.update({
         where:{
             id: roleId
         },
         data: {
             assign:{
-                connect:[...assignIds.map((id:any)=>{
-                    id:id
-                })]
+                set:[],
+            }
+        }
+    });
+    
+    //Connect with new assignment.
+    const resultAfter = await prisma.role.update({
+        where:{
+            id: roleId
+        },
+        data: {
+            assign:{
+                connect:assignIds.map((id:any) =>({id:id})),
             }
         }
     });
 
-    return NextResponse.json(newRole);
+    return NextResponse.json(resultAfter);
 
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
