@@ -15,10 +15,10 @@ const getUsers = async () => {
         createdAt: 'desc'
       },
       where: {
+        isRobot: false, //必须放在NOT的前面
         NOT: {
           email: session.user.email
-        },
-        isRobot: true //此处可能室prisma的bug，前面的NOT好像作用于这里
+        }
       }
     });
     
