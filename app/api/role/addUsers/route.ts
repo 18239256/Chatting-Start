@@ -10,18 +10,24 @@ export async function POST(
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
-      name,
-      description,
+        roleId,
+        assignIds
     } = body;
 
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const newRole = await prisma.role.create({
+    const newRole = await prisma.role.update({
+        where:{
+            id: roleId
+        },
         data: {
-            name: name,
-            description :  description,
+            assign:{
+                connect:[...assignIds.map((id:any)=>{
+                    id:id
+                })]
+            }
         }
     });
 
