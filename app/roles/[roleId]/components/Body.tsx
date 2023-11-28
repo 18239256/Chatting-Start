@@ -8,11 +8,16 @@ import { Key, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import useRoutes from "@/app/hooks/useRoutes";
 
 interface BodyProps {
     role: Role;
     users: User[];
 }
+
+interface IconProps {
+    icon: any;
+  }
 
 function arrayEqual(a:Key[], b:Key[]) {
     //先将数组排序
@@ -30,21 +35,25 @@ function arrayEqual(a:Key[], b:Key[]) {
 }
 
 const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
-    const [values, setValues] = useState<Selection>(new Set(role.assignIds));
-    const arrayValues = Array.from(values);
-    const [dirty, setDirty] = useState(false);
+    const [roleUsers, setRoleUsers] = useState<Selection>(new Set(role.assignIds));
+    const [roleChannels, setRoleChannels] = useState<Selection>(new Set(role.channels));
+    const arrayRoleUsers = Array.from(roleUsers);
+    const arrayRoleChannels = Array.from(roleChannels);
+    const [dirtyOfUsers, setDirtyOfUsers] = useState(false);
+    const [dirtyOfChannels, setDirtyOfChannels] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const routes = useRoutes();
     const router = useRouter();
 
     useEffect(() => {
-        if(values === "all")
-            setDirty(!arrayEqual(role.assignIds, [...users.map((u)=>u.id)]));
+        if(roleUsers === "all")
+            setDirtyOfUsers(!arrayEqual(role.assignIds, [...users.map((u)=>u.id)]));
         else
-            setDirty(!arrayEqual(role.assignIds, Array.from(values)));
-    }, [role.assignIds, values]);
+            setDirtyOfUsers(!arrayEqual(role.assignIds, Array.from(roleUsers)));
+    }, [role.assignIds, roleUsers]);
 
-    const topContent = useMemo(() => {
-        if (!arrayValues.length) {
+    const topContentOfUser = useMemo(() => {
+        if (!arrayRoleUsers.length) {
             return null;
         } return (
             <ScrollShadow
@@ -52,18 +61,34 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
                 className="w-full flex py-0.5 px-2 gap-1"
                 orientation="horizontal"
             >
-                {arrayValues.map((value) => (
+                {arrayRoleUsers.map((value) => (
                     <Chip key={value}>{users.find((user) => `${user.id}` === `${value}`)?.name}</Chip>
                 ))}
             </ScrollShadow>
         );
-    }, [arrayValues.length]);
+    }, [arrayRoleUsers.length]);
+
+    const topContentOfChannel = useMemo(() => {
+        if (!arrayRoleChannels.length) {
+            return null;
+        } return (
+            <ScrollShadow
+                // hideScrollBar
+                className="w-full flex py-0.5 px-2 gap-1"
+                orientation="horizontal"
+            >
+                {arrayRoleChannels.map((value) => (
+                    <Chip key={value}>{routes.find((r) => `${r.label}` === `${value}`)?.label}</Chip>
+                ))}
+            </ScrollShadow>
+        );
+    }, [arrayRoleChannels.length]);
 
     const saveModify = () =>{
         setIsLoading(true);
         const param={
             roleId: role.id,
-            assignIds: values === "all"? [...users.map((u)=>u.id)] : arrayValues
+            assignIds: roleUsers === "all"? [...users.map((u)=>u.id)] : arrayRoleUsers
         }
         axios.post('/api/role/addUsers', param)
         .then((callback) => {
@@ -73,7 +98,7 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
   
           if (callback?.status == 200) {
             toast.success('保存成功');
-            setDirty(false);
+            setDirtyOfUsers(false);
           }
         })
         .catch((err) => toast.error(`${err}`))
@@ -83,29 +108,63 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
         });
     };
 
+    const CustomIcon: React.FC<IconProps> = ({icon: Icon}) => {
+        return (
+            <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+        )
+    };
+
     return (
         <>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-                <div className="flex justify-between overflow-y-auto py-4">
-                    <div className="py-2">用户管理</div>
+                <div className="flex justify-end overflow-y-auto">
                     <div>
-                        <Button color="primary" disabled={!dirty || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
+                        <Button color="primary" disabled={!dirtyOfUsers || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
                             保存修改
                         </Button>
                     </div>
                 </div>
+                <div className="py-4">频道管理</div>
                 <ListboxWrapper>
                     <Listbox
-                        topContent={topContent}
+                        topContent={topContentOfChannel}
                         classNames={{
                             base: "max-w-[100%]",
                             list: "max-h-[600px] overflow-scroll",
                         }}
-                        defaultSelectedKeys={values}
+                        defaultSelectedKeys={roleChannels}
+                        items={routes}
+                        label="Assigned to"
+                        selectionMode="multiple"
+                        onSelectionChange={setRoleChannels}
+                        variant="flat"
+                    >
+                        {(item) => (
+                            <ListboxItem key={item.label} textValue={item.label||""}>
+                                <div className="flex gap-2 items-center">
+                                    <CustomIcon icon={item.icon} />
+                                    <div className="flex flex-col">
+                                        <span className="text-small">{item.label}</span>
+                                        <span className="text-tiny text-default-400">{item.href}</span>
+                                    </div>
+                                </div>
+                            </ListboxItem>
+                        )}
+                    </Listbox>
+                </ListboxWrapper>
+                <div className="py-4">用户管理</div>
+                <ListboxWrapper>
+                    <Listbox
+                        topContent={topContentOfUser}
+                        classNames={{
+                            base: "max-w-[100%]",
+                            list: "max-h-[600px] overflow-scroll",
+                        }}
+                        defaultSelectedKeys={roleUsers}
                         items={users}
                         label="Assigned to"
                         selectionMode="multiple"
-                        onSelectionChange={setValues}
+                        onSelectionChange={setRoleUsers}
                         variant="flat"
                     >
                         {(item) => (

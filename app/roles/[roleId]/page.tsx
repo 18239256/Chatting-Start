@@ -1,8 +1,6 @@
 import EmptyState from "@/app/components/EmptyState";
-// import Body from "./components/Body";
 import Header from "./components/Header";
 import getRoleById from "@/app/actions/getRoleById";
-import getKnowledgeFileList from "@/app/actions/LLM/getKnowledgeFileList";
 import Body from "./components/Body";
 import getUsers from "@/app/actions/getUsers";
 
@@ -29,7 +27,7 @@ const ConversationId = async ({ params }: { params: IParams }) => {
     <div className="lg:pl-80 h-full">
         <div className="h-full flex flex-col">
             <Header role={role} />
-            <Body role={role} users={users}/>
+            <Body role={role} users={users} />
       </div>
     </div>
   );
