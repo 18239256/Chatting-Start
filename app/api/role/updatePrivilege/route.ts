@@ -2,45 +2,57 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import { Prisma } from "@prisma/client";
 
 export async function POST(
   request: Request,
 ) {
   try {
-    
+
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
-        roleId,
-        assignIds
+      roleId,
+      assignIds,
+      channels
     } = body;
 
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    //Clear all connet before.
-    const resultBefore = await prisma.role.update({
-        where:{
-            id: roleId
+    //Clear user connnects
+    if (assignIds) {
+      const resultBefore = await prisma.role.update({
+        where: {
+          id: roleId
         },
         data: {
-            assign:{
-                set:[],
-            }
+          assign: {
+            set: [],
+          }
         }
-    });
-    
+      });
+    }
+
     //Connect with new assignment.
-    const resultAfter = await prisma.role.update({
-        where:{
-            id: roleId
-        },
-        data: {
-            assign:{
-                connect:assignIds.map((id:any) =>({id:id})),
-            }
+    let updateData: Prisma.RoleUpdateInput = {};
+    if (assignIds)
+      updateData =
+      {
+        assign: {
+          connect: assignIds.map((id: any) => ({ id: id })),
         }
+      };
+
+    if(channels)
+      updateData.channels = channels;
+
+    const resultAfter = await prisma.role.update({
+      where: {
+        id: roleId
+      },
+      data: updateData
     });
 
     return NextResponse.json(resultAfter);

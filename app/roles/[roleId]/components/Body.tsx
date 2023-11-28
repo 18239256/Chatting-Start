@@ -17,7 +17,7 @@ interface BodyProps {
 
 interface IconProps {
     icon: any;
-  }
+}
 
 function arrayEqual(a:Key[], b:Key[]) {
     //先将数组排序
@@ -38,9 +38,10 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     const [roleUsers, setRoleUsers] = useState<Selection>(new Set(role.assignIds));
     const [roleChannels, setRoleChannels] = useState<Selection>(new Set(role.channels));
     const arrayRoleUsers = Array.from(roleUsers);
-    const arrayRoleChannels = Array.from(roleChannels);
+    const arrayRoleChannels = Array.from(roleChannels);    
     const [dirtyOfUsers, setDirtyOfUsers] = useState(false);
     const [dirtyOfChannels, setDirtyOfChannels] = useState(false);
+    const [dirty,setDirty] = useState(dirtyOfUsers||dirtyOfChannels);
     const [isLoading, setIsLoading] = useState(false);
     const routes = useRoutes();
     const router = useRouter();
@@ -51,6 +52,17 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
         else
             setDirtyOfUsers(!arrayEqual(role.assignIds, Array.from(roleUsers)));
     }, [role.assignIds, roleUsers]);
+
+    useEffect(() => {
+        if(roleChannels === "all")
+            setDirtyOfChannels(!arrayEqual(role.channels, [...routes.map((r)=>r.label)]));
+        else
+            setDirtyOfChannels(!arrayEqual(role.channels, Array.from(roleChannels)));
+    }, [role.channels, roleChannels]);
+
+    useEffect(()=>{
+        setDirty(dirtyOfChannels||dirtyOfUsers);
+    }, [dirtyOfChannels,dirtyOfUsers]);
 
     const topContentOfUser = useMemo(() => {
         if (!arrayRoleUsers.length) {
@@ -84,28 +96,31 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
         );
     }, [arrayRoleChannels.length]);
 
-    const saveModify = () =>{
+    const saveModify = () => {
         setIsLoading(true);
-        const param={
-            roleId: role.id,
-            assignIds: roleUsers === "all"? [...users.map((u)=>u.id)] : arrayRoleUsers
-        }
-        axios.post('/api/role/addUsers', param)
-        .then((callback) => {
-          if (callback?.status !== 200) {
-            toast.error('保存失败');
-          }
-  
-          if (callback?.status == 200) {
-            toast.success('保存成功');
-            setDirtyOfUsers(false);
-          }
-        })
-        .catch((err) => toast.error(`${err}`))
-        .finally(() => {
-            setIsLoading(false);
-            router.refresh();
-        });
+        
+        //更新用户变更信息
+            const param = {
+                roleId: role.id,
+                assignIds: dirtyOfUsers? (roleUsers === "all" ? [...users.map((u) => u.id)] : arrayRoleUsers) : null,
+                channels: dirtyOfChannels?(roleChannels === "all" ? [...routes.map((r) => r.label)] : arrayRoleChannels):null,
+            }
+            axios.post('/api/role/updatePrivilege', param)
+                .then((callback) => {
+                    if (callback?.status !== 200) {
+                        toast.error('保存失败');
+                    }
+
+                    if (callback?.status == 200) {
+                        toast.success('保存成功');
+                        setDirtyOfUsers(false);
+                    }
+                })
+                .catch((err) => toast.error(`${err}`))
+                .finally(() => {
+                    setIsLoading(false);
+                    router.refresh();
+                });
     };
 
     const CustomIcon: React.FC<IconProps> = ({icon: Icon}) => {
@@ -119,7 +134,7 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
             <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="flex justify-end overflow-y-auto">
                     <div>
-                        <Button color="primary" disabled={!dirtyOfUsers || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
+                        <Button color="primary" disabled={!dirty || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
                             保存修改
                         </Button>
                     </div>
