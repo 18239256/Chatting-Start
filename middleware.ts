@@ -12,5 +12,6 @@ export const config = {
     "/users/:path*",
     "/knowledge/:path*",
     "/robots/:path*",
+    "/roles/:path*",
   ]
 };
