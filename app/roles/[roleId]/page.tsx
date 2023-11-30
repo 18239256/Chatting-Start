@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import getRoleById from "@/app/actions/getRoleById";
 import Body from "./components/Body";
 import getUsers from "@/app/actions/getUsers";
+import getCurrentUser from "@/app/actions/getCurrentUser";
 
 
 interface IParams {
@@ -12,6 +13,8 @@ interface IParams {
 const ConversationId = async ({ params }: { params: IParams }) => {
     const role = await getRoleById(params.roleId);
     const users = await getUsers();
+    const curUser = await getCurrentUser();
+    users.push(curUser!);
 
     if (!role) {
         return (

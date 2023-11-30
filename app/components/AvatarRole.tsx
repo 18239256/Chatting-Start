@@ -23,7 +23,7 @@ const AvatarRole: React.FC<AvatarProps> = ({ role }) => {
                 transition
               "
       >
-        <FaIdBadge size={32} />
+        <FaIdBadge size={20} />
       </div>
     </div>
   );
