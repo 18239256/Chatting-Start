@@ -8,13 +8,15 @@ import { User } from "@prisma/client";
 import Avatar from "../Avatar";
 
 interface DesktopSidebarProps {
-  currentUser: User
+  currentUser: User,
+  authChannels: string[]
 }
 
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
-  currentUser
+  currentUser,
+  authChannels,
 }) => {
-  const routes = useRoutes();
+  const routes = useRoutes().filter((r)=> authChannels.includes(r.label));
   const [isOpen, setIsOpen] = useState(false);
 
   return ( 

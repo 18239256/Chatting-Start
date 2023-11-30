@@ -4,10 +4,15 @@ import useConversation from "@/app/hooks/useConversation";
 import useRoutes from "@/app/hooks/useRoutes";
 import MobileItem from "./MobileItem";
 
-const MobileFooter = () => {
-  const routes = useRoutes();
-  const { isOpen } = useConversation();
+interface MobileFooterProps {
+  authChannels: string[]
+}
 
+const MobileFooter: React.FC<MobileFooterProps> = ({
+  authChannels
+}) => {
+  const routes = useRoutes().filter((r)=> authChannels.includes(r.label));
+  const { isOpen } = useConversation();
   if (isOpen) {
     return null;
   }
