@@ -11,7 +11,7 @@ interface MobileFooterProps {
 const MobileFooter: React.FC<MobileFooterProps> = ({
   authChannels
 }) => {
-  const routes = useRoutes().filter((r)=> authChannels.includes(r.label));
+  const routes = useRoutes().filter((r)=> authChannels?.includes(r.label));
   const { isOpen } = useConversation();
   if (isOpen) {
     return null;

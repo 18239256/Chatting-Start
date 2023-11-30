@@ -16,7 +16,7 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   currentUser,
   authChannels,
 }) => {
-  const routes = useRoutes().filter((r)=> authChannels.includes(r.label));
+  const routes = useRoutes().filter((r)=> authChannels?.includes(r.label));
   const [isOpen, setIsOpen] = useState(false);
 
   return ( 
