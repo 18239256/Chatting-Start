@@ -14,7 +14,8 @@ export async function POST(
     const {
       roleId,
       assignIds,
-      channels
+      channels,
+      isDefaultRole,
     } = body;
 
     if (!currentUser?.id) {
@@ -47,6 +48,8 @@ export async function POST(
 
     if(channels)
       updateData.channels = channels;
+
+    updateData.defaultRole = isDefaultRole;
 
     const resultAfter = await prisma.role.update({
       where: {

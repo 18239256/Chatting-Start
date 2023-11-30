@@ -62,8 +62,8 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     }, [role.channels, roleChannels]);
 
     useEffect(()=>{
-        setDirty(dirtyOfChannels||dirtyOfUsers);
-    }, [dirtyOfChannels,dirtyOfUsers]);
+        setDirty(dirtyOfChannels||dirtyOfUsers|| isDefaultRole !== role.defaultRole);
+    }, [dirtyOfChannels,dirtyOfUsers,isDefaultRole]);
 
     const topContentOfUser = useMemo(() => {
         if (!arrayRoleUsers.length) {
@@ -105,6 +105,7 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
                 roleId: role.id,
                 assignIds: dirtyOfUsers? (roleUsers === "all" ? [...users.map((u) => u.id)] : arrayRoleUsers) : null,
                 channels: dirtyOfChannels?(roleChannels === "all" ? [...routes.map((r) => r.label)] : arrayRoleChannels):null,
+                isDefaultRole: isDefaultRole,
             }
             axios.post('/api/role/updatePrivilege', param)
                 .then((callback) => {

@@ -21,12 +21,22 @@ export async function POST(
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
+        const defaultRoles = await prisma.role.findMany({
+            where:{
+                defaultRole: true,
+            }
+
+        });
+
         const user = await prisma.user.create({
             data: {
-            email,
-            name,
-            hashedPassword,
-            isRobot: false
+                email,
+                name,
+                hashedPassword,
+                isRobot: false,
+                assignRole: {
+                    connect: defaultRoles.map((role) => ({ id: role.id })),
+                }
             }
         });
 
