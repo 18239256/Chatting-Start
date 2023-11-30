@@ -1,7 +1,7 @@
 'use client';
 
 import { Role, User } from "@prisma/client";
-import { Listbox, ListboxItem, Chip, ScrollShadow, Selection, Button, Select } from "@nextui-org/react";
+import { Listbox, ListboxItem, Chip, ScrollShadow, Selection, Button, Select, Switch, cn } from "@nextui-org/react";
 import Avatar from "@/app/components/Avatar";
 import { ListboxWrapper } from "./ListboxWrapper";
 import { Key, useEffect, useMemo, useState } from "react";
@@ -37,6 +37,7 @@ function arrayEqual(a:Key[], b:Key[]) {
 const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     const [roleUsers, setRoleUsers] = useState<Selection>(new Set(role.assignIds));
     const [roleChannels, setRoleChannels] = useState<Selection>(new Set(role.channels));
+    const [isDefaultRole, setIsDefaultRole] = useState(role.defaultRole);
     const arrayRoleUsers = Array.from(roleUsers);
     const arrayRoleChannels = Array.from(roleChannels);    
     const [dirtyOfUsers, setDirtyOfUsers] = useState(false);
@@ -132,7 +133,29 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     return (
         <>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-                <div className="flex justify-end overflow-y-auto">
+                <div className="flex justify-between overflow-y-auto">
+                    <Switch 
+                        isSelected={isDefaultRole!} 
+                        onValueChange={setIsDefaultRole}
+                        classNames={{
+                            base: cn(
+                              "inline-flex flex-row-reverse w-[22%] max-w-md bg-content1 hover:bg-content2 items-center",
+                              "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
+                              "data-[selected=true]:border-sky-600",
+                            ),
+                            wrapper: "p-0 h-4 overflow-visible",
+                            thumb: cn("w-6 h-6 border-2 shadow-lg",
+                              "group-data-[hover=true]:bg-sky-600",
+                              //selected
+                              "group-data-[selected=true]:ml-6",
+                              // pressed
+                              "group-data-[pressed=true]:w-7",
+                              "group-data-[selected]:group-data-[pressed]:ml-4",
+                            ),
+                          }}
+                    >
+                        新用户默认角色
+                    </Switch>
                     <div>
                         <Button color="primary" disabled={!dirty || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
                             保存修改

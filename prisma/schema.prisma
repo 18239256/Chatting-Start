@@ -157,6 +157,7 @@ model Role{
   createdAt          DateTime @default(now())
   description        String
   image              String?
+  defaultRole        Boolean?
 
   channels           String[]
 
