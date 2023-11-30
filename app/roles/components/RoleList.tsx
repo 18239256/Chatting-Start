@@ -70,6 +70,7 @@ const RoleList: React.FC<RoleListProps> = ({
           </div>
           {items.map((item) => (
             <RoleBox
+              key={item.id}
               data={item}
               selected={roleId === item.id}
             />
