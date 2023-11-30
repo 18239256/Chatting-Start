@@ -32,7 +32,6 @@ const getAuthRoutes = async () => {
     });
 
     const authChannels = unique(...allChans);
-    console.log('authChannels', authChannels);
 
     return authChannels;
 

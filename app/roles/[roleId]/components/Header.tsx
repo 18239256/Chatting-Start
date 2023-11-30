@@ -1,12 +1,10 @@
 'use client';
 
 import { HiChevronLeft } from 'react-icons/hi'
-import { FaRegAddressCard } from "react-icons/fa6";
+import { FaIdBadge, FaRegIdBadge } from "react-icons/fa";
 import { LuBadgeX } from "react-icons/lu";
 import Link from "next/link";
 import { Role } from "@prisma/client";
-import axios from 'axios';
-import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Tooltip } from '@nextui-org/react';
@@ -74,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ role}) => {
           >
             <HiChevronLeft size={32} />
           </Link>
-          <FaRegAddressCard size={32} className="lg:hidden"/>
+          <FaRegIdBadge size={32} className="lg:hidden"/>
           <div className="flex flex-col">
             <div>{role.name}</div>
           </div>

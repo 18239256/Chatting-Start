@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
-import { HiArrowLeftOnRectangle, HiBookOpen, HiUsers } from 'react-icons/hi2';
+import { HiBookOpen, HiUsers } from 'react-icons/hi2';
 import {FaIdBadge, FaRobot} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
-import useConversation from "./useConversation";
+import { RiLogoutBoxFill } from "react-icons/ri";
 
 const useRoutes = () => {
   const pathname = usePathname();
@@ -44,7 +44,7 @@ const useRoutes = () => {
       label: 'Logout', 
       onClick: () => signOut(),
       href: '#',
-      icon: HiArrowLeftOnRectangle, 
+      icon: RiLogoutBoxFill, 
     }
   ], [pathname]);
 

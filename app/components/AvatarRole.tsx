@@ -1,31 +1,29 @@
 'use client';
 
-import { Role} from "@prisma/client";
+import { Role } from "@prisma/client";
 
 import Image from "next/image";
+import { FaIdBadge } from "react-icons/fa6";
 
 interface AvatarProps {
   role?: Role;
 };
 
-const AvatarRole: React.FC<AvatarProps> = ({ role}) => {
+const AvatarRole: React.FC<AvatarProps> = ({ role }) => {
   return (
     <div className="relative">
-      <div className="
-        relative 
-        inline-block 
-        rounded-full 
-        overflow-hidden
-        h-9 
-        w-9 
-        md:h-11 
-        md:w-11
-      ">
-        <Image
-          fill
-          src={role?.image || '/images/placeholder.jpg'}
-          alt="Avatar"
-        />
+      <div
+        className="
+                rounded-full 
+                p-2 
+                bg-gray-500 
+                text-gray-100
+                cursor-pointer 
+                hover:opacity-75 
+                transition
+              "
+      >
+        <FaIdBadge size={32} />
       </div>
     </div>
   );
