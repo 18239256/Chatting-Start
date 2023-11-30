@@ -11,11 +11,14 @@ const getRoles = async () => {
 
   try {
     const users = await prisma.role.findMany({
-      orderBy: {
-        createdAt: 'desc'
-      }
+      orderBy: [{
+        defaultRole: 'desc'
+      },
+      {
+        createdAt:'desc'
+      }]
     });
-    
+
     return users;
   } catch (error: any) {
     return [];
