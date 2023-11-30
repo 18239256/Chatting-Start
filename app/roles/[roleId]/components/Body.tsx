@@ -136,24 +136,8 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
             <div className="flex-1 overflow-y-auto px-4 py-4">
                 <div className="flex justify-between overflow-y-auto">
                     <Switch 
-                        isSelected={isDefaultRole!} 
-                        onValueChange={setIsDefaultRole}
-                        classNames={{
-                            base: cn(
-                              "inline-flex flex-row-reverse w-[22%] max-w-md bg-content1 hover:bg-content2 items-center",
-                              "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent",
-                              "data-[selected=true]:border-sky-600",
-                            ),
-                            wrapper: "p-0 h-4 overflow-visible",
-                            thumb: cn("w-6 h-6 border-2 shadow-lg",
-                              "group-data-[hover=true]:bg-sky-600",
-                              //selected
-                              "group-data-[selected=true]:ml-6",
-                              // pressed
-                              "group-data-[pressed=true]:w-7",
-                              "group-data-[selected]:group-data-[pressed]:ml-4",
-                            ),
-                          }}
+                        isSelected={isDefaultRole!}
+                        onValueChange={setIsDefaultRole}                        
                     >
                         新用户默认角色
                     </Switch>
