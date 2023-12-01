@@ -137,9 +137,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         return filteredFiles;
     }, [filesArray, filterValue, statusFilter, extsOptions, hasSearchFilter]);
 
-    const pages = React.useMemo(()=>{
-       return Math.ceil(filteredItems.length / rowsPerPage);
-    },[filteredItems, rowsPerPage]);  
+    const pages = React.useMemo(() => {
+        return Math.ceil(filteredItems.length / rowsPerPage);
+    }, [filteredItems, rowsPerPage]);
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -198,14 +198,14 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                     router.refresh();
                 })
                 .catch(() => toast.error('出错了!'))
-                .finally(()=>setSelectedKeys(new Set([])))
+                .finally(() => setSelectedKeys(new Set([])))
         return;
     };
 
     const removeSelectedFiles = async () => {
         let files: string[] = [];
-        if(selectedKeys === 'all'){
-            filteredItems.map((f)=>{
+        if (selectedKeys === 'all') {
+            filteredItems.map((f) => {
                 files.push(f.fileName);
             })
         } else {
@@ -287,7 +287,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
         const form = new FormData();
         form.append("knowledge_base_name", knowledge.realName);
-        
+
         while (i < fileLength) {
             let file = files[i];
             fileNames.push(file.name);
@@ -302,13 +302,13 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
         //开始上传任务
         axios.post('http://region-31.seetacloud.com:38744/api/knowledge_base/upload_docs', form)
-        .then((res)=>{
-            console.log('res', res);
-            toast.success('上传成功!');
-            onClose();
-        })
-        .catch(() => toast.error('出错了!'))
-        .finally(()=>router.refresh());
+            .then((res) => {
+                console.log('res', res);
+                toast.success('上传成功!');
+                onClose();
+            })
+            .catch(() => toast.error('出错了!'))
+            .finally(() => router.refresh());
     }
 
     const topContent = React.useMemo(() => {
@@ -328,13 +328,13 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                                 <ModalHeader className="flex flex-col gap-1 text-sm text-gray-500">上传进度</ModalHeader>
                                 <ModalBody>
                                     {uploadFiles.map((f, index) => (<><div key={index}>{f}
-                                    <Progress
-                                        size="sm"
-                                        isIndeterminate
-                                        aria-label="Loading..."
-                                        className="max-w-md"
-                                        color="success"
-                                    /></div> </>))}
+                                        <Progress
+                                            size="sm"
+                                            isIndeterminate
+                                            aria-label="Loading..."
+                                            className="max-w-md"
+                                            color="success"
+                                        /></div> </>))}
                                 </ModalBody>
                             </>
                         )}
@@ -411,9 +411,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                                 className="bg-transparent outline-none text-default-400 text-small border-0 focus:ring-0"
                                 onChange={onRowsPerPageChange}
                             >
-                                <option value="5" selected = {rowsPerPage ===5}>5</option>
-                                <option value="10" selected = {rowsPerPage ===10}>10</option>
-                                <option value="15" selected = {rowsPerPage ===15}>15</option>
+                                <option value="5" selected={rowsPerPage === 5}>5</option>
+                                <option value="10" selected={rowsPerPage === 10}>10</option>
+                                <option value="15" selected={rowsPerPage === 15}>15</option>
                             </select>
                         </label>
                     </div>
@@ -435,40 +435,40 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         return (
             <div className="py-2 px-4 flex justify-between items-center">
                 <div className="flex">
-                <span className="w-[100%] text-small text-default-400">
-                    {selectedKeys === "all"
-                        ? "选中所有文件"
-                        : `${selectedKeys.size} / ${filteredItems.length} 被选择`}
-                </span>
-                <Tooltip color="danger" content="删除选中文档">
-                    <span className={clsx(
-                        "px-2 text-3xl text-danger cursor-pointer active:opacity-50",
-                        Array.from(selectedKeys).length === 0 ? 'hidden' : ''
-                        )} onClick={()=> removeSelectedFiles()}>
-                        <MdDeleteSweep />
+                    <span className="w-[100%] text-small text-default-400">
+                        {selectedKeys === "all"
+                            ? "选中所有文件"
+                            : `${selectedKeys.size} / ${filteredItems.length} 被选择`}
                     </span>
-                </Tooltip>
+                    <Tooltip color="danger" content="删除选中文档">
+                        <span className={clsx(
+                            "px-2 text-3xl text-danger cursor-pointer active:opacity-50",
+                            Array.from(selectedKeys).length === 0 ? 'hidden' : ''
+                        )} onClick={() => removeSelectedFiles()}>
+                            <MdDeleteSweep />
+                        </span>
+                    </Tooltip>
                 </div>
-                {Boolean(pages > 1)?(<>
-                <Pagination
-                    isCompact
-                    showControls
-                    showShadow
-                    color="primary"
-                    page={page}
-                    total={pages}
-                    onChange={setPage}
-                    classNames={{
-                        cursor: "bg-sky-500 hover:bg-sky-600"
-                    }}
-                /> <div className="hidden sm:flex w-[30%] justify-end gap-2">
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                        上一页
-                    </Button>
-                    <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-                        下一页
-                    </Button>
-                </div></>):null}
+                {Boolean(pages > 1) ? (<>
+                    <Pagination
+                        isCompact
+                        showControls
+                        showShadow
+                        color="primary"
+                        page={page}
+                        total={pages}
+                        onChange={setPage}
+                        classNames={{
+                            cursor: "bg-sky-500 hover:bg-sky-600"
+                        }}
+                    /> <div className="hidden sm:flex w-[30%] justify-end gap-2">
+                        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+                            上一页
+                        </Button>
+                        <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+                            下一页
+                        </Button>
+                    </div></>) : null}
             </div>
         );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
