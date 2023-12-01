@@ -19,6 +19,9 @@ const getUsers = async () => {
         NOT: {
           email: session.user.email
         }
+      },
+      include:{
+        assignRole:true,
       }
     });
     

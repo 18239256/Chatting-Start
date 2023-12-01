@@ -8,7 +8,7 @@ interface IParams {
 
 const UserId = async ({ params }: { params: IParams }) => {
     const user = await getUserById(params.userId);
-    console.log('user', user);
+    
     if (!user) {
       return (
         <div className="lg:pl-80 h-full">
