@@ -137,7 +137,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         return filteredFiles;
     }, [filesArray, filterValue, statusFilter, extsOptions, hasSearchFilter]);
 
-    const pages = Math.ceil(filteredItems.length / rowsPerPage);
+    const pages = React.useMemo(()=>{
+       return Math.ceil(filteredItems.length / rowsPerPage);
+    },[filteredItems, rowsPerPage]);  
 
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -409,9 +411,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                                 className="bg-transparent outline-none text-default-400 text-small border-0 focus:ring-0"
                                 onChange={onRowsPerPageChange}
                             >
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="15">15</option>
+                                <option value="5" selected = {rowsPerPage ===5}>5</option>
+                                <option value="10" selected = {rowsPerPage ===10}>10</option>
+                                <option value="15" selected = {rowsPerPage ===15}>15</option>
                             </select>
                         </label>
                     </div>
@@ -447,6 +449,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                     </span>
                 </Tooltip>
                 </div>
+                {Boolean(pages > 1)?(<>
                 <Pagination
                     isCompact
                     showControls
@@ -465,7 +468,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                     <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
                         下一页
                     </Button>
-                </div>
+                </div></>):null}
             </div>
         );
     }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
