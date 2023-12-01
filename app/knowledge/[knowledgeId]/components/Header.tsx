@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ knowledge }) => {
           <div className="flex flex-col">
             <div>{knowledge.displayName}</div>
             <div className="text-sm font-light text-neutral-500">
-              {knowledge.realName}
+              {knowledge.description}
             </div>
           </div>
         </div>
