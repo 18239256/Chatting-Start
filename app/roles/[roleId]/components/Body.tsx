@@ -37,7 +37,7 @@ function arrayEqual(a:Key[], b:Key[]) {
 const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     const [roleUsers, setRoleUsers] = useState<Selection>(new Set(role.assignIds));
     const [roleChannels, setRoleChannels] = useState<Selection>(new Set(role.channels));
-    const [isDefaultRole, setIsDefaultRole] = useState(role.defaultRole);
+    const [isDefaultRole, setIsDefaultRole] = useState(Boolean(role.defaultRole));
     const arrayRoleUsers = Array.from(roleUsers);
     const arrayRoleChannels = Array.from(roleChannels);    
     const [dirtyOfUsers, setDirtyOfUsers] = useState(false);
@@ -63,7 +63,6 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
 
     useEffect(()=>{
         setDirty(dirtyOfChannels||dirtyOfUsers|| isDefaultRole !== Boolean(role.defaultRole));
-        console.log('role.defaultRole', Boolean(role.defaultRole));
     }, [dirtyOfChannels,dirtyOfUsers,isDefaultRole]);
 
     const topContentOfUser = useMemo(() => {
