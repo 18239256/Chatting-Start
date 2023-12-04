@@ -15,7 +15,8 @@ export async function POST(
       historyRound,
       model,
       robotTempId,
-      maskId
+      maskId,
+      topK
     } = body;
 
     if (!currentUser?.id) {
@@ -31,7 +32,8 @@ export async function POST(
         historyRound,
         model,
         robotTempId,
-        maskId
+        maskId,
+        topK
       },
     })
 

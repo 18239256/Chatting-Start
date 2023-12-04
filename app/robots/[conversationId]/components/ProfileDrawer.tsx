@@ -15,6 +15,7 @@ import useActiveList from '@/app/hooks/useActiveList';
 import {FullUserType } from "@/app/types";
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import AvatarWithKB from '@/app/components/AvatarWithKB';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -33,15 +34,16 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const otherUser = useRobotOtherUser(data);
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
+    const [topK, setTopK] = useState(otherUser.robot?.topK || 3);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
-
+    
     useEffect(() => {
-        axios.post('/api/robot/robotupdate', {robotId: otherUser.robot?.id, temperature: temperature, historyRound: history })
+        axios.post('/api/robot/robotupdate', {robotId: otherUser.robot?.id, temperature: temperature, historyRound: history, topK: topK })
             .then()
             .catch((err) => toast.error('保存修改时出错了!', err))
             .finally();
-    }, [history, temperature, otherUser]);
+    }, [history, temperature, otherUser, topK]);
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
@@ -109,13 +111,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                             <div className="relative mt-6 flex-1 px-4 sm:px-6">
                                                 <div className="flex flex-col items-center">
                                                     <div className="mb-2">
-                                                        {data.isGroup ? (
-                                                            <AvatarGroup users={data.users} />
-                                                        ) :
-                                                            (
-                                                                <Avatar user={otherUser} />
-                                                            )
-                                                        }
+                                                        {Boolean(otherUser.robot?.knowledgeBaseName) ? (
+                                                            <AvatarWithKB user={otherUser} />
+                                                        ) : (
+                                                            <Avatar user={otherUser} />
+                                                        )}
                                                     </div>
                                                     <div>
                                                         {title}
@@ -229,6 +229,13 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                         </label>
                                                                         <input type="number" id="history" min={1} max={10} defaultValue={history} onChange={value => setHistory(Number(value.target.value) || 0)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
                                                                     </div>
+                                                                    {Boolean(otherUser.robot?.knowledgeBaseName) &&
+                                                                    <div className="col-span-full">
+                                                                        <label htmlFor="topKrange" className="block text-sm font-medium leading-6 text-gray-500">
+                                                                            匹配条数 <b className="text-sky-600">{topK}</b>
+                                                                        </label>
+                                                                        <input id="default-range" type="range" min="1" max="6" step="1" defaultValue={topK} onChange={value => setTopK(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                                                    </div>}
                                                                 </div>
                                                             </form>
                                                         </dl>
