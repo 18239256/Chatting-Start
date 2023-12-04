@@ -62,7 +62,8 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
     }, [role.channels, roleChannels]);
 
     useEffect(()=>{
-        setDirty(dirtyOfChannels||dirtyOfUsers|| isDefaultRole !== role.defaultRole);
+        setDirty(dirtyOfChannels||dirtyOfUsers|| isDefaultRole !== Boolean(role.defaultRole));
+        console.log('role.defaultRole', Boolean(role.defaultRole));
     }, [dirtyOfChannels,dirtyOfUsers,isDefaultRole]);
 
     const topContentOfUser = useMemo(() => {
