@@ -28,7 +28,7 @@ const ShareRobotList: React.FC<ShareRobotListProps> = ({
                     </div>
                 </div>
                 <div className="flex justify-normal mb-4 pt-4 gap-6">
-                    {items.map((item) => (
+                    {items?.map((item) => (
                         <ShareRobotBox
                             key={item.id}
                             data={item}
