@@ -1,11 +1,11 @@
 'use client';
 
-import { Robot } from "@prisma/client";
+import { Robot, User } from "@prisma/client";
 import ShareRobotBox from "./ShareRobotBox";
 import clsx from "clsx";
 
 interface ShareRobotListProps {
-    items: Robot[];
+    items: (Robot & {user: User})[];
 }
 
 const ShareRobotList: React.FC<ShareRobotListProps> = ({
@@ -14,7 +14,7 @@ const ShareRobotList: React.FC<ShareRobotListProps> = ({
     return (
         <>
             <div className="px-5">
-                <div className="flex justify-between mb-4 pt-4">
+                <div className="flex justify-between mb-4 pt-4 gap-2">
                     <div
                         className="
                         text-2xl 
@@ -25,12 +25,14 @@ const ShareRobotList: React.FC<ShareRobotListProps> = ({
                         机器人市场
                     </div>
                 </div>
-                {items.map((item) => (
-                    <ShareRobotBox
-                        key={item.id}
-                        data={item}
-                    />
-                ))}
+                <div className="flex justify-normal mb-4 pt-4 gap-6">
+                    {items.map((item) => (
+                        <ShareRobotBox
+                            key={item.id}
+                            data={item}
+                        />
+                    ))}
+                </div>
             </div>
         </>
     );

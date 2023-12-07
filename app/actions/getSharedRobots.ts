@@ -23,6 +23,7 @@ const getSharedRobots = async () => {
       },
       include:{
         consumeUsers:true,
+        user:true,
       }
     });
     

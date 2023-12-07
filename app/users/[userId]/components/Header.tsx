@@ -62,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ user }) => {
         <div className="flex flex-col">
           <div>{user.name}</div>
           <div className="text-sm font-light text-neutral-500">
-            {statusText}
+            {statusText} {user.email}
           </div>
         </div>
       </div>

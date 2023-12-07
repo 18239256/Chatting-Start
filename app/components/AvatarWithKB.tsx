@@ -8,7 +8,7 @@ import { FaDatabase } from "react-icons/fa";
 import { Badge } from "@nextui-org/react";
 
 interface AvatarGroupProps {
-  user?: FullUserType;
+  user?: User;
 };
 
 const AvatarGroup: React.FC<AvatarGroupProps> = ({
