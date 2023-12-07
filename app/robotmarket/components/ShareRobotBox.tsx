@@ -9,13 +9,15 @@ import Avatar from "@/app/components/Avatar";
 
 
 interface ShareRobotBoxProps {
-    data: Robot & {user: User},
+    data: Robot & {user: User};
+    curUser: User;
   }
 
   const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
     data,
+    curUser,
   }) => {
-    const [isFollowed, setIsFollowed] = useState(false);
+    const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
 
     return (
       <Card className="max-w-lg">
@@ -32,14 +34,14 @@ interface ShareRobotBoxProps {
           </div>
         </div>
         <Button
-          className={isFollowed ? "bg-transparent text-foreground border-default-200" : ""}
+          className={isUsed ? "bg-transparent text-foreground border-default-200" : ""}
           color="primary"
           radius="full"
           size="sm"
-          variant={isFollowed ? "bordered" : "solid"}
-          onPress={() => setIsFollowed(!isFollowed)}
+          variant={isUsed ? "bordered" : "solid"}
+          onPress={() => setIsUsed(!isUsed)}
         >
-          {isFollowed ? "停用" : "使用"}
+          {isUsed ? "停用" : "使用"}
         </Button>
       </CardHeader>
         <CardBody className="px-3 py-0 text-small text-default-400">

@@ -6,10 +6,12 @@ import clsx from "clsx";
 
 interface ShareRobotListProps {
     items: (Robot & {user: User})[];
+    curUser: User;
 }
 
 const ShareRobotList: React.FC<ShareRobotListProps> = ({
     items,
+    curUser,
 }) => {
     return (
         <>
@@ -30,6 +32,7 @@ const ShareRobotList: React.FC<ShareRobotListProps> = ({
                         <ShareRobotBox
                             key={item.id}
                             data={item}
+                            curUser={curUser}
                         />
                     ))}
                 </div>
