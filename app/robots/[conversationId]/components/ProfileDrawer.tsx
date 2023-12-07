@@ -36,22 +36,9 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
     const [topK, setTopK] = useState(otherUser.robot?.topK || 3);
-    const [isShared, setIsShared] = useState(otherUser.robot?.isShared || false);
+    const [isShared, setIsShared] = useState(otherUser.robot?.isShared!);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
-    
-    useEffect(() => {
-        axios.post('/api/robot/robotupdate', {
-            robotId: otherUser.robot?.id, 
-            temperature: temperature, 
-            historyRound: history, 
-            topK: topK, 
-            isShared: isShared,
-        })
-            .then()
-            .catch((err) => toast.error('保存修改时出错了!', err))
-            .finally();
-    }, [history, temperature, otherUser, topK, isShared]);
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
@@ -69,6 +56,20 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         return isActive ? '在线' : '离线'
     }, [data, isActive]);
 
+    const closeMyself = ()=>{
+        axios.post('/api/robot/robotupdate', {
+            robotId: otherUser.robot?.id, 
+            temperature: temperature, 
+            historyRound: history, 
+            topK: topK, 
+            isShared: isShared,
+        })
+            .then()
+            .catch((err) => toast.error('保存修改时出错了!', err))
+            .finally();
+        onClose();
+    };
+
     return (
         <>
             <ConfirmModal
@@ -76,7 +77,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                 onClose={() => setConfirmOpen(false)}
             />
             <Transition.Root show={isOpen} as={Fragment}>
-                <Dialog as="div" className="relative z-50" onClose={onClose}>
+                <Dialog as="div" className="relative z-50" onClose={closeMyself}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-500"
@@ -108,7 +109,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                         <button
                                                             type="button"
                                                             className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                                                            onClick={onClose}
+                                                            onClick={closeMyself}
                                                         >
                                                             <span className="sr-only">Close panel</span>
                                                             <IoClose size={24} aria-hidden="true" />
@@ -230,7 +231,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                             isSelected={isShared!}
                                                                             onValueChange={setIsShared}
                                                                         >
-                                                                            {isShared ? "共享" : "不共享"}
+                                                                            {isShared ? "已共享" : "未共享"}
                                                                         </Switch>
                                                                     </div>
                                                                     <div className="col-span-full">

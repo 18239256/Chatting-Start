@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
       <ProfileDrawer
         data={conversation}
         isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={() => {setDrawerOpen(false);router.refresh();}}
       />
       <div
         className="
