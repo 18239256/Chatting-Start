@@ -34,7 +34,7 @@ interface ShareRobotBoxProps {
           </div>
         </div>
         <Button
-          className={isUsed ? "bg-transparent text-foreground border-default-200" : ""}
+          className={isUsed ? "bg-transparent text-foreground border-default-200" : "bg-primary-300 hover:bg-primary-500"}
           color="primary"
           radius="full"
           size="sm"
