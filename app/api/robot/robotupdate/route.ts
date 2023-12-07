@@ -16,7 +16,8 @@ export async function POST(
       model,
       robotTempId,
       maskId,
-      topK
+      topK,
+      isShared
     } = body;
 
     if (!currentUser?.id) {
@@ -33,7 +34,8 @@ export async function POST(
         model,
         robotTempId,
         maskId,
-        topK
+        topK,
+        isShared
       },
     })
 

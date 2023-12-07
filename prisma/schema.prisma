@@ -40,6 +40,9 @@ model User {
 
   assignRoleIds String[] @db.ObjectId
   assignRole    Role[] @relation("assign",fields: [assignRoleIds], references: [id])
+
+  sharedRobotIds     String[] @db.ObjectId
+  shareRobots        Robot[] @relation("shareRob", fields: [sharedRobotIds], references: [id])
 }
 
 model Account {
@@ -136,6 +139,10 @@ model Robot{
   historyRound       Int?
   knowledgeBaseName  String?
   topK               Int?
+
+  isShared           Boolean?
+  consumeIds         String[] @db.ObjectId
+  consumeUsers       User[] @relation("shareRob", fields: [consumeIds], references: [id])
 
   maskId            String?   @db.ObjectId
   mask              RobotMask? @relation(fields: [maskId], references: [id])

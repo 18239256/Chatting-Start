@@ -16,6 +16,7 @@ import {FullUserType } from "@/app/types";
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import AvatarWithKB from '@/app/components/AvatarWithKB';
+import { Switch } from '@nextui-org/react';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -35,15 +36,22 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
     const [topK, setTopK] = useState(otherUser.robot?.topK || 3);
+    const [isShared, setIsShared] = useState(otherUser.robot?.isShared || false);
     const { members } = useActiveList();
     const isActive = members.indexOf(otherUser?.email!) !== -1;
     
     useEffect(() => {
-        axios.post('/api/robot/robotupdate', {robotId: otherUser.robot?.id, temperature: temperature, historyRound: history, topK: topK })
+        axios.post('/api/robot/robotupdate', {
+            robotId: otherUser.robot?.id, 
+            temperature: temperature, 
+            historyRound: history, 
+            topK: topK, 
+            isShared: isShared,
+        })
             .then()
             .catch((err) => toast.error('保存修改时出错了!', err))
             .finally();
-    }, [history, temperature, otherUser, topK]);
+    }, [history, temperature, otherUser, topK, isShared]);
 
     const joinedDate = useMemo(() => {
         return format(new Date(otherUser.createdAt), 'PP');
@@ -123,7 +131,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                     <div className="text-sm text-gray-500">
                                                         {statusText}
                                                     </div>
-                                                    <div className="flex gap-10 my-8">
+                                                    <div className="flex gap-10 my-8">                                                        
                                                         <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
                                                             <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
                                                                 <IoTrash size={20} />
@@ -217,6 +225,14 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                             <hr />
                                                             <form>
                                                                 <div className="space-y-12">
+                                                                    <div className="col-span-full">
+                                                                        <Switch
+                                                                            isSelected={isShared!}
+                                                                            onValueChange={setIsShared}
+                                                                        >
+                                                                            {isShared ? "共享" : "不共享"}
+                                                                        </Switch>
+                                                                    </div>
                                                                     <div className="col-span-full">
                                                                         <label htmlFor="temprange" className="block text-sm font-medium leading-6 text-gray-500">
                                                                             幻想度 <b className="text-sky-600">{temperature}</b>
