@@ -39,7 +39,7 @@ interface ShareRobotBoxProps {
           variant={isFollowed ? "bordered" : "solid"}
           onPress={() => setIsFollowed(!isFollowed)}
         >
-          {isFollowed ? "Unfollow" : "Follow"}
+          {isFollowed ? "停用" : "使用"}
         </Button>
       </CardHeader>
         <CardBody className="px-3 py-0 text-small text-default-400">
