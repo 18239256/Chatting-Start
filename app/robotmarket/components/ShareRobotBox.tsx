@@ -8,6 +8,7 @@ import AvatarWithKB from "@/app/components/AvatarWithKB";
 import Avatar from "@/app/components/Avatar";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 
 interface ShareRobotBoxProps {
@@ -19,6 +20,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   data,
   curUser,
 }) => {
+  const router = useRouter();
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
 
   useEffect(() => {
@@ -28,8 +30,14 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
       axios.post('/api/conversations', { userId: data.userId })
         .then()
         .catch(() => toast.error('出错了!'))
-        .finally(() => { return null; });
+        .finally(() => { router.refresh();});
+    }else{
+      axios.post('/api/robot/robotconsumecut', { robotId: data.id })
+      .then()
+      .catch(() => toast.error('出错了!'))
+      .finally(() => { router.refresh(); });
     }
+    
   }, [isUsed]);
 
   return (
