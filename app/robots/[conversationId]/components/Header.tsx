@@ -19,6 +19,7 @@ import AvatarWithKB from '@/app/components/AvatarWithKB';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import useActiveList from "@/app/hooks/useActiveList";
 import useCurrentUser from '@/app/hooks/useCurrentUser';
+import { Button } from '@nextui-org/react';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -57,6 +58,13 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
         .catch((err) => toast.error('出错了!',err))
         .finally();
     return;
+  };
+
+  const disconnectShareRobot = () =>{
+    axios.post('/api/robot/robotconsumecut', { robotId: robotUser.robot?.id })
+      .then(()=>{router.push('/robots');})
+      .catch(() => toast.error('出错了!'))
+      .finally(() => {  });
   };
 
   return (
@@ -174,7 +182,17 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           hover:text-sky-600
           transition
         "
-          />) : null}
+          />) : (
+          <Button
+            className={"bg-transparent text-foreground border-default-200"}
+            color="primary"
+            radius="full"
+            size="sm"
+            variant={"bordered"}
+            onPress={() => disconnectShareRobot()}
+          >
+            {true ? "停用" : "启用"}
+          </Button>)}
       </div>
     </>
   );
