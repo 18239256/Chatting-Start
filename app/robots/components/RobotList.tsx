@@ -12,7 +12,6 @@ import RobotBox from "./RobotBox";
 import RobotChatModal from "./RobotChatModal";
 import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
-import { FaRobot } from "react-icons/fa6";
 import { BiSolidMessageRoundedAdd } from "react-icons/bi";
 
 
@@ -74,8 +73,7 @@ const RobotList: React.FC<RobotListProps> = ({
         setItems((current) => {
           return [...current.filter((convo) => convo.id !== conversation.id)]
         });
-        
-        // fresh new codes
+        // fresh client
         if(conversationId === conversation.id){
           router.push('/robots');
         }

@@ -2,6 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 
 import prisma from "@/app/libs/prismadb";
+import { pusherServer } from "@/app/libs/pusher";
 
 export async function POST(
     request: Request,
@@ -33,19 +34,34 @@ export async function POST(
         };
 
         //Remove related conversation
-        const deletedConversation = await prisma.conversation.deleteMany({
-            where:{
+        const existingConversation = await prisma.conversation.findMany({
+            where: {
                 AND: [
                     {
-                      userIds: {
-                        has: currentUser.id //包含当前用户的ID
-                      }
-                    },{
-                      userIds: {
-                        has: robot.userId //包含机器人用户ID
-                      }
+                        userIds: {
+                            has: currentUser.id //包含当前用户的ID
+                        }
+                    }, {
+                        userIds: {
+                            has: robot.userId //包含机器人用户ID
+                        }
                     },
-                  ]
+                ]
+            },
+            select:{
+                id:true,
+                name:true,
+                isGroup:true,
+            }
+        });
+
+        if (!existingConversation) {
+            return new NextResponse('Invalid conversation ID', { status: 400 });
+        }
+
+        const deletedConversation = await prisma.conversation.delete({
+            where:{
+                id: existingConversation[0].id
             },
         });
 
@@ -64,6 +80,8 @@ export async function POST(
                 }
             }
         });
+
+        pusherServer.trigger(currentUser.email, 'conversation:remove', existingConversation[0]);
 
         return NextResponse.json(deletedConversation);
     } catch (error) {

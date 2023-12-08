@@ -62,9 +62,9 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
 
   const disconnectShareRobot = () =>{
     axios.post('/api/robot/robotconsumecut', { robotId: robotUser.robot?.id })
-      .then(()=>{router.push('/robots');})
+      .then()
       .catch(() => toast.error('出错了!'))
-      .finally(() => {  });
+      .finally();
   };
 
   return (
