@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
@@ -10,6 +10,8 @@ import Avatar from "@/app/components/Avatar";
 import {FullRobotConversationType } from "@/app/types";
 import useRobotOtherUser from "@/app/hooks/useRobotOtherUser";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
+import { Badge } from "@nextui-org/react";
+import useCurrentUser from "@/app/hooks/useCurrentUser";
 
 interface RobotBoxProps {
     data: FullRobotConversationType,
@@ -21,6 +23,8 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     selected
 }) => {
     const otherRobotUser = useRobotOtherUser(data);
+    const curUser = useCurrentUser(data);
+    const [isInvisible] = useState(curUser.id === otherRobotUser.robotOwnerId);
     const session = useSession();
     const router = useRouter();
     
@@ -84,11 +88,19 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           selected ? 'bg-neutral-100' : 'bg-white'
         )}
       >
-        { otherRobotUser && Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
-          <AvatarWithKB user={otherRobotUser} />
-        ) : (
-          <Avatar user={otherRobotUser} />
-        )}
+        <Badge
+          isOneChar
+          content=""
+          color="warning"
+          shape="circle"
+          placement="top-left"
+          isInvisible={isInvisible}
+        >
+          {otherRobotUser && Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
+            <AvatarWithKB user={otherRobotUser} />
+          ) : (
+            <Avatar user={otherRobotUser} />
+          )}</Badge>
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />

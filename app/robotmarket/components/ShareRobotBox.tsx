@@ -1,7 +1,7 @@
 'use client';
 
 import { Robot, User } from "@prisma/client";
-import { Card, CardHeader, CardBody, CardFooter, Button } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Button, Badge } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
@@ -22,6 +22,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
 }) => {
   const router = useRouter();
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
+  const [isInvisible] = useState(curUser.id === data.user.robotOwnerId);
 
   useEffect(() => {
     if (isUsed) {
@@ -44,11 +45,19 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
     <Card className="w-80 max-w-lg">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
-          {Boolean(data.knowledgeBaseName) ? (
-            <AvatarWithKB user={data.user} />
-          ) : (
-            <Avatar user={data.user} />
-          )}
+          <Badge
+            isOneChar
+            content=""
+            color="warning"
+            shape="circle"
+            placement="top-left"
+            isInvisible={isInvisible}
+          >
+            {Boolean(data.knowledgeBaseName) ? (
+              <AvatarWithKB user={data.user} />
+            ) : (
+              <Avatar user={data.user} />
+            )}</Badge>
           <div className="flex flex-col gap-1 items-start justify-center">
             <h4 className="text-small font-semibold leading-none text-default-600">{data.name}</h4>
             <h5 className="text-small tracking-tight text-default-400">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</h5>

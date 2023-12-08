@@ -19,7 +19,7 @@ import AvatarWithKB from '@/app/components/AvatarWithKB';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import useActiveList from "@/app/hooks/useActiveList";
 import useCurrentUser from '@/app/hooks/useCurrentUser';
-import { Button } from '@nextui-org/react';
+import { Badge, Button } from '@nextui-org/react';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -37,6 +37,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
   const router = useRouter();
   const robotUser = useRobotOtherUser(conversation);
   const curUser = useCurrentUser(conversation);
+  const [isInvisible] = useState(curUser.id === robotUser.robotOwnerId);
   const [mask, setMask] = useState(masks.find((m) => m.id === robotUser.robot?.maskId)?.title || "");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { members } = useActiveList();
@@ -103,11 +104,19 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           >
             <HiChevronLeft size={32} />
           </Link>
-          {Boolean(robotUser.robot?.knowledgeBaseName) ? (
-            <AvatarWithKB user={robotUser} />
-          ) : (
-            <Avatar user={robotUser} />
-          )}
+          <Badge
+            isOneChar
+            content=""
+            color="warning"
+            shape="circle"
+            placement="top-left"
+            isInvisible={isInvisible}
+          >
+            {Boolean(robotUser.robot?.knowledgeBaseName) ? (
+              <AvatarWithKB user={robotUser} />
+            ) : (
+              <Avatar user={robotUser} />
+            )}</Badge>
           <div className="flex flex-col">
             <div>{conversation.name || robotUser.name}</div>
             <div className="text-sm font-light text-neutral-500">
