@@ -6,19 +6,19 @@ import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { Conversation, Knowledge, RobotMask, User } from "@prisma/client";
 
-import useActiveList from "@/app/hooks/useActiveList";
 
 import Avatar from "@/app/components/Avatar";
-import AvatarGroup from "@/app/components/AvatarGroup";
 import ProfileDrawer from './ProfileDrawer';
 import { FullUserType } from '@/app/types';
 import { BiMask } from 'react-icons/bi';
-import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import AvatarWithKB from '@/app/components/AvatarWithKB';
+import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
+import useActiveList from "@/app/hooks/useActiveList";
+import useCurrentUser from '@/app/hooks/useCurrentUser';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -35,11 +35,12 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
 
   const router = useRouter();
   const robotUser = useRobotOtherUser(conversation);
+  const curUser = useCurrentUser(conversation);
   const [mask, setMask] = useState(masks.find((m) => m.id === robotUser.robot?.maskId)?.title || "");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { members } = useActiveList();
   const isActive = members.indexOf(robotUser?.email!) !== -1;
-
+  
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
       return `${conversation.users.length} 个成员`;
@@ -163,16 +164,17 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           </Menu>
                  
         </div>
-        <HiEllipsisHorizontal
-          size={32}
-          onClick={() => setDrawerOpen(true)}
-          className="
+        {curUser?.id === robotUser.robotOwnerId ? (
+          <HiEllipsisHorizontal
+            size={32}
+            onClick={() => setDrawerOpen(true)}
+            className="
           text-sky-500
           cursor-pointer
           hover:text-sky-600
           transition
         "
-        />
+          />) : null}
       </div>
     </>
   );
