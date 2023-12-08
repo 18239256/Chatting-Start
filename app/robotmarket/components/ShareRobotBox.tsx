@@ -2,10 +2,12 @@
 
 import { Robot, User } from "@prisma/client";
 import { Card, CardHeader, CardBody, CardFooter, Button } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
 import Avatar from "@/app/components/Avatar";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 
 interface ShareRobotBoxProps {
@@ -18,6 +20,16 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   curUser,
 }) => {
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
+
+  useEffect(() => {
+    if (isUsed) {
+      // Create new 1 by 1 conversation by new robot user
+      axios.post('/api/conversations', { userId: data.userId })
+        .then()
+        .catch(() => toast.error('出错了!'))
+        .finally(() => { return null; });
+    }
+  }, [isUsed]);
 
   return (
     <Card className="w-80 max-w-lg">

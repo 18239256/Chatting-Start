@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ role}) => {
     //   router.push('/roles');
     //   router.refresh();
     // })
-    // .catch(() => toast.error('Something went wrong!'))
+    // .catch(() => toast.error('出错了!'))
     // .finally(() => setIsLoading(false));
   }
 

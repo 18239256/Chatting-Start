@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ knowledge }) => {
       router.refresh();
       console.log('ret', ret);
     })
-    .catch(() => toast.error('Something went wrong!'))
+    .catch(() => toast.error('出错了!'))
     .finally(() => setIsLoading(false));
   }
 

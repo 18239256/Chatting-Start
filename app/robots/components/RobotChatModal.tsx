@@ -106,7 +106,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               onClose();
               router.push('/robots');
             })
-            .catch(() => toast.error('Something went wrong!'))
+            .catch(() => toast.error('出错了!'))
             .finally(() => setIsLoading(false));
         }
       })
