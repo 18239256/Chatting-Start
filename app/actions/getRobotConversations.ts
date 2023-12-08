@@ -30,11 +30,16 @@ const getConversations = async () => {
       robotIds.push(r.id);
     })
 
-    console.log('robotIds-1', robotIds);
     //增加启用分享的机器人IDs
-    robotIds = [...robotIds,...currentUser.sharedRobotIds];
-    console.log('currentUser.sharedRobotIds', currentUser.sharedRobotIds);
-    
+    const shareRobots = await prisma.robot.findMany({
+      where:{
+        id:{
+          in: currentUser.sharedRobotIds,
+        }
+      }
+    });
+
+    robotIds = [...robotIds,...shareRobots.map((u)=>{return u.userId})];
 
     //根据上面的数组，查询出数组关联的所有会话
     const conversations = await prisma.conversation.findMany({
@@ -42,9 +47,17 @@ const getConversations = async () => {
         lastMessageAt: 'desc',
       },
       where: {
-        userIds: {
-          hasSome: robotIds
-        }
+        AND: [
+          {
+            userIds: {
+              has: currentUser.id //包含当前用户的ID
+            }
+          },{
+            userIds: {
+              hasSome: robotIds //至少包含机器人用户ID数组中的1个或多个
+            }
+          },
+        ]
       },
       include: {
         users: {
@@ -61,6 +74,7 @@ const getConversations = async () => {
       }
     });
 
+    console.log('conversations', conversations);
     return conversations;
   } catch (error: any) {
     return [];

@@ -23,7 +23,8 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
 
   useEffect(() => {
     if (isUsed) {
-      // Create new 1 by 1 conversation by new robot user
+      // Create new 1 by 1 conversation by new robot user；
+      // Then update model sharedRobotIds of model User with shared robot ID.
       axios.post('/api/conversations', { userId: data.userId })
         .then()
         .catch(() => toast.error('出错了!'))

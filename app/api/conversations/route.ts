@@ -126,16 +126,28 @@ export async function POST(
       where: {
         userId: robotUserId,
       },
-      select:{
-        id:true,
-        knowledgeBaseName:true,
-        topK:true,
-        historyRound:true,
-        temperature:true,
+      include:{
+        user:true,
       }
     });
+    
+    Object.assign(robotObj,{robot:robotData});  //robotObj被赋值后的作用是什么？看不懂了！
 
-    Object.assign(robotObj,{robot:robotData});
+    // 如果机器人的所有者ID不是当前登录用户的ID，就是共享机器人，需要更新当前用户的sharedRobotIds
+    if(robotData?.user.robotOwnerId !== currentUser.id){
+      const updateRobot = await prisma.user.update({
+        where: {
+          id: currentUser.id,
+        },
+        data: {
+          shareRobots:{
+            connect:{
+              id:robotData?.id,
+            }
+          }
+        },
+      });
+    }
 
     // Update all connections with new conversation
     newConversation.users.map((user) => {
