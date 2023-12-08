@@ -106,7 +106,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               onClose();
               router.push('/robots');
             })
-            .catch(() => toast.error('出错了!'))
+            .catch(() => toast.error('Something went wrong!'))
             .finally(() => setIsLoading(false));
         }
       })
@@ -122,7 +122,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
         {...otherProps}
         classNames={{
           base: cn(
-            "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between",
+            "inline-flex m-0 bg-content1 hover:bg-content2 items-center justify-between w-full",
             "flex-row-reverse max-w-[500px] cursor-pointer rounded-lg gap-4 p-4 border-2 border-transparent",
             "data-[selected=true]:border-sky-600"
           ),
@@ -239,7 +239,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               <div className="mx-auto w-full max-w-md">
                 <RadioGroup value={tmpl} onValueChange={setTmpl} color='default'>
                   {robotTmpls.map((t) => (
-                    <>
+                    <div key={t.id}>
                       <CustomRadio description={t.description} value={t.id} key={t.id}>
                         <p>
                           {t.name}
@@ -248,7 +248,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                       <div>
                         {t.knowledgeAbility && getTmplObj()?.knowledgeAbility ? knowContent : null}
                       </div>
-                    </>
+                    </div>
                   ))}
                 </RadioGroup>
               </div>
