@@ -37,7 +37,6 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
   const router = useRouter();
   const robotUser = useRobotOtherUser(conversation);
   const curUser = useCurrentUser(conversation);
-  const [isInvisible] = useState(curUser.id === robotUser.robotOwnerId);
   const [mask, setMask] = useState(masks.find((m) => m.id === robotUser.robot?.maskId)?.title || "");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { members } = useActiveList();
@@ -110,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
             color="warning"
             shape="circle"
             placement="top-left"
-            isInvisible={isInvisible}
+            isInvisible={curUser?.id === robotUser.robotOwnerId}
           >
             {Boolean(robotUser.robot?.knowledgeBaseName) ? (
               <AvatarWithKB user={robotUser} />

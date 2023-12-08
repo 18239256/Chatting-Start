@@ -24,7 +24,6 @@ const RobotBox: React.FC<RobotBoxProps> = ({
 }) => {
     const otherRobotUser = useRobotOtherUser(data);
     const curUser = useCurrentUser(data);
-    const [isInvisible] = useState(curUser.id === otherRobotUser.robotOwnerId);
     const session = useSession();
     const router = useRouter();
     
@@ -94,7 +93,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           color="warning"
           shape="circle"
           placement="top-left"
-          isInvisible={isInvisible}
+          isInvisible={curUser?.id == otherRobotUser.robotOwnerId}
         >
           {otherRobotUser && Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
             <AvatarWithKB user={otherRobotUser} />
