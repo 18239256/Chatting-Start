@@ -70,6 +70,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   } = useForm<FieldValues>({
     defaultValues: {
       name: '',
+      description:'',
     }
   });
 
