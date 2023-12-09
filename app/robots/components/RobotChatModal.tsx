@@ -16,7 +16,7 @@ import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import { TbDatabase } from 'react-icons/tb';
 import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
-import clsx from 'clsx';
+import Textarea from '@/app/components/inputs/Textarea';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -225,7 +225,13 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 required
                 register={register}
               />
-
+              <Textarea
+                disabled={isLoading}
+                label="描述"
+                id="description"
+                errors={errors}
+                register={register}
+              />
               <label
                 className="
                 block 

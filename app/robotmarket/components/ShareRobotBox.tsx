@@ -76,7 +76,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
       </CardHeader>
       <CardBody className="px-3 py-0 text-small text-default-400">
         <p>
-          记录{data.historyRound}轮对话。
+          {data.description}
         </p>
 
       </CardBody>

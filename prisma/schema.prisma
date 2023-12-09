@@ -127,6 +127,7 @@ model Robot{
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
   name               String
   createdAt          DateTime @default(now())
+  description        String?
 
   userId             String   @db.ObjectId @unique
   user User          @relation(fields: [userId], references: [id], onDelete: Cascade)

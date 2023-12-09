@@ -13,6 +13,7 @@ export async function POST(
         
         const {
             name,
+            description,
             robotTmpl,
             knowledgeBaseName,
         } = body;
@@ -28,6 +29,7 @@ export async function POST(
         const user = await prisma.robot.create({
             data: {
                 name,
+                description,
                 knowledgeBaseName,
                 user:{
                     create:{
