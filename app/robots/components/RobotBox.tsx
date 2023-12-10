@@ -10,7 +10,7 @@ import Avatar from "@/app/components/Avatar";
 import {FullRobotConversationType } from "@/app/types";
 import useRobotOtherUser from "@/app/hooks/useRobotOtherUser";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
-import { Badge } from "@nextui-org/react";
+import { Badge, Chip } from "@nextui-org/react";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
 
 interface RobotBoxProps {
@@ -101,14 +101,20 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             <AvatarWithKB user={otherRobotUser} />
           ) : (
             <Avatar user={otherRobotUser} />
-          )}</Badge>
+          )}
+        </Badge>
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />
-            <div className="flex justify-between items-center mb-1">
+            <div className="flex justify-between items-center mb-1 ">
               <p className="text-md font-medium text-gray-900">
                 {data.name || (otherRobotUser && otherRobotUser.name)}
-              </p>
+                {curUser?.id == otherRobotUser.robotOwnerId && otherRobotUser.robot?.isShared &&
+                <Chip classNames={{
+                  base: "bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
+                  content: "drop-shadow shadow-black text-white",
+                }} variant="solid">共享</Chip>}
+              </p>              
               {lastMessage?.createdAt && (
                 <p 
                   className="
