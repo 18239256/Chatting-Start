@@ -27,10 +27,6 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     const session = useSession();
     const router = useRouter();
 
-    console.log('curUser', curUser);
-    console.log('otherRobotUser', otherRobotUser);
-    console.log('curUser?.id == otherRobotUser.robotOwnerId', curUser?.id == otherRobotUser.robotOwnerId);
-    
     const handleClick = useCallback(() => {
         router.push(`/robots/${data.id}`);
     }, [data, router]
