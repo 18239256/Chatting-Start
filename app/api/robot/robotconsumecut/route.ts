@@ -60,8 +60,6 @@ export async function POST(
             return new NextResponse('Invalid conversation ID', { status: 400 });
         }
 
-        console.log('existingConversation', existingConversation);
-
         const deletedConversation = await prisma.conversation.delete({
             where:{
                 id: existingConversation[0].id

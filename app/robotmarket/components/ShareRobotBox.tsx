@@ -24,7 +24,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
   const [isInvisible] = useState(curUser.id === data.user.robotOwnerId);
 
-  useEffect(() => {
+  const onPressFire=(isUsed:boolean)=>{
     if (isUsed) {
       // Create new 1 by 1 conversation by new robot user；
       // Then update model sharedRobotIds of model User with shared robot ID.
@@ -38,8 +38,8 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
       .catch(() => toast.error('出错了!'))
       .finally(() => { router.refresh(); });
     }
-    
-  }, [isUsed]);
+    setIsUsed(isUsed);
+  }
 
   return (
     <Card className="w-80 max-w-lg">
@@ -69,7 +69,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
           radius="full"
           size="sm"
           variant={isUsed ? "bordered" : "solid"}
-          onPress={() => setIsUsed(!isUsed)}
+          onPress={() => onPressFire(!isUsed)}
         >
           {isUsed ? "停用" : "启用"}
         </Button>
