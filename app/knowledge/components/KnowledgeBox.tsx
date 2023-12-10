@@ -3,7 +3,7 @@
 import { Knowledge } from "@prisma/client";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
 import format from "date-fns/format";
 import { AiFillDatabase } from "react-icons/ai";
@@ -19,6 +19,8 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
   selected
 }) => {
   const router = useRouter();
+  useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
+  
   const handleClick = useCallback(() => {
     router.push(`/knowledge/${data.id}`);
   }, [data, router]

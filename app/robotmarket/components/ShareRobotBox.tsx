@@ -24,6 +24,8 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
   const [isInvisible] = useState(curUser.id === data.user.robotOwnerId);
 
+  useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
+
   const onPressFire=(isUsed:boolean)=>{
     if (isUsed) {
       // Create new 1 by 1 conversation by new robot user；

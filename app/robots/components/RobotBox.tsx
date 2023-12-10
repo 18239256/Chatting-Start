@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
@@ -26,6 +26,8 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     const curUser = useCurrentUser(data);
     const session = useSession();
     const router = useRouter();
+
+    useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
 
     const handleClick = useCallback(() => {
         router.push(`/robots/${data.id}`);
