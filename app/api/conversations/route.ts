@@ -106,6 +106,7 @@ export async function POST(
             email: true,
             image: true,
             isRobot: true,
+            robotOwnerId:true,
           },
         }
       }
