@@ -36,17 +36,18 @@ export async function POST(
         //Remove related conversation
         const existingConversation = await prisma.conversation.findMany({
             where: {
-                AND: [
+                OR: [
                     {
-                        userIds: {
-                            has: currentUser.id //包含当前用户的ID
-                        }
-                    }, {
-                        userIds: {
-                            has: robot.userId //包含机器人用户ID
-                        }
+                      userIds: {
+                        equals: [currentUser.id, robot.userId]
+                      }
                     },
-                ]
+                    {
+                      userIds: {
+                        equals: [robot.userId, currentUser.id]
+                      }
+                    }
+                  ]
             },
             select:{
                 id:true,
