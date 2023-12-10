@@ -4,7 +4,7 @@ import { HiChevronLeft } from 'react-icons/hi'
 import { HiChevronDown, HiEllipsisHorizontal } from 'react-icons/hi2';
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
-import { Conversation, Knowledge, RobotMask, User } from "@prisma/client";
+import { Conversation, RobotMask} from "@prisma/client";
 
 
 import Avatar from "@/app/components/Avatar";
@@ -19,7 +19,7 @@ import AvatarWithKB from '@/app/components/AvatarWithKB';
 import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import useActiveList from "@/app/hooks/useActiveList";
 import useCurrentUser from '@/app/hooks/useCurrentUser';
-import { Badge, Button } from '@nextui-org/react';
+import { Badge, Button, Chip } from '@nextui-org/react';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -117,7 +117,12 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
               <Avatar user={robotUser} />
             )}</Badge>
           <div className="flex flex-col">
-            <div>{conversation.name || robotUser.name}</div>
+            <div>{conversation.name || robotUser.name} {curUser?.id == robotUser.robotOwnerId && robotUser.robot?.isShared &&
+                <Chip classNames={{
+                  base: "bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
+                  content: "drop-shadow shadow-black text-white",
+                }} variant="solid" size="sm">共享</Chip>}
+            </div>
             <div className="text-sm font-light text-neutral-500">
               {statusText}
             </div>

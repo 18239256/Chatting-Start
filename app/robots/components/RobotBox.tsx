@@ -113,7 +113,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
                 <Chip classNames={{
                   base: "bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
                   content: "drop-shadow shadow-black text-white",
-                }} variant="solid">共享</Chip>}
+                }} variant="solid" size="sm">共享</Chip>}
               </p>              
               {lastMessage?.createdAt && (
                 <p 
