@@ -103,23 +103,26 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           >
             <HiChevronLeft size={32} />
           </Link>
-          <Badge
-            isOneChar
-            content=""
-            color="warning"
-            shape="circle"
-            placement="top-left"
-            isInvisible={curUser?.id === robotUser.robotOwnerId}
-          >
-            {Boolean(robotUser.robot?.knowledgeBaseName) ? (
-              <AvatarWithKB user={robotUser} />
-            ) : (
-              <Avatar user={robotUser} />
-            )}</Badge>
+          <div className='lg:hidden'>
+            <Badge
+              isOneChar
+              content=""
+              color="warning"
+              shape="circle"
+              placement="top-left"
+              isInvisible={curUser?.id === robotUser.robotOwnerId}
+            >
+              {Boolean(robotUser.robot?.knowledgeBaseName) ? (
+                <AvatarWithKB user={robotUser} />
+              ) : (
+                <Avatar user={robotUser} />
+              )}
+            </Badge>
+          </div>
           <div className="flex flex-col">
             <div>{conversation.name || robotUser.name} {curUser?.id == robotUser.robotOwnerId && robotUser.robot?.isShared &&
                 <Chip classNames={{
-                  base: "bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
+                  base: "lg:hidden bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
                   content: "drop-shadow shadow-black text-white",
                 }} variant="solid" size="sm">共享</Chip>}
             </div>

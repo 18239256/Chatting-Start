@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Tooltip } from '@nextui-org/react';
 import LoadingModal from '@/app/components/modals/LoadingModal';
+import AvatarRole from '@/app/components/AvatarRole';
 
 
 interface HeaderProps {
@@ -25,17 +26,6 @@ const Header: React.FC<HeaderProps> = ({ role}) => {
     if(!confirm(`请确认删除当前角色：${role.name} ?`)){
       return;
     };
-    // setIsLoading(true);
-
-    // axios.post('/api/knowledges/deleteknowledgebase', {
-    //   roleId:role.id
-    // })
-    // .then((ret) => {
-    //   router.push('/roles');
-    //   router.refresh();
-    // })
-    // .catch(() => toast.error('出错了!'))
-    // .finally(() => setIsLoading(false));
   }
 
   return (
@@ -70,9 +60,9 @@ const Header: React.FC<HeaderProps> = ({ role}) => {
             cursor-pointer
           "
           >
-            <HiChevronLeft size={32} />
+          <HiChevronLeft size={32} />
           </Link>
-          <FaRegIdBadge size={32} className="lg:hidden"/>
+          <div className='lg:hidden'><AvatarRole role={role}/></div>
           <div className="flex flex-col">
             <div>{role.name}</div>
           </div>
