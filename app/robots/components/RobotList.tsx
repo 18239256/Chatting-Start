@@ -38,7 +38,12 @@ const RobotList: React.FC<RobotListProps> = ({
 
     const pusherKey = useMemo(() => {
       return session.data?.user?.email
-    }, [session.data?.user?.email])
+    }, [session.data?.user?.email]);
+
+    //当初始值改变后，需要重新初始化items变量，否则列表状态还是第一次初始化的值
+    useMemo(()=>{
+      setItems(initialItems);
+    },[initialItems]);
 
     useEffect(() => {
       if (!pusherKey) {
