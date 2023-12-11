@@ -39,13 +39,13 @@ const getRobotAnswer = async (
             {
                 allMessages.push({
                     role : 'assistant',
-                    content: msg.body
+                    content: msg.body? msg.body:""
                 })
             }
             else{
                 allMessages.push({
                     role : 'user',
-                    content: msg.body
+                    content: msg.body? msg.body:""
                 })
             }
         }
