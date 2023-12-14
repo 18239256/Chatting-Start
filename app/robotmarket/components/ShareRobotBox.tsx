@@ -44,7 +44,7 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   }
 
   return (
-    <Card className="w-80 max-w-lg">
+    <Card className="shrink-0 mb-4 max-w-1/2 basis-1/2 sm:max-w-1/3 sm:basis-1/3 lg:max-w-1/4 lg:basis-1/4">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
           <Badge
@@ -76,11 +76,10 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
           {isUsed ? "停用" : "启用"}
         </Button>
       </CardHeader>
-      <CardBody className="px-3 py-0 text-small text-default-400">
+      <CardBody className="px-3 py-0 text-small text-default-400 h-8">
         <p>
           {data.description}
         </p>
-
       </CardBody>
       <CardFooter className="gap-3 justify-between">
         <div className="flex gap-1">
