@@ -201,7 +201,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                     "
                                                                 >
                                                                     {!isEdit && description}
-                                                                    {isEdit && <input type='text' value={description!} onChange={(e) => setDescription(e.target.value)} className='form-input
+                                                                    {isEdit && <textarea value={description!} onChange={(e) => setDescription(e.target.value)} className='form-input
             block 
             w-full 
             rounded-md 
@@ -218,7 +218,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             focus:ring-inset 
             focus:ring-sky-600 
             sm:text-sm 
-            sm:leading-6'></input>}
+            sm:leading-6'></textarea>}
                                                                 </dd>
                                                             </div>
 
