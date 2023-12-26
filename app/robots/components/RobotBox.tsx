@@ -108,7 +108,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             <span className="absolute inset-0" aria-hidden="true" />
             <div className="flex justify-between items-center mb-1 ">
               <p className="text-md font-medium text-gray-900">
-                {data.name || (otherRobotUser && otherRobotUser.name)}
+                {data.name || (otherRobotUser && otherRobotUser.robot?.name)}
                 {curUser?.id == otherRobotUser.robotOwnerId && otherRobotUser.robot?.isShared &&
                 <Chip classNames={{
                   base: "bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",

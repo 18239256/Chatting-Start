@@ -120,15 +120,12 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
             </Badge>
           </div>
           <div className="flex flex-col">
-            <div>{conversation.name || robotUser.name} {curUser?.id == robotUser.robotOwnerId && robotUser.robot?.isShared &&
+            <div>{conversation.name || robotUser.robot?.name} {curUser?.id == robotUser.robotOwnerId && robotUser.robot?.isShared &&
                 <Chip classNames={{
                   base: "lg:hidden bg-sky-600 ml-2 opacity-50 border-small border-white/50 shadow-pink-500/30",
                   content: "drop-shadow shadow-black text-white",
                 }} variant="solid" size="sm">共享</Chip>}
-            </div>
-            <div className="text-sm font-light text-neutral-500">
-              {statusText}
-            </div>
+            </div>           
           </div>
           <Menu as="div" className="relative inline-block text-left">
             <div className="flex flex-col px-6">

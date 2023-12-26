@@ -6,13 +6,12 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { IoClose, IoTrash } from 'react-icons/io5';
+import { IoClose, IoTrash, IoBuild, IoSave, IoRefreshCircle } from 'react-icons/io5';
 
 import ConfirmModal from './ConfirmModal';
-import AvatarGroup from '@/app/components/AvatarGroup';
 import useActiveList from '@/app/hooks/useActiveList';
 
-import {FullUserType } from "@/app/types";
+import { FullUserType } from "@/app/types";
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import AvatarWithKB from '@/app/components/AvatarWithKB';
@@ -31,8 +30,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     onClose,
     data,
 }) => {
+    const [isEdit, setIsEdit] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const otherUser = useRobotOtherUser(data);
+    const [name, setName] = useState(otherUser.robot?.name);
+    const [description, setDescription] = useState(otherUser.robot?.description);
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
     const [topK, setTopK] = useState(otherUser.robot?.topK || 3);
@@ -44,10 +46,6 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         return format(new Date(otherUser.createdAt), 'PP');
     }, [otherUser.createdAt]);
 
-    const title = useMemo(() => {
-        return data.name || otherUser.name;
-    }, [data.name, otherUser.name]);
-
     const statusText = useMemo(() => {
         if (data.isGroup) {
             return `${data.users.length} members`;
@@ -56,18 +54,27 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         return isActive ? '在线' : '离线'
     }, [data, isActive]);
 
-    const closeMyself = ()=>{
+    const closeMyself = () => {
         axios.post('/api/robot/robotupdate', {
-            robotId: otherUser.robot?.id, 
-            temperature: temperature, 
-            historyRound: history, 
-            topK: topK, 
+            robotId: otherUser.robot?.id,
+            name: name,
+            description: description,
+            temperature: temperature,
+            historyRound: history,
+            topK: topK,
             isShared: isShared,
         })
             .then()
             .catch((err) => toast.error('保存修改时出错了!', err))
             .finally();
         onClose();
+        setIsEdit(false);
+    };
+
+    const reset = () => {
+        setName(otherUser.robot?.name);
+        setDescription(otherUser.robot?.description);
+        setIsEdit(false);
     };
 
     return (
@@ -126,21 +133,50 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                             <Avatar user={otherUser} />
                                                         )}
                                                     </div>
-                                                    <div>
-                                                        {title}
-                                                    </div>
-                                                    <div className="text-sm text-gray-500">
-                                                        {statusText}
-                                                    </div>
-                                                    <div className="flex gap-10 my-8">                                                        
+                                                    {!isEdit &&
+                                                        <div>
+                                                            {name}
+                                                        </div>}
+                                                    {isEdit && <div> <input id={name} type='text' value={name} onChange={(e) => setName(e.target.value)} className='form-input
+            block 
+            w-full 
+            rounded-md 
+            border-0 
+            text-center
+            py-1.5
+            px-1.5 
+            text-gray-900 
+            shadow-sm 
+            ring-1 
+            ring-inset 
+            ring-gray-300 
+            placeholder:text-gray-400 
+            focus:ring-2 
+            focus:ring-inset 
+            focus:ring-sky-600 
+            sm:text-sm 
+            sm:leading-6'></input></div>}
+                                                    <div className="flex gap-10 my-8 ">
+                                                        {!isEdit && <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                            <IoBuild size={20} />
+                                                        </div>}
+                                                        {isEdit && (<>
+                                                            <div onClick={reset} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                                <IoRefreshCircle size={20} />
+                                                            </div>
+                                                            <div onClick={() => setIsEdit(false)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                                <IoSave size={20} />
+                                                            </div>
+                                                        </>)}
+                                                        {!isEdit &&
                                                         <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
                                                             <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
                                                                 <IoTrash size={20} />
                                                             </div>
-                                                            <div className="text-sm font-light text-neutral-600">
+                                                            {/* <div className="text-sm font-light text-neutral-600">
                                                                 删除
-                                                            </div>
-                                                        </div>
+                                                            </div> */}
+                                                        </div>}
                                                     </div>
                                                     <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                                                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
@@ -164,7 +200,25 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                     sm:col-span-2
                                                                     "
                                                                 >
-                                                                    {otherUser.robot?.description}
+                                                                    {!isEdit && description}
+                                                                    {isEdit && <input type='text' value={description!} onChange={(e) => setDescription(e.target.value)} className='form-input
+            block 
+            w-full 
+            rounded-md 
+            border-0 
+            py-1.5
+            px-1.5 
+            text-gray-900 
+            shadow-sm 
+            ring-1 
+            ring-inset 
+            ring-gray-300 
+            placeholder:text-gray-400 
+            focus:ring-2 
+            focus:ring-inset 
+            focus:ring-sky-600 
+            sm:text-sm 
+            sm:leading-6'></input>}
                                                                 </dd>
                                                             </div>
 
@@ -240,12 +294,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                         <input type="number" id="history" min={1} max={10} defaultValue={history} onChange={value => setHistory(Number(value.target.value) || 0)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required></input>
                                                                     </div>
                                                                     {Boolean(otherUser.robot?.knowledgeBaseName) &&
-                                                                    <div className="col-span-full">
-                                                                        <label htmlFor="topKrange" className="block text-sm font-medium leading-6 text-gray-500">
-                                                                            匹配条数 <b className="text-sky-600">{topK}</b>
-                                                                        </label>
-                                                                        <input id="default-range" type="range" min="1" max="6" step="1" defaultValue={topK} onChange={value => setTopK(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
-                                                                    </div>}
+                                                                        <div className="col-span-full">
+                                                                            <label htmlFor="topKrange" className="block text-sm font-medium leading-6 text-gray-500">
+                                                                                匹配条数 <b className="text-sky-600">{topK}</b>
+                                                                            </label>
+                                                                            <input id="default-range" type="range" min="1" max="6" step="1" defaultValue={topK} onChange={value => setTopK(Number(value.target.value) || 0)} className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                                                                        </div>}
                                                                 </div>
                                                             </form>
                                                         </dl>

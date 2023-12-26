@@ -10,6 +10,8 @@ export async function POST(
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
+      name,
+      description,
       robotId,
       temperature,
       historyRound,
@@ -29,6 +31,8 @@ export async function POST(
         id: robotId,
       },
       data: {
+        name,
+        description,
         temperature,
         historyRound,
         model,
