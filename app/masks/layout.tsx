@@ -1,5 +1,5 @@
 import getCurrentUser from "../actions/getCurrentUser";
-import getSharedRobots from "../actions/getSharedRobots";
+import getMasks from "../actions/getMasks ";
 import Sidebar from "../components/sidebar/Sidebar";
 import MaskList from "./components/MaskList";
 
@@ -9,15 +9,14 @@ export default async function MasksLayout({
   children: React.ReactNode,
 }) {
 
-  const sharedRobots = await getSharedRobots();
+  const masks = await getMasks();
   const currentUser = await getCurrentUser();
 
   return (
     // \s*\/\/\s*@ts-expect-error
     <Sidebar>
       <div className="h-full">
-        <MaskList items={sharedRobots!} curUser={currentUser!}/>
-        {sharedRobots?.length === 0 && children}
+        <MaskList items={masks!}/>
       </div>
     </Sidebar>
   );

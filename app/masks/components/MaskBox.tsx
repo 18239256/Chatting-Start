@@ -1,94 +1,131 @@
 'use client';
 
-import { Robot, User } from "@prisma/client";
-import { Card, CardHeader, CardBody, CardFooter, Button, Badge } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { RobotMask } from "@prisma/client";
+import { Card, CardHeader, CardBody, CardFooter, Button} from "@nextui-org/react";
 import { format } from "date-fns";
-import AvatarWithKB from "@/app/components/AvatarWithKB";
-import Avatar from "@/app/components/Avatar";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { BiMask } from "react-icons/bi";
+import { useState } from "react";
 
 
 interface MaskBoxProps {
-  data: Robot & { user: User };
-  curUser: User;
+  data: RobotMask;
 }
 
 const MaskBox: React.FC<MaskBoxProps> = ({
   data,
-  curUser,
 }) => {
   const router = useRouter();
-  const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
-  const [isInvisible] = useState(curUser.id === data.user.robotOwnerId);
+  const [isEdit, setIsEdit] = useState(false);
+  const [title, setTitle] = useState(data.title);
+  const [content, setContent] = useState(data.content);
 
-  useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
+  const reset = () => {
+    setTitle(data.title);
+    setContent(data.content);
+    setIsEdit(false);
+  };
 
-  const onPressFire=(isUsed:boolean)=>{
-    if (isUsed) {
-      // Create new 1 by 1 conversation by new robot user；
-      // Then update model sharedRobotIds of model User with shared robot ID.
-      axios.post('/api/conversations', { userId: data.userId })
+  const editBtn = () => {
+    if (!isEdit) {
+      setIsEdit(true);
+    } else {
+      axios.post('/api/mask/maskupdate', {
+        id: data.id,
+        title: title,
+        content: content,
+        description: data.description,
+      })
         .then()
-        .catch(() => toast.error('出错了!'))
-        .finally(() => { router.refresh();});
-    }else{
-      axios.post('/api/robot/robotconsumecut', { robotId: data.id })
-      .then()
-      .catch(() => toast.error('出错了!'))
-      .finally(() => { router.refresh(); });
+        .catch((err) => toast.error('保存修改时出错了!', err))
+        .finally(() => {
+          setIsEdit(false);
+          router.refresh();
+        });
     }
-    setIsUsed(isUsed);
-  }
+  };
 
   return (
     <Card className="shrink-0 mb-4 max-w-1/2 basis-1/2 sm:max-w-1/3 sm:basis-1/3 lg:max-w-1/4 lg:basis-1/4">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
-          <Badge
-            isOneChar
-            content=""
-            color="warning"
-            shape="circle"
-            placement="top-left"
-            isInvisible={isInvisible}
-          >
-            {Boolean(data.knowledgeBaseName) ? (
-              <AvatarWithKB user={data.user} />
-            ) : (
-              <Avatar user={data.user} />
-            )}</Badge>
+          <BiMask size={26} />
           <div className="flex flex-col gap-1 items-start justify-center">
-            <h4 className="text-small font-semibold leading-none text-default-600">{data.name}</h4>
-            <h5 className="text-small tracking-tight text-default-400">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</h5>
+            {!isEdit && <h4 className="text-small font-semibold leading-none text-default-600">{title}</h4>}
+            {isEdit && <input type='text' value={title}  onChange={(e) => setTitle(e.target.value)} className='form-input
+            block 
+            w-full
+            h-7
+            rounded-md 
+            border-0 
+            py-1.5
+            px-1.5 
+            text-gray-900 
+            shadow-sm 
+            ring-1 
+            ring-inset 
+            ring-gray-300 
+            placeholder:text-gray-400 
+            focus:ring-2 
+            focus:ring-inset 
+            focus:ring-sky-600 
+            sm:text-sm 
+            sm:leading-6'></input>}
           </div>
         </div>
-        <Button
-          className={isUsed ? "bg-transparent text-foreground border-default-200" : "bg-primary-300 hover:bg-primary-500"}
-          color="primary"
-          radius="full"
-          size="sm"
-          variant={isUsed ? "bordered" : "solid"}
-          onPress={() => onPressFire(!isUsed)}
-        >
-          {isUsed ? "停用" : "启用"}
-        </Button>
-      </CardHeader>
-      <CardBody className="px-3 py-0 text-small text-default-400 h-8">
-        <p>
-          {data.description}
-        </p>
-      </CardBody>
-      <CardFooter className="gap-3 justify-between">
-        <div className="flex gap-1">
-          <p className="text-default-400 text-small">幻想度</p>
-          <p className="font-semibold text-default-400 text-small">{data.temperature}</p>
+        <div className="flex flex-row gap-2">
+          {isEdit &&
+          <Button
+            className={true ? "bg-transparent text-foreground border-default-200" : "bg-primary-300 hover:bg-primary-500"}
+            color="primary"
+            radius="full"
+            size="sm"
+            variant={true ? "bordered" : "solid"}
+            onPress={() => reset()}
+          >
+            取消
+          </Button>}
+          <Button
+            className="bg-primary-300 hover:bg-primary-500"
+            color="primary"
+            radius="full"
+            size="sm"
+            variant="solid"
+            onPress={() => editBtn()}
+          >
+            {isEdit ? "保存" : "编辑"}
+          </Button>
         </div>
+      </CardHeader>
+      <CardBody className="px-3 py-0 text-small text-default-400 h-32">
+        {!isEdit && <p>
+          {content}
+        </p>}
+        {isEdit && <textarea value={content!} onChange={(e) => setContent(e.target.value)} className='form-input
+            block 
+            w-full 
+            h-full
+            rounded-md 
+            border-0 
+            py-1.5
+            px-1.5 
+            text-gray-900 
+            shadow-sm 
+            ring-1 
+            ring-inset 
+            ring-gray-300 
+            placeholder:text-gray-400 
+            focus:ring-2 
+            focus:ring-inset 
+            focus:ring-sky-600 
+            sm:text-sm 
+            sm:leading-6'></textarea>}
+      </CardBody>
+      <CardFooter className="gap-3 justify-end">
         <div className="flex gap-1">
-          <p className="font-semibold text-default-400 text-small">{data.consumeIds.length}</p>
-          <p className="text-default-400 text-small">人在使用</p>
+        <h5 className="text-small tracking-tight text-default-400">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</h5>
         </div>
       </CardFooter>
     </Card>

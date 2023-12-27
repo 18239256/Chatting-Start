@@ -1,17 +1,15 @@
 'use client';
 
-import { Robot, User } from "@prisma/client";
+import { RobotMask } from "@prisma/client";
 import MaskBox from "./MaskBox";
 import clsx from "clsx";
 
 interface MaskListProps {
-    items: (Robot & {user: User})[];
-    curUser: User;
+    items: RobotMask[];
 }
 
 const MaskList: React.FC<MaskListProps> = ({
     items,
-    curUser,
 }) => {
     return (
         <>
@@ -27,12 +25,11 @@ const MaskList: React.FC<MaskListProps> = ({
                         面具配置
                     </div>
                 </div>
-                <div className="flex flex-col md:flex-row md:gap-6">
+                <div className="flex flex-col md:flex-row md:gap-6 lg:pr-20">
                     {items?.map((item) => (
                         <MaskBox
                             key={item.id}
                             data={item}
-                            curUser={curUser}
                         />
                     ))}
                 </div>
