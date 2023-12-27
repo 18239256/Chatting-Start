@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
+import Textarea from '@/app/components/inputs/Textarea';
 
 interface RoleModalProps {
     isOpen?: boolean;
@@ -89,12 +90,11 @@ const RoleModal: React.FC<RoleModalProps> = ({
              
             </div>
             <div className="mt-10 flex flex-col gap-y-8">
-              <Input
+              <Textarea
                 disabled={isLoading}
                 label="说明" 
                 id="description" 
                 errors={errors} 
-                type='textarea'
                 required 
                 register={register}
               />

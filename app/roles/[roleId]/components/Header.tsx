@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { Tooltip } from '@nextui-org/react';
 import LoadingModal from '@/app/components/modals/LoadingModal';
 import AvatarRole from '@/app/components/AvatarRole';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 
 interface HeaderProps {
@@ -26,6 +28,15 @@ const Header: React.FC<HeaderProps> = ({ role}) => {
     if(!confirm(`请确认删除当前角色：${role.name} ?`)){
       return;
     };
+
+    setIsLoading(true);
+
+    axios.delete(`/api/role/${role.id}`)
+      .then(() => {
+        router.refresh();
+      })
+      .catch(() => toast.error('出错了!'))
+      .finally(() => setIsLoading(false));
   }
 
   return (
