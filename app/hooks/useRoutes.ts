@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
+import { BiSolidMask } from 'react-icons/bi';
 import { HiBookOpen, HiUsers } from 'react-icons/hi2';
 import {FaIdBadge, FaRobot, FaStore} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
@@ -33,6 +34,12 @@ const useRoutes = () => {
       href: '/knowledge', 
       icon: HiBookOpen, 
       active: /^\/knowledge.*$/.test(pathname || "")
+    },
+    { 
+      label: 'Masks', 
+      href: '/masks', 
+      icon: BiSolidMask, 
+      active: /^\/masks.*$/.test(pathname || "")
     },
     { 
       label: 'Users', 

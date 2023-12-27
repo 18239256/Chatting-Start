@@ -13,6 +13,7 @@ export const config = {
     "/knowledge/:path*",
     "/robots/:path*",
     "/roles/:path*",
+    "/masks/:path*",
     "/robotmarket/:path*",
   ]
 };
