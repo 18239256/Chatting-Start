@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import prisma from "@/app/libs/prismadb";
 import { pusherServer } from "@/app/libs/pusher";
+import { exitCode } from "process";
 
 interface IParams {
   roleId?: string;
@@ -30,34 +31,24 @@ export async function DELETE(
       return new NextResponse('Invalid ID', { status: 400 });
     }
 
+    const result = await prisma.role.update({
+      where:{
+        id: roleId,
+      },
+      data:{
+        assign:{
+          set:[]
+        }
+      }
+    });
+    
     const deletedRole = await prisma.role.deleteMany({
       where: {
         id: roleId
       },
     });
 
-    existingRole.assignIds.forEach((userId) => {
-        //清除每一个授权用户的角色ID
-        const result = prisma.user.update({
-          where: {
-            id: userId,
-          },
-          data:{
-            assignRole:{
-              deleteMany: [{id: roleId}],
-            }
-          },
-          include:{
-            assignRole: true,
-          },
-        })
-        .then(()=>{console.log('deleted userId', userId)})
-        .catch((e)=>{
-          console.error('remove role from user error: ', e);
-        });
-    });
-
-    return NextResponse.json(deletedRole)
+    return NextResponse.json(deletedRole);
   } catch (error) {
     return NextResponse.json(null);
   }
