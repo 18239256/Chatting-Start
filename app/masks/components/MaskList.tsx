@@ -25,7 +25,7 @@ const MaskList: React.FC<MaskListProps> = ({
                         面具配置
                     </div>
                 </div>
-                <div className="flex flex-col md:flex-row md:gap-6 lg:pr-20">
+                <div className="flex flex-col lg:flex-row md:gap-6 lg:pr-20">
                     {items?.map((item) => (
                         <MaskBox
                             key={item.id}
