@@ -10,7 +10,7 @@ import clsx from "clsx";
 import useConversation from "@/app/hooks/useConversation";
 import RobotBox from "./RobotBox";
 import RobotChatModal from "./RobotChatModal";
-import { pusherClient } from "@/app/libs/pusher";
+import { RMQC } from "@/app/libs/RMQClient";
 import { find } from "lodash";
 import { BiSolidMessageRoundedAdd } from "react-icons/bi";
 
@@ -49,8 +49,7 @@ const RobotList: React.FC<RobotListProps> = ({
       if (!pusherKey) {
         return;
       }
-  
-      pusherClient.subscribe(pusherKey);
+      RMQC.subscribe(pusherKey);
   
       const updateHandler = (conversation: FullConversationType) => {
         setItems((current) => current.map((currentConversation) => {
@@ -84,16 +83,16 @@ const RobotList: React.FC<RobotListProps> = ({
         }
       }
   
-      pusherClient.bind('conversation:update', updateHandler)
-      pusherClient.bind('conversation:new', newHandler)
-      pusherClient.bind('conversation:remove', removeHandler)
+      RMQC.bind('conversation:update', updateHandler)
+      RMQC.bind('conversation:new', newHandler)
+      RMQC.bind('conversation:remove', removeHandler)
 
       // fresh new codes
       return () => {
-        pusherClient.unsubscribe(pusherKey);
-        pusherClient.unbind('conversation:update', updateHandler)
-        pusherClient.unbind('conversation:new', newHandler)
-        pusherClient.unbind('conversation:remove', removeHandler)
+        RMQC.unsubscribe(pusherKey);
+        RMQC.unbind('conversation:update', updateHandler)
+        RMQC.unbind('conversation:new', newHandler)
+        RMQC.unbind('conversation:remove', removeHandler)
 
       }
     }, [pusherKey, conversationId, router]);

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { pusherServer } from '@/app/libs/pusher'
+import { RMQC } from "@/app/libs/RMQClient";
 import prisma from "@/app/libs/prismadb";
 import getConversationById from "@/app/actions/getConversationById";
 import getRobotAnswer from "@/app/actions/getRobotAnswer";
@@ -85,12 +85,12 @@ export async function POST(
       }
     });
 
-    await pusherServer.trigger(conversationId, 'messages:new', newMessage);
+    RMQC.publish(conversationId, 'messages:new', newMessage);
 
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
 
     updatedConversation.users.map((user) => {
-      pusherServer.trigger(user.email!, 'conversation:update', {
+      RMQC.publish(user.email!, 'conversation:update', {
         id: conversationId,
         messages: [lastMessage]
       });

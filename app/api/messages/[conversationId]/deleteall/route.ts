@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { pusherServer } from '@/app/libs/pusher'
+import { RMQC } from "@/app/libs/RMQClient";
 import prisma from "@/app/libs/prismadb";
 
 interface IParams {
@@ -30,7 +30,7 @@ export async function POST(
       });
 
     // Update last message seen
-    await pusherServer.trigger(conversationId!, 'message:deleteall', {});
+    RMQC.publish(conversationId!, 'message:deleteall', {});
 
     return new NextResponse(`Successfully delete ${count} message(s).`);
   } catch (error) {

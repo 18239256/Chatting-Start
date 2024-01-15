@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import MessageBox from "./MessageBox";
 import axios from "axios";
-import { pusherClient } from "@/app/libs/pusher";
+import { RMQC } from "@/app/libs/RMQClient";
 import { find } from "lodash";
 
 interface BodyProps {
@@ -25,7 +25,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
   }, [conversationId]);
 
   useEffect(() => {
-    pusherClient.subscribe(conversationId)
+    RMQC.subscribe(conversationId);
     bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullRobotMessageType) => {
@@ -59,15 +59,15 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     };
 
 
-    pusherClient.bind('messages:new', messageHandler)
-    // pusherClient.bind('message:update', updateMessageHandler); //防止消息更新触发后引起消息显示控件无法获得knowledgeName的bug，因为发送消息时候消息信息不完整
-    pusherClient.bind('message:deleteall', delAllMessageHandler);
+    RMQC.bind('messages:new', messageHandler)
+    // RMQC.bind('message:update', updateMessageHandler); //防止消息更新触发后引起消息显示控件无法获得knowledgeName的bug，因为发送消息时候消息信息不完整
+    RMQC.bind('message:deleteall', delAllMessageHandler);
 
     return () => {
-      pusherClient.unsubscribe(conversationId)
-      pusherClient.unbind('messages:new', messageHandler)
-      // pusherClient.unbind('message:update', updateMessageHandler)
-      pusherClient.unbind('message:deleteall', delAllMessageHandler)
+      RMQC.unsubscribe(conversationId)
+      RMQC.unbind('messages:new', messageHandler)
+      // RMQC.unbind('message:update', updateMessageHandler)
+      RMQC.unbind('message:deleteall', delAllMessageHandler)
     }
   }, [conversationId]);
 
