@@ -5,16 +5,25 @@ type EventCallback<T = any> = (...args: T[]) => void;
 
 type EventMessageBody = { event: string, data: any };
 
+const PUBLIC_RABBIT_ENV = {
+    HOST: process.env.NEXT_PUBLIC_RABBITMQ_HOST!,
+    PORT: process.env.NEXT_PUBLIC_RABBITMQ_PORT!,
+    VHOST:process.env.NEXT_PUBLIC_RABBITMQ_VHOST!,
+    USER: process.env.NEXT_PUBLIC_RABBITMQ_USER!,
+    PASSWORD: process.env.NEXT_PUBLIC_RABBITMQ_PASSWORD!,
+    EXCHANGE: process.env.NEXT_PUBLIC_RABBITMQ_EXCHNGE!,
+}
+
 class RMQClient {
     private static _instance: RMQClient;
     private stompClient: Client;
     private destinations: string[] = [];
     private clientSettings: StompConfig = {
-        brokerURL: "ws://43.143.223.86:15674/ws",
+        brokerURL: `ws://${PUBLIC_RABBIT_ENV.HOST}:${PUBLIC_RABBIT_ENV.PORT}/ws`,
         connectHeaders: {
-            login: "root",
-            passcode: "LTxRMYpYhawEV1NaLNEs",
-            host: "/",
+            login: PUBLIC_RABBIT_ENV.USER,
+            passcode: PUBLIC_RABBIT_ENV.PASSWORD,
+            host: PUBLIC_RABBIT_ENV.VHOST,
         },
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
@@ -22,7 +31,6 @@ class RMQClient {
     };
 
     public static get instance(): RMQClient {
-        console.log('RMQClient._instance', RMQClient._instance);
         if (RMQClient._instance === undefined) {
             RMQClient._instance = new RMQClient();
         }
@@ -65,7 +73,7 @@ class RMQClient {
     public publish(channel: string, event: string, data: any): void {
         if (this.stompClient) {
             const params = {
-                destination: `/exchange/chatexchange/${channel}`,
+                destination: `/exchange/${PUBLIC_RABBIT_ENV.EXCHANGE}/${channel}`,
                 body: JSON.stringify({ event: event, data: data }),
             };
             this.stompClient.publish(params);
@@ -79,7 +87,7 @@ class RMQClient {
         this.disconnnect();
         this.stompClient.onConnect = () => {
             this.destinations.forEach(ch => {
-                this.stompClient.subscribe(`/exchange/chatexchange/${ch}`, this.callback, { id: ch });
+                this.stompClient.subscribe(`/exchange/${PUBLIC_RABBIT_ENV.EXCHANGE}/${ch}`, this.callback, { id: ch });
             });
         };
         this.connnect();
@@ -94,7 +102,7 @@ class RMQClient {
 
         this.stompClient.onConnect = () => {
             this.destinations.forEach(ch => {
-                this.stompClient.unsubscribe(`/exchange/chatexchange/${ch}`, { id: ch });
+                this.stompClient.unsubscribe(`/exchange/${PUBLIC_RABBIT_ENV.EXCHANGE}/${ch}`, { id: ch });
             });
         };
 
