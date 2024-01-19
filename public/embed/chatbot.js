@@ -52,13 +52,13 @@ export default async function(config) {
     
     // Inject the HTML
     chatWidgetContainer.innerHTML = `
-      <div id="chat-bubble" class="w-16 h-16 bg-blue-800 rounded-full flex items-center justify-center cursor-pointer text-3xl">
+      <div id="chat-bubble" class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer text-3xl">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
         </svg>
       </div>
       <div id="chat-popup" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-md shadow-md flex flex-col transition-all text-sm">
-        <div id="chat-header" class="flex justify-between items-center p-4 bg-blue-800 text-white rounded-t-md">
+        <div id="chat-header" class="flex justify-between items-center p-4 bg-blue-600 text-white rounded-t-md">
           <h3 class="m-0 text-lg">${robotName}</h3>
           <button id="close-popup" class="bg-transparent border-none text-white cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -70,7 +70,7 @@ export default async function(config) {
         <div id="chat-input-container" class="p-4 border-t border-gray-200">
           <div class="flex space-x-4 items-center">
             <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="请输入您的问题...">
-            <button id="chat-submit" class="bg-blue-800 text-white rounded-md px-4 py-2 cursor-pointer">提交</button>
+            <button id="chat-submit" class="bg-blue-600 text-white rounded-md px-4 py-2 cursor-pointer">提交</button>
           </div>
           <div class="flex text-center text-xs pt-4">
             <span class="flex-1">Prompted by <a href="/robots" target="_blank" class="text-indigo-600">@John</a></span>
