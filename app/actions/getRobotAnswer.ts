@@ -81,9 +81,6 @@ const getRobotAnswer = async (
             });
 
         } else {
-
-            
-
             if (allMessages.slice(-1)[0].content !== message)
                 allMessages.push({
                     role: 'user',
