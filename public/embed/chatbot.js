@@ -53,10 +53,11 @@ export default async function(config) {
     // Inject the HTML
     chatWidgetContainer.innerHTML = `
       <div id="chat-bubble" class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer text-3xl">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        <svg viewBox="0 0 1280 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1680" width="36" height="36">
+            <path d="M0 512v256c0 35.4 28.6 64 64 64h64V448H64c-35.4 0-64 28.6-64 64zM928 192H704V64c0-35.4-28.6-64-64-64s-64 28.6-64 64v128H352c-88.4 0-160 71.6-160 160v544c0 70.6 57.4 128 128 128h640c70.6 0 128-57.4 128-128V352c0-88.4-71.6-160-160-160zM512 832h-128v-64h128v64z m-64-240c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z m256 240h-128v-64h128v64z m192 0h-128v-64h128v64z m-64-240c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z m384-144h-64v384h64c35.4 0 64-28.6 64-64V512c0-35.4-28.6-64-64-64z"  fill="#ffffff">
+            </path>
         </svg>
-      </div>
+        </div>
       <div id="chat-popup" class="hidden absolute bottom-20 right-0 w-96 bg-white rounded-md shadow-md flex flex-col transition-all text-sm">
         <div id="chat-header" class="flex justify-between items-center p-4 bg-blue-600 text-white rounded-t-md">
           <h3 class="m-0 text-lg">${robotName}</h3>
