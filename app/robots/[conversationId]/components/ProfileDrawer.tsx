@@ -6,7 +6,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Conversation, User } from '@prisma/client';
 import { format } from 'date-fns';
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { IoClose, IoTrash, IoBuild, IoSave, IoRefreshCircle } from 'react-icons/io5';
+import { IoClose, IoTrash, IoBuild, IoSave, IoRefreshCircle, IoCopyOutline } from 'react-icons/io5';
 
 import ConfirmModal from './ConfirmModal';
 import useActiveList from '@/app/hooks/useActiveList';
@@ -156,7 +156,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             focus:ring-sky-600 
             sm:text-sm 
             sm:leading-6'></input></div>}
-            <div>{otherUser.robot?.id}</div>
+            <div className="flex gap-1 my-8 ">
+                <div className='text-gray-400 flex items-center justify-center'>{otherUser.robot?.id}</div>
+                <div onClick={() => navigator.clipboard.writeText(otherUser.robot?.id!)} className='text-gray-400 flex items-center cursor-pointer  justify-center'><IoCopyOutline size={20} /></div>
+            </div>
+            
                                                     <div className="flex gap-10 my-8 ">
                                                         {!isEdit && <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
                                                             <IoBuild size={20} />
