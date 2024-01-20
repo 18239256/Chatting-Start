@@ -2,7 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 
 import prisma from "@/app/libs/prismadb";
-import { pusherServer } from "@/app/libs/pusher";
+import { RMQC } from "@/app/libs/RMQClient";
 
 export async function POST(
     request: Request,
@@ -82,7 +82,7 @@ export async function POST(
             }
         });
 
-        pusherServer.trigger(currentUser.email, 'conversation:remove', existingConversation[0]);
+        RMQC.publish(currentUser.email, 'conversation:remove', existingConversation[0]);
 
         return NextResponse.json(deletedConversation);
     } catch (error) {

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { pusherServer } from '@/app/libs/pusher'
+import { RMQC } from "@/app/libs/RMQClient";
+
 import prisma from "@/app/libs/prismadb";
 
 interface IParams {
@@ -82,7 +83,7 @@ export async function POST(
     });
 
     // Update all connections with new seen
-    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+    await RMQC.publish(currentUser.email, 'conversation:update', {
       id: conversationId,
       messages: [updatedMessage]
     });
@@ -93,7 +94,7 @@ export async function POST(
     }
 
     // Update last message seen
-    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+    RMQC.publish(conversationId!, 'message:update', updatedMessage);
 
     return new NextResponse('Success');
   } catch (error) {
