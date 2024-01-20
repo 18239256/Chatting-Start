@@ -1,7 +1,7 @@
 'use client';
 
 import { HiChevronLeft } from 'react-icons/hi'
-import { HiChevronDown, HiEllipsisHorizontal } from 'react-icons/hi2';
+import { HiChevronDown, HiEllipsisHorizontal, HiCodeBracket } from 'react-icons/hi2';
 import { Fragment, useMemo, useState } from "react";
 import Link from "next/link";
 import { Conversation, RobotMask} from "@prisma/client";
@@ -20,6 +20,7 @@ import useRobotOtherUser from '@/app/hooks/useRobotOtherUser';
 import useActiveList from "@/app/hooks/useActiveList";
 import useCurrentUser from '@/app/hooks/useCurrentUser';
 import { Badge, Button, Chip } from '@nextui-org/react';
+import CodeModal from './CodeModal';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -39,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
   const curUser = useCurrentUser(conversation);
   const [mask, setMask] = useState(masks.find((m) => m.id === robotUser.robot?.maskId)?.title || "");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [codeOpen, setCodeOpen] = useState(false);
   const { members } = useActiveList();
   const isActive = members.indexOf(robotUser?.email!) !== -1;
   
@@ -73,6 +75,11 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
         data={conversation}
         isOpen={drawerOpen}
         onClose={() => {setDrawerOpen(false);router.refresh();}}
+      />
+      <CodeModal
+        isOpen={codeOpen}
+        onClose={() => {setCodeOpen(false)}}
+        robotId={robotUser.robot?.id}
       />
       <div
         className="
@@ -129,7 +136,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           </div>
           <Menu as="div" className="relative inline-block text-left">
             <div className="flex flex-col px-6">
-              <Menu.Button className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm sm:text-xs  font-semibold text-sky-500 cursor-pointer" >
+              <Menu.Button className="hidden lg:inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm font-semibold text-sky-500 cursor-pointer" >
                 <BiMask size={26} />
                 {mask}
                 <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
@@ -185,17 +192,28 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           </Menu>
                  
         </div>
-        {curUser?.id === robotUser.robotOwnerId ? (
-          <HiEllipsisHorizontal
-            size={32}
-            onClick={() => setDrawerOpen(true)}
+        {curUser?.id === robotUser.robotOwnerId ? (<div className='flex gap-2'>
+          <HiCodeBracket
+            size={28}
+            onClick={() => setCodeOpen(true)}
             className="
+            hidden
+            lg:flex
           text-sky-500
           cursor-pointer
           hover:text-sky-600
           transition
         "
-          />) : (
+          /><HiEllipsisHorizontal
+          size={32}
+          onClick={() => setDrawerOpen(true)}
+          className="
+        text-sky-500
+        cursor-pointer
+        hover:text-sky-600
+        transition
+      "
+        /></div>) : (
           <Button
             className={"bg-transparent text-foreground border-default-200"}
             color="primary"
