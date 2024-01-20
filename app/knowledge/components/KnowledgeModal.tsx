@@ -40,7 +40,7 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
-            description: '知识库的说明'
+            description: ''
         }
     });
 
@@ -87,6 +87,7 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
                 label="名称" 
                 id="name" 
                 errors={errors} 
+                placeholder='请输入知识库名称'
                 required 
                 register={register}
               />
@@ -99,6 +100,7 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
                 id="description" 
                 errors={errors} 
                 type='textarea'
+                placeholder='请输入知识库说明'
                 required 
                 register={register}
               />

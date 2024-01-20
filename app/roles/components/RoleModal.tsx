@@ -8,7 +8,6 @@ import {
   SubmitHandler, 
   useForm 
 } from 'react-hook-form';
-import { Role } from "@prisma/client";
 
 import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
@@ -39,7 +38,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
-            description: '角色的说明'
+            description: ''
         }
     });
 
@@ -84,6 +83,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
                 label="名称" 
                 id="name" 
                 errors={errors} 
+                placeholder='请输入角色名称'
                 required 
                 register={register}
               />
@@ -95,6 +95,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
                 label="说明" 
                 id="description" 
                 errors={errors} 
+                placeholder='请输入角色说明'
                 required 
                 register={register}
               />

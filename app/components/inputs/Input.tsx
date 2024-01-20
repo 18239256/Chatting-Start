@@ -8,13 +8,14 @@ import {
 } from "react-hook-form";
 
 interface InputProps {
-  label: string;
-  id: string;
-  type?: string;
+  label: string,
+  id: string,
+  type?: string,
   required?: boolean;
   register: UseFormRegister<FieldValues>,
-  errors: FieldErrors
-  disabled?: boolean;
+  errors: FieldErrors,
+  disabled?: boolean,
+  placeholder?:string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -25,6 +26,7 @@ const Input: React.FC<InputProps> = ({
   errors,
   type = 'text',
   disabled,
+  placeholder,
 }) => {
   return ( 
     <div>
@@ -46,6 +48,7 @@ const Input: React.FC<InputProps> = ({
           type={type}
           autoComplete={id}
           disabled={disabled}
+          placeholder={placeholder}
           {...register(id, { required })}
           className={clsx(`
             form-input

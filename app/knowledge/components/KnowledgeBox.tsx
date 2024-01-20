@@ -62,7 +62,7 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
             </CardHeader>
             <Divider />
             <CardBody>
-              <p>知识库描述信息.</p>
+              <p>{data.description}</p>
             </CardBody>
             <Divider />
             <CardFooter>

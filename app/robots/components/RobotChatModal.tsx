@@ -223,6 +223,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 label="名称"
                 id="name"
                 errors={errors}
+                placeholder='请输入机器人名称'
                 required
                 register={register}
               />
@@ -230,6 +231,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                 disabled={isLoading}
                 label="描述"
                 id="description"
+                placeholder='请输入机器人描述说明'
                 errors={errors}
                 register={register}
               />

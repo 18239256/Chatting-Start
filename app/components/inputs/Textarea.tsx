@@ -12,8 +12,9 @@ interface TextareaProps {
   id: string;
   required?: boolean;
   register: UseFormRegister<FieldValues>,
-  errors: FieldErrors
-  disabled?: boolean;
+  errors: FieldErrors,
+  disabled?: boolean,
+  placeholder?: string,
 }
 
 const Textarea: React.FC<TextareaProps> = ({
@@ -23,6 +24,7 @@ const Textarea: React.FC<TextareaProps> = ({
   required,
   errors,
   disabled,
+  placeholder,
 }) => {
   return ( 
     <div>
@@ -43,6 +45,7 @@ const Textarea: React.FC<TextareaProps> = ({
           id={id}
           autoComplete={id}
           disabled={disabled}
+          placeholder={placeholder}
           {...register(id, { required })}
           className={clsx(`
             form-input

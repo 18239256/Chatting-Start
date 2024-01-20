@@ -137,7 +137,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                         <div>
                                                             {name}
                                                         </div>}
-                                                    {isEdit && <div> <input id={name} type='text' value={name} onChange={(e) => setName(e.target.value)} className='form-input
+                                                    {isEdit && <div> <input id={name} type='text' placeholder='请输入机器人名称' value={name} onChange={(e) => setName(e.target.value)} className='form-input
             block 
             w-full 
             rounded-md 
@@ -202,7 +202,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                     "
                                                                 >
                                                                     {!isEdit && description}
-                                                                    {isEdit && <textarea value={description!} onChange={(e) => setDescription(e.target.value)} className='form-input
+                                                                    {isEdit && <textarea value={description!} placeholder='请输入机器人描述' onChange={(e) => setDescription(e.target.value)} className='form-input
             block 
             w-full 
             rounded-md 
