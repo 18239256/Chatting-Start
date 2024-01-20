@@ -76,6 +76,17 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
         setDescription(otherUser.robot?.description);
         setIsEdit(false);
     };
+    
+    const copyHandle = (content:string) => {
+        let copy = (e:any)=>{
+            e.preventDefault()
+            e.clipboardData.setData('text/plain',content);
+            toast.success('复制成功');
+            document.removeEventListener('copy',copy);
+        }
+        document.addEventListener('copy',copy);
+        document.execCommand("Copy");
+      }
 
     return (
         <>
@@ -158,7 +169,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             sm:leading-6'></input></div>}
             <div className="flex gap-1 my-8 ">
                 <div className='text-gray-400 flex items-center justify-center'>{otherUser.robot?.id}</div>
-                <div onClick={() => navigator.clipboard.writeText(otherUser.robot?.id!).then(()=>toast.success("复制成功"))} className='text-gray-400 flex items-center cursor-pointer  justify-center'><IoCopyOutline size={20} /></div>
+                <div onClick={() => copyHandle(otherUser.robot?.id!)} className='text-gray-400 flex items-center cursor-pointer  justify-center'><IoCopyOutline size={20} /></div>
             </div>
             
                                                     <div className="flex gap-10 my-8 ">
