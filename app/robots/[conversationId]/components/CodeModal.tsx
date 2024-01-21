@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation';
 import Modal from '@/app/components/modals/Modal';
 import Button from '@/app/components/Button';
+import CodeBlock from '@/app/components/CodeBlock';
+import { useEffect, useRef } from 'react';
 
 interface CodeModalProps {
   isOpen?: boolean;
@@ -16,8 +16,6 @@ const CodeModal: React.FC<CodeModalProps> = ({
   onClose,
   robotId,
 }) => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const codeContent = `
   <head>
   ...
@@ -52,12 +50,11 @@ const CodeModal: React.FC<CodeModalProps> = ({
       <p className="mt-1 text-sm leading-6 text-gray-600">
         请按把下面的代码复制到前端页面文件中。
       </p>
-      <div className='max-w-full'>
-        <pre><code>{codeContent}</code></pre>
+      <div>
+        <CodeBlock language='javascript' code={codeContent}></CodeBlock>
       </div>
       <div className="mt-6 flex items-center justify-end gap-x-6">
         <Button
-          disabled={isLoading}
           onClick={onClose}
           type="button"
         >
