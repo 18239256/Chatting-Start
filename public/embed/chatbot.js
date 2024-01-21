@@ -70,7 +70,7 @@ export default async function(config) {
         <div id="chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
         <div id="chat-input-container" class="p-4 border-t border-gray-200">
           <div class="flex space-x-4 items-center">
-            <input type="text" id="chat-input" class="flex-1 border border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="请输入您的问题...">
+            <input type="text" id="chat-input" class="flex-1 border border-solid border-gray-300 rounded-md px-4 py-2 outline-none w-3/4" placeholder="请输入您的问题...">
             <button id="chat-submit" class="bg-blue-600 text-white rounded-md px-4 py-2 cursor-pointer">提交</button>
           </div>
           <div class="flex text-center text-xs pt-4">
@@ -131,7 +131,7 @@ export default async function(config) {
       const messageElement = document.createElement('div');
       messageElement.className = 'flex justify-end mb-3';
       messageElement.innerHTML = `
-        <div class="bg-blue-600 text-white rounded-lg py-2 px-4 max-w-[70%]">
+        <div class="bg-blue-600 text-white rounded-lg py-2 px-4 max-w-[70%] text-right">
           ${message}
         </div>
       `;
@@ -152,7 +152,7 @@ export default async function(config) {
       const replyElement = document.createElement('div');
       replyElement.className = 'flex mb-3';
       replyElement.innerHTML = `
-        <div class="bg-gray-200 text-black rounded-lg py-2 px-4 max-w-[70%]">
+        <div class="bg-gray-200 text-black rounded-lg py-2 px-4 max-w-[70%] text-left">
           ${message}
         </div>
       `;
