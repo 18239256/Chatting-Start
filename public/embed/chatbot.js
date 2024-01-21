@@ -9,7 +9,7 @@ export default async function(config) {
     const robotData = await response.json();
     const robotName = robotData.name;
     
-    document.head.insertAdjacentHTML('beforeend', '<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.16/tailwind.min.css" rel="stylesheet">');
+    document.head.insertAdjacentHTML('beforeend', '<link href="./tailwind.min.css" rel="stylesheet">');
     // Inject the CSS
     const style = document.createElement('style');
     style.innerHTML = `
