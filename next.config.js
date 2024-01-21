@@ -14,7 +14,7 @@ const nextConfig = {
     typescript: {
       ignoreBuildErrors: true, // temp add for next-auth failded build issues
     },
-    async headers(){
+    async headers(){  //添加服务器对跨域CORS的支持
       return [
         {
           source:"/:path*",
