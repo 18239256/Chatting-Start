@@ -9,7 +9,7 @@
         import { default as rob  } from "./chatbot.js";
         rob({
             robotId:"6575263d97d664689a8edbce",
-            apiHost:"http://localhost:3000",
+            apiHost:`${window.location.protocol}//${window.location.host}`,
             chatflowConfig:{},
             theme:{},
         });
