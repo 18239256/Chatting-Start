@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Tooltip } from '@nextui-org/react';
+import { HiEllipsisHorizontal } from 'react-icons/hi2';
+import ProfileDrawer from './ProfileDrawer';
 
 
 interface HeaderProps {
@@ -18,29 +20,15 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ knowledge }) => {
 
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const delBTNClick = ()=>{
-
-    if(!confirm(`请确认删除当前知识库：${knowledge.displayName} ?`)){
-      return;
-    };
-    setIsLoading(true);
-
-    axios.post('/api/knowledges/deleteknowledgebase', {
-      knowledgeBaseName:knowledge.realName
-    })
-    .then((ret) => {
-      router.push('/knowledge');
-      router.refresh();
-      console.log('ret', ret);
-    })
-    .catch(() => toast.error('出错了!'))
-    .finally(() => setIsLoading(false));
-  }
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <>
+      <ProfileDrawer
+        data={knowledge}
+        isOpen={drawerOpen}
+        onClose={() => {setDrawerOpen(false);router.refresh();}}
+      />
       <div
         className="
         bg-white 
@@ -77,25 +65,18 @@ const Header: React.FC<HeaderProps> = ({ knowledge }) => {
               {knowledge.description}
             </div>
           </div>
-        </div>
-        <Tooltip  content="删除知识库" className='bg-red-500  text-gray-200'>
-          <button
-            onClick={delBTNClick}
-            className="
-                        rounded-full 
-                        p-2 
-                        bg-gray-200 
-                        cursor-pointer 
-                        hover:bg-red-500
-                        transition
-                    "
-          >
-            <TbDatabaseX
-              size={18}
-              className="text-white"
-            />
-          </button>
-        </Tooltip>
+        </div>        
+        <div className='flex gap-2'>
+         <HiEllipsisHorizontal
+          size={32}
+          onClick={() => setDrawerOpen(true)}
+          className="
+        text-sky-500
+        cursor-pointer
+        hover:text-sky-600
+        transition
+      "
+        /></div>
       </div>
     </>
   );

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
-import delKnowledgeBase from "@/app/actions/LLM/delKnowledgeBase";
 
 export async function POST(
   request: Request,
@@ -11,24 +10,26 @@ export async function POST(
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
-        knowledgeBaseId,
-        knowledgeBaseName,
+      KnowledgeId,
+      displayName,
+      description,
     } = body;
 
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const ret = await delKnowledgeBase(knowledgeBaseName);
-
-    const deleteKB = await prisma.knowledge.delete({
-        where: {
-            id :  knowledgeBaseId,
-        }
-    });
-
-    return NextResponse.json(deleteKB);
-
+    const updateKnowledgeBase = await prisma.knowledge.update({
+      where: {
+        id: KnowledgeId,
+      },
+      data: {
+        displayName,
+        description,
+      },
+    })
+    
+    return NextResponse.json(updateKnowledgeBase);
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
     return new NextResponse('Error', { status: 500 });
