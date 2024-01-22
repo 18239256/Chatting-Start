@@ -15,7 +15,7 @@ import { FullUserType } from "@/app/types";
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import AvatarWithKB from '@/app/components/AvatarWithKB';
-import { Switch } from '@nextui-org/react';
+import { Switch, Tooltip } from '@nextui-org/react';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -173,25 +173,31 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             </div>
             
                                                     <div className="flex gap-10 my-8 ">
-                                                        {!isEdit && <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                        {!isEdit && 
+                                                        <Tooltip  content="编辑" className='bg-sky-500  text-gray-200'>
+                                                        <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
                                                             <IoBuild size={20} />
-                                                        </div>}
+                                                        </div>
+                                                        </Tooltip>}
                                                         {isEdit && (<>
+                                                            <Tooltip  content="重置" className='bg-sky-500  text-gray-200'>
                                                             <div onClick={reset} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
                                                                 <IoRefreshCircle size={20} />
                                                             </div>
+                                                            </Tooltip>
+                                                            <Tooltip  content="保存" className='bg-sky-500  text-gray-200'>
                                                             <div onClick={() => setIsEdit(false)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
                                                                 <IoSave size={20} />
                                                             </div>
+                                                            </Tooltip>
                                                         </>)}
                                                         {!isEdit &&
                                                         <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
+                                                            <Tooltip  content="删除" className='bg-red-500  text-gray-200'>
                                                             <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
                                                                 <IoTrash size={20} />
                                                             </div>
-                                                            {/* <div className="text-sm font-light text-neutral-600">
-                                                                删除
-                                                            </div> */}
+                                                            </Tooltip>
                                                         </div>}
                                                     </div>
                                                     <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
