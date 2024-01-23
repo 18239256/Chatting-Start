@@ -3,7 +3,6 @@
 import Modal from '@/app/components/modals/Modal';
 import Button from '@/app/components/Button';
 import CodeBlock from '@/app/components/CodeBlock';
-import { useEffect, useRef } from 'react';
 
 interface CodeModalProps {
   isOpen?: boolean;
@@ -22,10 +21,10 @@ const CodeModal: React.FC<CodeModalProps> = ({
   //从这里开始复制
   <script type="module" >
       import { default as rob  } 
-      from "${window.location.protocol}//${window.location.host}/embed/chatbot.js"; 
+      from "${global.location?.origin}/embed/chatbot.js"; 
       rob({
         robotId:"${robotId}",
-        apiHost:"${window.location.protocol}//${window.location.host}",  
+        apiHost:"${global.location?.origin}",  
         chatflowConfig:{},
         theme:{},
     });
