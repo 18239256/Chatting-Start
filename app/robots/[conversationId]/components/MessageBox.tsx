@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { FullMessageType, FullRobotMessageType } from "@/app/types";
+import { FullRobotMessageType } from "@/app/types";
 import { useSession } from "next-auth/react";
 
 import Avatar from "@/app/components/Avatar";
@@ -15,6 +15,8 @@ import React from "react";
 import { Accordion, AccordionItem, Link } from "@nextui-org/react";
 import { format as url_format } from "url";
 import toast from "react-hot-toast";
+
+import LoadingStyle from "../../../resources/css/loading.module.css";
 
 interface MessageBoxProps {
   data: FullRobotMessageType;
@@ -141,9 +143,14 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                   translate
                 "
             />
-          ) : (
-            <div><ReactMarkdown remarkPlugins={[gfm]}>{data.body}</ReactMarkdown>
-              {renderRefDocs}</div>
+          ) : ( !data.isLoading ?
+            (<div><ReactMarkdown remarkPlugins={[gfm]}>{data.body}</ReactMarkdown>
+              {renderRefDocs}</div>):
+              (<div className={LoadingStyle.loading} >
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>)
           )}
         </div>
         {isLast && isOwn && seenList.length > 0 && (

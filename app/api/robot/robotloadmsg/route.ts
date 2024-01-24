@@ -15,8 +15,7 @@ export async function POST(
     const {
       message,
       image,
-      conversationId,
-      updateMessageId,
+      conversationId
     } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
@@ -30,14 +29,9 @@ export async function POST(
         return currentValue.id !== currentUser.id;
     })
     
-    const retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id);
-    
-    const updateMessage = await prisma.message.update({
-      where:{
-        id: updateMessageId,
-      },
+    const newMessage = await prisma.message.create({
       include: {
-        // seen: true,
+        seen: true,
         sender: {
           select:{
             id: true,
@@ -50,10 +44,9 @@ export async function POST(
         }
       },
       data: {
-        body: retMessage.answer,
+        body: "Robot's answer loading...",
         image: image,
-        isLoading: false,
-        referenceDocs: JSON.stringify(retMessage.docs),
+        isLoading: true,
         conversation: {
           connect: { id: conversationId }
         },
@@ -76,7 +69,7 @@ export async function POST(
         lastMessageAt: new Date(),
         messages: {
           connect: {
-            id: updateMessage.id
+            id: newMessage.id
           }
         }
       },
@@ -90,9 +83,7 @@ export async function POST(
       }
     });
 
-    console.log('updateMessage', updateMessage);
-
-    RMQC.publish(conversationId, 'message:update', updateMessage);
+    RMQC.publish(conversationId, 'messages:new', newMessage);
 
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
 
@@ -103,7 +94,7 @@ export async function POST(
       });
     });
 
-    return NextResponse.json(updateMessage)
+    return NextResponse.json(newMessage)
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
     return new NextResponse('Error', { status: 500 });

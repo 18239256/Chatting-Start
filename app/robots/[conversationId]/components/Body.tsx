@@ -42,6 +42,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     };
 
     const updateMessageHandler = (newMessage: FullRobotMessageType) => {
+      console.log('newMessage=>', newMessage)
       setMessages((current) => current.map((currentMessage) => {
         if (currentMessage.id === newMessage.id) {
           return newMessage;
@@ -60,13 +61,13 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
 
 
     RMQC.bind('messages:new', messageHandler)
-    // RMQC.bind('message:update', updateMessageHandler); //防止消息更新触发后引起消息显示控件无法获得knowledgeName的bug，因为发送消息时候消息信息不完整
+    RMQC.bind('message:update', updateMessageHandler); //防止消息更新触发后引起消息显示控件无法获得knowledgeName的bug，因为发送消息时候消息信息不完整
     RMQC.bind('message:deleteall', delAllMessageHandler);
 
     return () => {
       RMQC.unsubscribe(conversationId)
       RMQC.unbind('messages:new', messageHandler)
-      // RMQC.unbind('message:update', updateMessageHandler)
+      RMQC.unbind('message:update', updateMessageHandler)
       RMQC.unbind('message:deleteall', delAllMessageHandler)
     }
   }, [conversationId]);

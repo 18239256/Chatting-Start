@@ -8,7 +8,6 @@ import {
     useForm 
   } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
-import { CldUploadButton } from "next-cloudinary";
 import MessageInput from "./MessageInput";
 import { useState } from "react";
 import DelAllMsgConfirmModal from "./DelAllMsgConfirmModal";
@@ -40,13 +39,17 @@ const Form =() => {
             conversationId: conversationId
         }).then(()=>
             //triggle robot to reply
-            axios.post('/api/robot/robottalk', {
+            axios.post('/api/robot/robotloadmsg', {
                 ...data,
                 conversationId: conversationId
-            })
+            }).then((newMsg)=>
+                axios.post('/api/robot/robottalk', {
+                    ...data,
+                    conversationId: conversationId,
+                    updateMessageId: newMsg.data?.id,
+                })
+            )
         );
-
-        
     };
 
     const handleUpload = (result: any) => {

@@ -94,6 +94,8 @@ model Message {
   sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   referenceDocs  String?
+
+  isLoading Boolean?
 }
 
 model Knowledge{
