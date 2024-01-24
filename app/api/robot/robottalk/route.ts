@@ -90,8 +90,6 @@ export async function POST(
       }
     });
 
-    console.log('updateMessage', updateMessage);
-
     RMQC.publish(conversationId, 'message:update', updateMessage);
 
     const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];

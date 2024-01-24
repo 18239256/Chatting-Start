@@ -35,6 +35,7 @@ const getRobotAnswer = async (
         let historyRound:number = robotUserFull?.robot?.historyRound || 6;
         for (let index = (messages.length>historyRound? messages.length - historyRound : 0); index < messages.length; index++) {
             const msg = messages[index];
+            if(msg.isLoading) continue;
             if(msg.sender.isRobot)
             {
                 allMessages.push({

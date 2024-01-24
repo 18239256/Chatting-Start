@@ -42,7 +42,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
     };
 
     const updateMessageHandler = (newMessage: FullRobotMessageType) => {
-      console.log('newMessage=>', newMessage)
       setMessages((current) => current.map((currentMessage) => {
         if (currentMessage.id === newMessage.id) {
           return newMessage;
