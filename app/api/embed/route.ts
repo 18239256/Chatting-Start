@@ -10,7 +10,7 @@ export async function POST(
       robot,
       message,
     } = body;
-    console.log('robot', robot);
+
     const retMessage = await getEmbedRobotAnswer(robot, message);
 
     return NextResponse.json(retMessage)
