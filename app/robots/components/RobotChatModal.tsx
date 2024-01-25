@@ -251,7 +251,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
               "              >
                 选择模型
               </label>
-              <div className="mx-auto w-full max-w-md">
+              <div className="mx-auto w-full max-w-lg">
                 <RadioGroup value={tmpl} onValueChange={setTmpl} color='default'>
                   {robotTmpls.map((t) => (
                     <div key={t.id}>
