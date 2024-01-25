@@ -17,6 +17,7 @@ import { format as url_format } from "url";
 import toast from "react-hot-toast";
 
 import LoadingStyle from "../../../resources/css/loading.module.css";
+import AvatarWithKB from "@/app/components/AvatarWithKB";
 
 interface MessageBoxProps {
   data: FullRobotMessageType;
@@ -114,7 +115,10 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   return (
     <div className={container}>
       <div className={avatar}>
-        <Avatar user={data.sender} />
+        {Boolean(data.sender.robot?.knowledgeBaseName) ?
+          <AvatarWithKB user={data.sender} /> :
+          <Avatar user={data.sender} />
+        }
       </div>
       <div className={body}>
         <div className="flex items-center gap-1">

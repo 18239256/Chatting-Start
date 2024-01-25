@@ -14,9 +14,11 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
+import Image from "next/image";
 import { TbDatabase } from 'react-icons/tb';
 import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
 import Textarea from '@/app/components/inputs/Textarea';
+import { FaDatabase } from 'react-icons/fa';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -70,11 +72,15 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   } = useForm<FieldValues>({
     defaultValues: {
       name: '',
-      description:'',
+      description: '',
     }
   });
 
-  // const members = watch('members');
+  const positionMap = {
+    0: 'top-0 left-[12px]',
+    1: 'bottom-0',
+    2: 'bottom-0 right-0'
+  }
 
   const getTmplObj = () => { return robotTmpls.find((t) => { return t.id === tmpl }) };
 
@@ -83,7 +89,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
     let param = {};
     if (getTmplObj()?.knowledgeAbility) {
-      const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0]});
+      const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0] });
       param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName };
     }
     else
@@ -250,9 +256,42 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                   {robotTmpls.map((t) => (
                     <div key={t.id}>
                       <CustomRadio description={t.description} value={t.id} key={t.id}>
-                        <p>
-                          {t.name}
-                        </p>
+                        <div className='flex flex-row gap-2 items-center'>
+                          <div className="relative h-11 w-11">
+                            <div className={`
+                            relative 
+                            inline-block 
+                            rounded-full 
+                            overflow-hidden
+                            h-9 
+                            w-9 
+                            md:h-11 
+                            md:w-11
+                            `}><Image
+                                fill
+                                src='/images/robotbaby.jpg'
+                                alt="Avatar"
+                              />
+                            </div>
+                            {t.knowledgeAbility && 
+                            <div
+                              key={1}
+                              className={`
+                                absolute
+                                inline-block 
+                                rounded-full 
+                                overflow-hidden
+                                h-[21px]
+                                w-[21px]
+                                ${positionMap[2]}
+                              `}>
+                              <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
+                            </div>}
+                          </div>
+                          <p>
+                            {t.name}
+                          </p>
+                        </div>
                       </CustomRadio>
                       <div>
                         {t.knowledgeAbility && getTmplObj()?.knowledgeAbility ? knowContent : null}
