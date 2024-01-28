@@ -49,8 +49,8 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   const downloadDoc = async (knowledgeRN: string, file_name: string) => {
     const apiUrl = url_format({
       protocol: process.env.LLM_API_PROTOCOL,
-      hostname: "region-31.seetacloud.com",
-      port: "38744",
+      hostname: "region-3.seetacloud.com",
+      port: "59761",
       pathname: "/api/knowledge_base/download_doc",
       query: {
         knowledge_base_name: knowledgeRN,
