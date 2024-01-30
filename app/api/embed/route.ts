@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import getEmbedRobotAnswer from "@/app/actions/getEmbedRobotAnswer";
+import getRobotAnswerBase from "@/app/actions/getRobotAnswerBase";
 
 export async function POST(
   request: Request,
@@ -11,7 +11,7 @@ export async function POST(
       message,
     } = body;
 
-    const retMessage = await getEmbedRobotAnswer(robot, message);
+    const retMessage = await getRobotAnswerBase(robot, message);
 
     return NextResponse.json(retMessage)
   } catch (error) {
