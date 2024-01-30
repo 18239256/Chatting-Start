@@ -16,6 +16,7 @@ export async function POST(
             description,
             robotTmpl,
             knowledgeBaseName,
+            searchEngineName,
         } = body;
 
         if(!name || !robotTmpl){
@@ -31,6 +32,7 @@ export async function POST(
                 name,
                 description,
                 knowledgeBaseName,
+                searchEngineName,
                 user:{
                     create:{
                         name,

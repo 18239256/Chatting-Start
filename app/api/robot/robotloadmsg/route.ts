@@ -44,7 +44,7 @@ export async function POST(
         }
       },
       data: {
-        body: "Robot's answer loading...",
+        body: "思考中...",
         image: image,
         isLoading: true,
         conversation: {

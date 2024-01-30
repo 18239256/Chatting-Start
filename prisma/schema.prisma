@@ -141,6 +141,7 @@ model Robot{
   temperature        Float?
   historyRound       Int?
   knowledgeBaseName  String?
+  searchEngineName   String?
   topK               Int?
 
   isShared           Boolean?

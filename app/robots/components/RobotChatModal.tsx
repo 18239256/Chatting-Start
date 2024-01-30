@@ -18,7 +18,8 @@ import Image from "next/image";
 import { TbDatabase } from 'react-icons/tb';
 import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
 import Textarea from '@/app/components/inputs/Textarea';
-import { FaDatabase } from 'react-icons/fa';
+import { FaDatabase, FaSearch } from 'react-icons/fa';
+import { FaResearchgate } from 'react-icons/fa6';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -91,8 +92,9 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     if (getTmplObj()?.knowledgeAbility) {
       const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0] });
       param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName };
-    }
-    else
+    }else if(getTmplObj()?.searchAbility){
+      param = { ...data, robotTmpl: getTmplObj(), searchEngineName: "bing" };
+    }else
       param = { ...data, robotTmpl: getTmplObj() };
 
     console.log('param', param);
@@ -286,6 +288,20 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                 ${positionMap[2]}
                               `}>
                               <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
+                            </div>}
+                            {t.searchAbility && 
+                            <div
+                              key={1}
+                              className={`
+                                absolute
+                                inline-block 
+                                rounded-full 
+                                overflow-hidden
+                                h-[21px]
+                                w-[21px]
+                                ${positionMap[2]}
+                              `}>
+                              <FaSearch className="h-4 w-5 text-green-600 bg-gray-100" />
                             </div>}
                           </div>
                           <p>

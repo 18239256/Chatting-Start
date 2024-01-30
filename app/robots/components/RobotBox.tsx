@@ -12,6 +12,7 @@ import useRobotOtherUser from "@/app/hooks/useRobotOtherUser";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
 import { Badge, Chip } from "@nextui-org/react";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
+import AvatarWithSearch from "@/app/components/AvatarWithSearch";
 
 interface RobotBoxProps {
     data: FullRobotConversationType,
@@ -97,10 +98,11 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           placement="top-left"
           isInvisible={curUser?.id == otherRobotUser.robotOwnerId}
         >
-          {otherRobotUser && Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
+          {Boolean(otherRobotUser.robot?.knowledgeBaseName) ? (
             <AvatarWithKB user={otherRobotUser} />
-          ) : (
-            <Avatar user={otherRobotUser} />
+          ) : ( Boolean(otherRobotUser.robot?.searchEngineName) ? 
+              <AvatarWithSearch user={otherRobotUser} />
+              :<Avatar user={otherRobotUser} />
           )}
         </Badge>
         <div className="min-w-0 flex-1">

@@ -2,7 +2,7 @@ import getCurrentUser from "./getCurrentUser";
 import prisma from "@/app/libs/prismadb";
 import axios from "axios";
 import getMessages from "./getMessages";
-import { OPENAIFastAPIKBParamType, OPENAIFastAPIParamType } from "../types";
+import { OPENAIFastAPIKBParamType, OPENAIFastAPIParamType, OPENAIFastAPISearchParamType } from "../types";
 
 const getRobotAnswer = async (
     robotUserId: string | undefined,
@@ -72,7 +72,7 @@ const getRobotAnswer = async (
                 score_threshold: 1,
             }
 
-            console.log('AIParam', AIParam);
+            console.log('Knowledge AI Param', AIParam);
 
             await axios.post(robotUserFull.robot.robotTemp.apiUrl, AIParam).then((callback) => {
                 if (callback.status === 200)
@@ -81,7 +81,26 @@ const getRobotAnswer = async (
                 console.error('err', err);
             });
 
-        } else {
+        }if (robotUserFull?.robot?.robotTemp.searchAbility){
+            const AIParam: OPENAIFastAPISearchParamType = {
+                query: message,
+                search_engine_name: robotUserFull?.robot?.searchEngineName || "",
+                model_name: "chatglm2-6b",
+                history: allMessages,
+                temperature: robotUserFull?.robot?.temperature || 0.7,
+                top_k: robotUserFull?.robot?.topK || 3,
+                stream: false,
+            }
+
+            console.log('Search AI Param', AIParam);
+
+            await axios.post(robotUserFull.robot.robotTemp.apiUrl, AIParam).then((callback) => {
+                if (callback.status === 200)
+                    reply = callback.data;
+            }).catch((err) => {
+                console.error('err', err);
+            });
+        }else {
             if (allMessages.slice(-1)[0].content !== message)
                 allMessages.push({
                     role: 'user',

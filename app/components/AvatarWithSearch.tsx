@@ -2,7 +2,7 @@
 
 import { User } from "@prisma/client";
 import Image from "next/image";
-import { FaDatabase } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 
 interface AvatarGroupProps {
   user?: User;
@@ -49,7 +49,7 @@ const AvatarGroup: React.FC<AvatarGroupProps> = ({
             w-[21px]
             ${positionMap[2]}
           `}>
-        <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
+        <FaSearch className="h-4 w-5 text-green-600 bg-gray-100" />
       </div>
     </div>
   );

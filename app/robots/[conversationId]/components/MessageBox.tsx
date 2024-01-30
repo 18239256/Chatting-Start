@@ -76,6 +76,25 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     return;
   };
 
+  const getShrinkUrl = (url:string) => {
+    let hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+    if (url.indexOf("//") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+
+    return hostname;
+  }
+
   const itemClasses = {
     base: "py-0 w-full ",
     title: "font-normal text-medium text-sky-500",
@@ -102,7 +121,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 return (
                 <li key={secondStrip[1]} className="leading-loose text-base">
                   {secondStrip[1]}
-                  <Link className="text-sky-500 cursor-pointer" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>
+                  {(/^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/).test(fileName[1])?
+                  <Link className="text-sky-500 cursor-pointer" href={fileName[1]} isExternal showAnchorIcon>{getShrinkUrl(fileName[1])}</Link>
+                  :<Link className="text-sky-500 cursor-pointer" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>}
                   <p>{fistStrip[1]}</p>
                 </li>);
             })}

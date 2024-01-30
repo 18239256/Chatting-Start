@@ -53,6 +53,16 @@ export type OPENAIFastAPIKBParamType = {
   local_doc_url: boolean,
 };
 
+export type OPENAIFastAPISearchParamType = {
+  query: string,
+  search_engine_name: string,
+  top_k: number,
+  model_name: string,
+  history: any[],
+  temperature: number,
+  stream: boolean,
+};
+
 export type knowledgeFileArrayType={
   index: number,
   fileName: string,
