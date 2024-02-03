@@ -20,15 +20,16 @@ const getConversations = async () => {
       }
     });
 
-    if (robotUsersOfCurUser === null) {
-      return [];
-    }
+    // if (robotUsersOfCurUser === null) {
+    //   return [];
+    // }
    
     //转换机器人关联IDs为字符串数组
     let robotIds : string[] =[];
-    robotUsersOfCurUser.robotUsers.map((r) => {
-      robotIds.push(r.id);
-    })
+    if(robotUsersOfCurUser !== null)
+      robotUsersOfCurUser.robotUsers.map((r) => {
+        robotIds.push(r.id);
+      });
 
     //增加启用分享的机器人IDs
     const shareRobots = await prisma.robot.findMany({
@@ -40,6 +41,9 @@ const getConversations = async () => {
     });
 
     robotIds = [...robotIds,...shareRobots.map((u)=>{return u.userId})];
+
+    if(robotIds.length === 0)
+      return [];
 
     //根据上面的数组，查询出数组关联的所有会话
     const conversations = await prisma.conversation.findMany({
