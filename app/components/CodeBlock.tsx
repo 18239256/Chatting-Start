@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import hljs from '@/app/libs/highlight';
 import 'highlight.js/styles/github-dark.css';
-import Clipboard from 'clipboard';
 import toast from 'react-hot-toast';
+import { CopyTextToClipboard } from '../libs/clipboard';
 
 interface CodeBlockProps {
     language: string,
@@ -13,26 +13,27 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
     const preRef = useRef(null);
     const [copied, setCopied] = useState(false);
 
+    // onClick handler function for the copy button
+    const handleCopyClick = () => {
+        // Asynchronously call copyTextToClipboard
+        CopyTextToClipboard(code)
+            .then(() => {
+                // If successful, update the isCopied state value
+                setCopied(true);
+                toast.success("复制成功");
+                setTimeout(() => {
+                    setCopied(false);
+                }, 1500);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     useEffect(() => {
         if (preRef.current) {
             hljs.highlightBlock(preRef.current);
-      
-            // 创建 clipboard 实例并保存到变量中
-            const clipboard = new Clipboard(`#${language}copy_btn`, {
-              text: () => {return code},
-            });
-      
-            console.log('clipboard', clipboard);
-            // 监听复制成功事件
-            clipboard.on('success', () => {
-              setCopied(true);
-              setTimeout(() => setCopied(false), 2000);
-            });
-      
-            // 销毁 clipboard 实例
-            return () => {
-              clipboard.destroy();
-            };
+            return ;
           }
     }, [code]);
 
@@ -43,7 +44,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
                     {code}
                 </code>
             </pre>
-            <button id={`${language}copy_btn`} style={{ position: 'absolute', top: 4, right: 4, lineHeight: '14px' }} className="code-block-button" data-clipboard-target={`#${language}`} disabled={!preRef.current}>
+            <button id={`${language}copy_btn`} style={{ position: 'absolute', top: 4, right: 4, lineHeight: '14px'}} 
+                className="text-gray-400 cursor-pointer" 
+                onClick={handleCopyClick}>
                 {copied ? '已复制' : '复制'}
             </button>
         </div>

@@ -17,7 +17,6 @@
     "@stomp/stompjs": "^7.0.0",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",
-    "clipboard": "^2.0.11",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.4",
