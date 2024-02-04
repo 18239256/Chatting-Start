@@ -16,7 +16,7 @@ const getUserById = async (
         id: userId
       },
       include: {
-        robot: true,
+        robotUsers: true,
       },
     });
 

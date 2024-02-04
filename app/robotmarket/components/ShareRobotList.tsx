@@ -2,7 +2,6 @@
 
 import { Robot, User } from "@prisma/client";
 import ShareRobotBox from "./ShareRobotBox";
-import clsx from "clsx";
 
 interface ShareRobotListProps {
     items: (Robot & {user: User})[];

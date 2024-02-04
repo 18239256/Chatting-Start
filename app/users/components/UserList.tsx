@@ -47,6 +47,7 @@ const UserList: React.FC<UserListProps> = ({
           <UserBox
             key={item.id}
             data={item}
+            selected={userId === item.id}
           />
         ))}
       </div>
