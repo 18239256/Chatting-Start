@@ -1,7 +1,6 @@
 'use client';
 
 import { User } from "@prisma/client";
-import { stringify } from "querystring";
 import RobotBox from "./RobotBox";
 import { useState } from "react";
 
@@ -11,7 +10,7 @@ interface BodyProps {
 
 const Body: React.FC<BodyProps> = ({ user }) => {
     const [robotsCount,setRobotsCount] = useState(user.robotUsers.length);
-    console.log('user.robotUsers', user.robotUsers);
+    const [startDate, setStartDate] = useState(new Date());
     return (
         <>
             <div className="px-5">

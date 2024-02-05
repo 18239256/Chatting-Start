@@ -7,3 +7,6 @@ body,
 :root {
   height: 100%;
 }
+
+/* datepicker custom css */
+.react-datepicker-popper {  z-index: 50 !important }
