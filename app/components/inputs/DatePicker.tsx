@@ -63,6 +63,7 @@ const Datepicker: React.FC<DatePickerProps> = ({
     <ReactDatePicker
       customInput={<ExampleCustomInput />}
       locale="zh-CN"
+      dateFormat="yyyy年MM月dd日"
       {...args}
     /></div>
    );
