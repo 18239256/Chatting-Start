@@ -2,17 +2,10 @@
 
 import { forwardRef } from "@nextui-org/react";
 import clsx from "clsx";
-import { map } from "lodash";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ReactDatePicker, { ReactDatePickerProps, registerLocale } from "react-datepicker";
 import zhCN from "date-fns/locale/zh-CN"
 import "react-datepicker/dist/react-datepicker.css"
-
-import { 
-  FieldErrors, 
-  FieldValues, 
-  UseFormRegister 
-} from "react-hook-form";
 
 interface DatePickerProps<
 CustomModifierNames extends string = never,
