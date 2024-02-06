@@ -3,9 +3,10 @@
 import { User } from "@prisma/client";
 import RobotBox from "./RobotBox";
 import { useState } from "react";
+import { FullUserType } from "@/app/types";
 
 interface BodyProps {
-    user: User & { robotUsers: User[] }
+    user: User & { robotUsers: FullUserType[] }
 }
 
 const Body: React.FC<BodyProps> = ({ user }) => {
@@ -24,7 +25,7 @@ const Body: React.FC<BodyProps> = ({ user }) => {
                     >
                         拥有的机器人
                     </div>
-                    <div className="text-sm font-light text-neutral-300">[{robotsCount}]</div>
+                    <div className="text-sm font-light text-neutral-200">[{robotsCount}]</div>
                 </div>
                 <div className="flex flex-col md:flex-row md:gap-4 md:flex-wrap md:justify-start flex-1">
                     {user.robotUsers?.map((item) => (

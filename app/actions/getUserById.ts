@@ -16,7 +16,11 @@ const getUserById = async (
         id: userId
       },
       include: {
-        robotUsers: true,
+        robotUsers: {
+          include:{
+            robot: true,
+          }
+        },
       },
     });
 
