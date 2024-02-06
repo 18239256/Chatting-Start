@@ -3,8 +3,9 @@
 import { forwardRef } from "@nextui-org/react";
 import clsx from "clsx";
 import { map } from "lodash";
-import { useState } from "react";
-import ReactDatePicker, { ReactDatePickerProps } from "react-datepicker";
+import { useEffect, useState } from "react";
+import ReactDatePicker, { ReactDatePickerProps, registerLocale } from "react-datepicker";
+import zhCN from "date-fns/locale/zh-CN"
 import "react-datepicker/dist/react-datepicker.css"
 
 import { 
@@ -12,14 +13,6 @@ import {
   FieldValues, 
   UseFormRegister 
 } from "react-hook-form";
-
-// const colorType = new Map([
-//   ['primary','ring-gray-300 '],
-//   ['secondary',''],
-//   ['success','ring-green-300 '],
-//   ['warning','ring-rose-500'],
-//   ['danger','ring-gray-300 '],
-// ]);
 
 interface DatePickerProps<
 CustomModifierNames extends string = never,
@@ -44,6 +37,11 @@ const Datepicker: React.FC<DatePickerProps> = ({
   danger,
   ...args
 }) => {
+
+  useEffect(() => {
+    registerLocale("zh-CN", zhCN);
+  }, []);
+
   const CustomInput = forwardRef(({ value, onClick }, ref) => (
     <button className={clsx(`
     form-input
@@ -78,7 +76,7 @@ const Datepicker: React.FC<DatePickerProps> = ({
     <div>
     <ReactDatePicker
       customInput={<CustomInput />}
-      locale="zh-CN"
+      locale='zh-CN'
       dateFormat="yyyy年MM月dd日"
       {...args}
     /></div>
