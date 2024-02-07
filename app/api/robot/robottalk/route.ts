@@ -29,8 +29,13 @@ export async function POST(
     const robotUser = conversation?.users.find((currentValue) => {
         return currentValue.id !== currentUser.id;
     })
-    
-    const retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id);
+
+    let retMessage:{answer:string, docs?:[]};
+    if(null !== robotUser?.expiredAt && robotUser?.expiredAt! < new Date()){
+      retMessage = {
+        answer:"机器人使用期限已经到了!",
+    }}else    
+      retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id);
     
     const updateMessage = await prisma.message.update({
       where:{
