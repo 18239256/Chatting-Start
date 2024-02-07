@@ -9,4 +9,5 @@ body,
 }
 
 /* datepicker custom css */
-.react-datepicker-popper {  z-index: 50 !important }
+.react-datepicker-popper {  z-index: 50 !important } 
+.react-datepicker__close-icon {right: -25px !important}

@@ -61,7 +61,7 @@ const Datepicker: React.FC<DatePickerProps> = ({
     disabled && 'opacity-50 cursor-default'
   )}
    onClick={onClick} ref={ref}>
-      {value}
+      {value === "" ? '永久有效' : value}
     </button>
   ));
   

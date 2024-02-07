@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
       <CodeModal
         isOpen={codeOpen}
         onClose={() => {setCodeOpen(false)}}
-        robotId={robotUser.robot?.id}
+        robotId={robotUser.robot?.id!}
       />
       <div
         className="

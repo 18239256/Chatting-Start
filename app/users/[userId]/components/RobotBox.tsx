@@ -20,7 +20,7 @@ interface RobotBoxProps {
 const RobotBox: React.FC<RobotBoxProps> = ({
   data,
 }) => {
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(data.expiredAt);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,6 +42,21 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     return;
   };
 
+  const setExpiredDate = async (newDate: Date) => {
+    console.log('setExpiredDate called ', newDate);
+    axios.post(`/api/users/update`, {
+      id: data.id,
+      expiredAt: newDate,
+    }).then((ret) => {
+        console.log(`成功更新有效期`,ret.data);
+        router.refresh();
+      })
+      .catch(() => toast.error('出错了!'))
+      .finally(() => setIsLoading(false));
+
+    setStartDate(newDate);
+  };
+
   return (
     <Card className="overflow-visible shrink-0 mb-1 max-w-0.5 basis-1/2 sm:max-w-1/3 sm:basis-1/3 lg:max-w-1/4 lg:basis-1/4 ">
       <CardHeader className="justify-between">
@@ -56,6 +71,14 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             <h5 className="text-small tracking-tight text-default-400">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</h5>
           </div>
         </div>
+        {!isLoading? 
+        <Tooltip color="danger" content="删除机器人">
+          <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={removeRobot}>
+            <RiDeleteBinLine />
+          </span>
+        </Tooltip>
+        :
+        <Spinner color="danger" size="sm"/>}
       </CardHeader>
       <CardBody className="px-3 py-0 text-small text-default-400 h-8 ">
         <p>
@@ -67,17 +90,12 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           <p className="text-default-400 text-small">有效期</p>
           <Datepicker
             selected={startDate}
-            onChange={(date) => setStartDate(date!)}
+            onChange={(date) => setExpiredDate(date!)}
+            placeholderText="设定生效结束日期"
+            isClearable
           />
         </div>
-        {!isLoading? 
-        <Tooltip color="danger" content="删除机器人">
-          <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={removeRobot}>
-            <RiDeleteBinLine />
-          </span>
-        </Tooltip>
-        :
-        <Spinner color="danger" size="sm"/>}
+        
       </CardFooter>
     </Card>
   );
