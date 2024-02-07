@@ -38,14 +38,14 @@ export async function DELETE(
     });
 
     //删除机器人用户，关联机器人配置数据会自动被prisma清理
-    const deletedRobotUser =await prisma.user.delete({
-          where: {
-            id: robotUserId,
-          },
-        }).catch((e)=>{
-          console.log('delete user error: ', e);
-        });
-    console.log('deletedRobotUser', deletedRobotUser);
+    const deletedRobotUser = await prisma.user.delete({
+      where: {
+        id: robotUserId,
+      },
+    }).catch((e) => {
+      console.log('delete user error: ', e);
+    });
+
     return NextResponse.json(deletedRobotUser)
   } catch (error) {
     return NextResponse.json(null);

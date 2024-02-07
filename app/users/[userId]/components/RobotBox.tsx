@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardBody, CardFooter, Button, Badge, Tooltip } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Button, Badge, Tooltip, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
@@ -22,9 +22,11 @@ const RobotBox: React.FC<RobotBoxProps> = ({
 }) => {
   const [startDate, setStartDate] = useState(new Date());
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const removeRobot = async () => {
-    if (confirm(`确认删除机器人 ${data.name}?`))   //后续优化这个确认对话框
+    if (confirm(`确认删除机器人 ${data.name}?`)) {   //后续优化这个确认对话框
+      setIsLoading(true);
       axios.delete(`/api/robot/robotdelete`, {
         data: {
           robotUserId: data.id,
@@ -35,7 +37,8 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           router.refresh();
         })
         .catch(() => toast.error('出错了!'))
-        .finally();
+        .finally(()=>setIsLoading(false));
+    }
     return;
   };
 
@@ -67,11 +70,14 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             onChange={(date) => setStartDate(date!)}
           />
         </div>
+        {!isLoading? 
         <Tooltip color="danger" content="删除机器人">
           <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={removeRobot}>
             <RiDeleteBinLine />
           </span>
         </Tooltip>
+        :
+        <Spinner color="danger" size="sm"/>}
       </CardFooter>
     </Card>
   );
