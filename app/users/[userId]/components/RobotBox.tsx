@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardHeader, CardBody, CardFooter, Button, Badge, Tooltip, Spinner } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
 import Avatar from "@/app/components/Avatar";
@@ -20,9 +20,13 @@ interface RobotBoxProps {
 const RobotBox: React.FC<RobotBoxProps> = ({
   data,
 }) => {
-  const [startDate, setStartDate] = useState(data.expiredAt);
+  const [expiredDate, setexpiredDate] = useState(data.expiredAt);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const notExpired = useMemo(() => {
+    return null === expiredDate || expiredDate! >= new Date();
+  }, [expiredDate]);
 
   const removeRobot = async () => {
     if (confirm(`确认删除机器人 ${data.name}?`)) {   //后续优化这个确认对话框
@@ -54,7 +58,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
       .catch(() => toast.error('出错了!'))
       .finally(() => setIsLoading(false));
 
-    setStartDate(newDate);
+      setexpiredDate(newDate);
   };
 
   return (
@@ -89,12 +93,12 @@ const RobotBox: React.FC<RobotBoxProps> = ({
         <div className="flex gap-1 items-center">
           <p className="text-default-400 text-small">有效期</p>
           <Datepicker
-            selected={startDate}
+            selected={expiredDate}
             onChange={(date) => setExpiredDate(date!)}
             placeholderText="设定生效结束日期"
             isClearable
-            warning={ null !== startDate && startDate! < new Date()}
-            success={ null === startDate || startDate! >= new Date() }
+            warning={!notExpired}
+            success={notExpired}
           />
         </div>
       </CardFooter>
