@@ -20,7 +20,7 @@ WithRange extends boolean | undefined = undefined,
   danger?:boolean,
 }
 
-const Datepicker: React.FC<DatePickerProps> = ({
+const DatePicker: React.FC<DatePickerProps> = ({
   id,
   required,
   disabled,
@@ -76,4 +76,4 @@ const Datepicker: React.FC<DatePickerProps> = ({
    );
 }
  
-export default Datepicker;
+export default DatePicker;

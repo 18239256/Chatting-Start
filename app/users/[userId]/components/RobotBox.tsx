@@ -9,8 +9,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { FullUserType } from "@/app/types";
-import Datepicker from "@/app/components/inputs/Datepicker";
 import { RiDeleteBinLine } from "react-icons/ri";
+import DatePicker from "@/app/components/inputs/DatePicker";
 
 
 interface RobotBoxProps {
@@ -92,7 +92,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
       <CardFooter className="gap-3 justify-between">
         <div className="flex gap-1 items-center">
           <p className="text-default-400 text-small">有效期</p>
-          <Datepicker
+          <DatePicker
             selected={expiredDate}
             onChange={(date) => setExpiredDate(date!)}
             placeholderText="设定生效结束日期"
