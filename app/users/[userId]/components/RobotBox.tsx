@@ -24,14 +24,18 @@ const RobotBox: React.FC<RobotBoxProps> = ({
   const router = useRouter();
 
   const removeRobot = async () => {
-    if (confirm("确认删除机器人?"))   //后续优化这个确认对话框
-      // axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
-      //   .then((ret) => {
-      //     toast.success(`已经成功删除`);
-      //     router.refresh();
-      //   })
-      //   .catch(() => toast.error('出错了!'))
-      //   .finally(() => {})
+    if (confirm(`确认删除机器人 ${data.name}?`))   //后续优化这个确认对话框
+      axios.delete(`/api/robot/robotdelete`, {
+        data: {
+          robotUserId: data.id,
+        }
+      })
+        .then((ret) => {
+          toast.success(`成功删除机器人 ${ret.data.name}`);
+          router.refresh();
+        })
+        .catch(() => toast.error('出错了!'))
+        .finally();
     return;
   };
 
