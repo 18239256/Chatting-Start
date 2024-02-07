@@ -93,9 +93,10 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             onChange={(date) => setExpiredDate(date!)}
             placeholderText="设定生效结束日期"
             isClearable
+            warning={ null !== startDate && startDate! < new Date()}
+            success={ null === startDate || startDate! >= new Date() }
           />
         </div>
-        
       </CardFooter>
     </Card>
   );
