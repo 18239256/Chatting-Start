@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import { Prisma } from "@prisma/client";
 
 export async function POST(
   request: Request,
@@ -17,6 +18,7 @@ export async function POST(
       hashedPassword,
       updatedAt,
       expiredAt,
+      assignRoleIds,
     } = body;
 
     if (!currentUser?.id) {
@@ -36,6 +38,35 @@ export async function POST(
         expiredAt,
       },
     })
+
+    if (assignRoleIds) {
+      const resultBefore = await prisma.user.update({
+        where: {
+          id: id
+        },
+        data: {
+          assignRole: {
+            set: [],
+          }
+        }
+      });
+
+      //Connect with new assignment.
+      const updateData: Prisma.UserUpdateInput =
+      {
+        assignRole: {
+          connect: assignRoleIds.map((id: any) => ({ id: id })),
+        }
+      };
+
+      //Execute update action
+      const resultAfter = await prisma.user.update({
+        where: {
+          id: id
+        },
+        data: updateData
+      });
+    }
     
     return NextResponse.json(updateUser);
   } catch (error) {

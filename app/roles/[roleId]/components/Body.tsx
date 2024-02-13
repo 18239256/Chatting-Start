@@ -3,7 +3,7 @@
 import { Role, User } from "@prisma/client";
 import { Listbox, ListboxItem, Chip, ScrollShadow, Selection, Button, Select, Switch, cn } from "@nextui-org/react";
 import Avatar from "@/app/components/Avatar";
-import { ListboxWrapper } from "./ListboxWrapper";
+import { ListboxWrapper } from "@/app/components/lists/ListboxWrapper";
 import { Key, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";

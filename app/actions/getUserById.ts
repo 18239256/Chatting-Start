@@ -21,6 +21,7 @@ const getUserById = async (
             robot: true,
           }
         },
+        assignRole: true,
       },
     });
 
