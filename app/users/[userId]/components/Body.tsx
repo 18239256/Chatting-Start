@@ -10,21 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import AvatarRole from "@/app/components/AvatarRole";
-
-function arrayEqual(a:Key[], b:Key[]) {
-    //先将数组排序
-    a = a.sort();
-    b = b.sort();
-    //判断数组长度是否相等，若不相等返回false
-    if (a.length != b.length) 
-    return false;
-    //逐个比较数组元素
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) 
-        return false;
-    }
-    return true;
-}
+import Tools from "@/app/libs/tools"
 
 interface BodyProps {
     user: User & { robotUsers: FullUserType[], assignRole: Role[]},
@@ -85,9 +71,9 @@ const Body: React.FC<BodyProps> = ({ user, roles }) => {
 
     useEffect(() => {
         if(userRoles === "all")
-            setDirtyOfUserRoles(!arrayEqual(user.assignRoleIds, [...roles.map((u)=>u.id)]));
+            setDirtyOfUserRoles(!Tools.ArrayEqual(user.assignRoleIds, [...roles.map((u)=>u.id)]));
         else
-            setDirtyOfUserRoles(!arrayEqual(user.assignRoleIds, Array.from(userRoles)));
+            setDirtyOfUserRoles(!Tools.ArrayEqual(user.assignRoleIds, Array.from(userRoles)));
     }, [user.assignRoleIds, userRoles]);
 
     return (
@@ -113,7 +99,8 @@ const Body: React.FC<BodyProps> = ({ user, roles }) => {
                         />
                     ))}
                 </div>
-                <div className="flex justify-start mb-4 pt-4 gap-2">
+                <div className="flex justify-between mb-4 pt-4 gap-2">
+                    <div className="flex justify-start gap-2">
                     <div
                         className="
                         text-2xl 
@@ -124,6 +111,7 @@ const Body: React.FC<BodyProps> = ({ user, roles }) => {
                         角色
                     </div>
                     <div className="text-sm font-light text-neutral-200">[{rolesCount}]</div>
+                    </div>
                     <Button color="primary" disabled={!dirtyOfUserRoles || isLoading} className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={saveModify}>
                             保存修改
                     </Button>

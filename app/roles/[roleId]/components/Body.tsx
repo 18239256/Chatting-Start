@@ -9,6 +9,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import useRoutes from "@/app/hooks/useRoutes";
+import Tools from "@/app/libs/tools"
 
 interface BodyProps {
     role: Role;
@@ -17,21 +18,6 @@ interface BodyProps {
 
 interface IconProps {
     icon: any;
-}
-
-function arrayEqual(a:Key[], b:Key[]) {
-    //先将数组排序
-    a = a.sort();
-    b = b.sort();
-    //判断数组长度是否相等，若不相等返回false
-    if (a.length != b.length) 
-    return false;
-    //逐个比较数组元素
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) 
-        return false;
-    }
-    return true;
 }
 
 const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
@@ -49,16 +35,16 @@ const Body: React.FC<BodyProps> = ({ role, users = [] }) => {
 
     useEffect(() => {
         if(roleUsers === "all")
-            setDirtyOfUsers(!arrayEqual(role.assignIds, [...users.map((u)=>u.id)]));
+            setDirtyOfUsers(!Tools.ArrayEqual(role.assignIds, [...users.map((u)=>u.id)]));
         else
-            setDirtyOfUsers(!arrayEqual(role.assignIds, Array.from(roleUsers)));
+            setDirtyOfUsers(!Tools.ArrayEqual(role.assignIds, Array.from(roleUsers)));
     }, [role.assignIds, roleUsers]);
 
     useEffect(() => {
         if(roleChannels === "all")
-            setDirtyOfChannels(!arrayEqual(role.channels, [...routes.map((r)=>r.label)]));
+            setDirtyOfChannels(!Tools.ArrayEqual(role.channels, [...routes.map((r)=>r.label)]));
         else
-            setDirtyOfChannels(!arrayEqual(role.channels, Array.from(roleChannels)));
+            setDirtyOfChannels(!Tools.ArrayEqual(role.channels, Array.from(roleChannels)));
     }, [role.channels, roleChannels]);
 
     useEffect(()=>{
