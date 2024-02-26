@@ -301,7 +301,13 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         data.target.value = null;
 
         //开始上传任务
-        axios.post('https://u154745-87ee-9e7dd061.westx.seetacloud.com:8443/api/knowledge_base/upload_docs', form)
+        const apiUrl = format({
+            protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,
+            hostname: process.env.NEXT_PUBLIC_LLM_API_HOST,
+            port: process.env.NEXT_PUBLIC_LLM_API_PORT,
+            pathname: "/api/knowledge_base/upload_docs"
+        });
+        axios.post(apiUrl, form)
             .then((res) => {
                 console.log('res', res);
                 toast.success('上传成功!');

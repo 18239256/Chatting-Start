@@ -7,8 +7,7 @@ import { Button, Input } from "@nextui-org/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Knowledge } from "@prisma/client";
-import { File } from "buffer";
-import { stringify } from "querystring";
+import { format } from "url";
 
 interface UploadfileModalProps {
     isOpen: boolean;
@@ -36,7 +35,14 @@ const UploadfileModal: React.FC<UploadfileModalProps> = ({
             form.append("files", file);
             i++;
         }
-        axios.post('https://u154745-87ee-9e7dd061.westx.seetacloud.com:8443/api/knowledge_base/upload_docs', form)
+
+        const apiUrl = format({
+            protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,
+            hostname: process.env.NEXT_PUBLIC_LLM_API_HOST,
+            port: process.env.NEXT_PUBLIC_LLM_API_PORT,
+            pathname: "/api/knowledge_base/upload_docs"
+        });
+        axios.post(apiUrl, form)
         .then((res)=>{
             console.log('res', res);
             toast.success('上传成功!');
