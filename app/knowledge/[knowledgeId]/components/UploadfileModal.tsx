@@ -36,7 +36,7 @@ const UploadfileModal: React.FC<UploadfileModalProps> = ({
             form.append("files", file);
             i++;
         }
-        axios.post('http://region-3.seetacloud.com:59761/api/knowledge_base/upload_docs', form)
+        axios.post('https://u154745-87ee-9e7dd061.westx.seetacloud.com:8443/api/knowledge_base/upload_docs', form)
         .then((res)=>{
             console.log('res', res);
             toast.success('上传成功!');

@@ -22,9 +22,9 @@ const delKnowledgeFiles = async (
                 not_refresh_vs_cache: false
             };
             const apiUrl = format({
-                protocol: process.env.LLM_API_PROTOCOL,
-                hostname: process.env.LLM_API_HOST,
-                port: process.env.LLM_API_PORT,
+                protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,
+                hostname: process.env.NEXT_PUBLIC_LLM_API_HOST,
+                port: process.env.NEXT_PUBLIC_LLM_API_PORT,
                 pathname: "/api/knowledge_base/delete_docs"
             });
 

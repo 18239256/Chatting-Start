@@ -161,9 +161,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
     const downloadDoc = async (knowledgeRN: string, file_name: string) => {
         const apiUrl = format({
-            protocol: process.env.LLM_API_PROTOCOL,
-            hostname: "region-3.seetacloud.com",
-            port: "59761",
+            protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,
+            hostname: process.env.NEXT_PUBLIC_LLM_API_HOST,
+            port: process.env.NEXT_PUBLIC_LLM_API_PORT,
             pathname: "/api/knowledge_base/download_doc",
             query: {
                 knowledge_base_name: knowledgeRN,
@@ -301,7 +301,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         data.target.value = null;
 
         //开始上传任务
-        axios.post('http://region-3.seetacloud.com:59761/api/knowledge_base/upload_docs', form)
+        axios.post('https://u154745-87ee-9e7dd061.westx.seetacloud.com:8443/api/knowledge_base/upload_docs', form)
             .then((res) => {
                 console.log('res', res);
                 toast.success('上传成功!');
