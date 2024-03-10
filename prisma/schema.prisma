@@ -44,6 +44,8 @@ model User {
 
   sharedRobotIds     String[] @db.ObjectId
   shareRobots        Robot[] @relation("shareRob", fields: [sharedRobotIds], references: [id])
+
+  wxAccount   WXBasis?
 }
 
 model Account {
@@ -177,6 +179,36 @@ model Role{
   assign           User[] @relation("assign", fields: [assignIds], references: [id])
 }
 
+model WXBasis{
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  createdAt       DateTime @default(now())
+  termScreenName  String
+  online          Boolean
+  qrUrl           String?
+  defaultAIType   String?
+
+  ownerUserId     String   @db.ObjectId  @unique
+  user User @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+
+  wxContacts      WXContacts[]
+}
+
+model WXContacts{
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  alias           String?
+  wxContactID            String?
+  createdAt       DateTime @default(now())
+
+  wxInstanceId   String   @db.ObjectId  @unique
+  wxInstance     WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
+
+  isGroup       Boolean @default(false)
+  aiType        String
+  knowledgeName String
+  expired       DateTime?
+}
 
 enum RoleType {
   USER
