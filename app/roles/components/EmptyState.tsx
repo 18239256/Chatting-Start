@@ -15,7 +15,7 @@ const EmptyState = () => {
         "
       >
         <div className="text-center items-center flex flex-col">
-          <h3 className="mt-2 text-2xl font-semibold text-gray-900">
+          <h3 className="mt-2 text-2xl font-semibold text-gray-300">
             选择角色并查看角色配置信息
           </h3>
         </div>
