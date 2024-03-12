@@ -12,55 +12,55 @@ datasource db {
 }
 
 model User {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String?
-  email           String?   @unique
-  emailVerified   DateTime?
-  image           String?
-  hashedPassword  String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  expiredAt       DateTime? @updatedAt
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  expiredAt      DateTime? @updatedAt
 
-  robotOwnerId    String? @db.ObjectId
-  robotOwner      User?   @relation("RobotOwner", fields: [robotOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  robotUsers      User[]  @relation("RobotOwner")
-  
-  conversationIds String[] @db.ObjectId
-  conversations Conversation[] @relation(fields: [conversationIds], references: [id])
-  
-  seenMessageIds String[] @db.ObjectId
-  seenMessages Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+  robotOwnerId String? @db.ObjectId
+  robotOwner   User?   @relation("RobotOwner", fields: [robotOwnerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  robotUsers   User[]  @relation("RobotOwner")
+
+  conversationIds String[]       @db.ObjectId
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  seenMessageIds String[]  @db.ObjectId
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
 
   accounts Account[]
   messages Message[]
 
   isRobot    Boolean?
   knowledges Knowledge[]
-  robot Robot?
+  robot      Robot?
 
   assignRoleIds String[] @db.ObjectId
-  assignRole    Role[] @relation("assign",fields: [assignRoleIds], references: [id])
+  assignRole    Role[]   @relation("assign", fields: [assignRoleIds], references: [id])
 
-  sharedRobotIds     String[] @db.ObjectId
-  shareRobots        Robot[] @relation("shareRob", fields: [sharedRobotIds], references: [id])
+  sharedRobotIds String[] @db.ObjectId
+  shareRobots    Robot[]  @relation("shareRob", fields: [sharedRobotIds], references: [id])
 
-  wxAccount   WXBasis?
+  wxAccount WXBasis?
 }
 
 model Account {
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String   @db.ObjectId
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.String
-  access_token       String?  @db.String
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.String
-  session_state      String?
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -68,143 +68,143 @@ model Account {
 }
 
 model Conversation {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt       DateTime @default(now())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime @default(now())
   lastMessageAt DateTime @default(now())
-  name String?
-  isGroup Boolean?
-  
-  messagesIds String[] @db.ObjectId
-  messages Message[]
+  name          String?
+  isGroup       Boolean?
+
+  messagesIds String[]  @db.ObjectId
+  messages    Message[]
 
   userIds String[] @db.ObjectId
-  users User[] @relation(fields: [userIds], references: [id])
+  users   User[]   @relation(fields: [userIds], references: [id])
 }
 
 model Message {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  body String?
-  image String?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  body      String?
+  image     String?
   createdAt DateTime @default(now())
 
   seenIds String[] @db.ObjectId
-  seen User[] @relation("Seen", fields: [seenIds], references: [id])
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
 
-  conversationId String @db.ObjectId
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
   senderId String @db.ObjectId
-  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
-  referenceDocs  String?
+  referenceDocs String?
 
   isLoading Boolean?
 }
 
-model Knowledge{
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
-  displayName       String
+model Knowledge {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  displayName String
   // vectorIDName      String
   // vectorDB          String
   // embeddingModel    String
-  realName          String  @unique
-  createdAt         DateTime @default(now())
-  image             String?
-  description       String?
-  isShare           Boolean @default(false)
+  realName    String   @unique
+  createdAt   DateTime @default(now())
+  image       String?
+  description String?
+  isShare     Boolean  @default(false)
 
-  userId            String   @db.ObjectId
-  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model RobotTemplate{
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  description       String?
-  apiUrl            String
-  knowledgeAbility  Boolean?
-  searchAbility     Boolean?
+model RobotTemplate {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  description      String?
+  apiUrl           String
+  knowledgeAbility Boolean?
+  searchAbility    Boolean?
 
   robots Robot[]
 }
 
-model Robot{
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  createdAt          DateTime @default(now())
-  description        String?
+model Robot {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime @default(now())
+  description String?
 
-  userId             String   @db.ObjectId @unique
-  user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  robotTempId        String   @db.ObjectId
-  robotTemp RobotTemplate @relation(fields: [robotTempId], references: [id])
+  robotTempId String        @db.ObjectId
+  robotTemp   RobotTemplate @relation(fields: [robotTempId], references: [id])
 
-  model              String?
-  temperature        Float?
-  historyRound       Int?
-  knowledgeBaseName  String?
-  searchEngineName   String?
-  topK               Int?
+  model             String?
+  temperature       Float?
+  historyRound      Int?
+  knowledgeBaseName String?
+  searchEngineName  String?
+  topK              Int?
 
-  isShared           Boolean?
-  consumeIds         String[] @db.ObjectId
-  consumeUsers       User[] @relation("shareRob", fields: [consumeIds], references: [id])
+  isShared     Boolean?
+  consumeIds   String[] @db.ObjectId
+  consumeUsers User[]   @relation("shareRob", fields: [consumeIds], references: [id])
 
-  maskId            String?   @db.ObjectId
-  mask              RobotMask? @relation(fields: [maskId], references: [id])
+  maskId String?    @db.ObjectId
+  mask   RobotMask? @relation(fields: [maskId], references: [id])
 }
 
-model RobotMask{
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  title              String
-  createdAt          DateTime @default(now())
-  content            String
-  description        String
+model RobotMask {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  createdAt   DateTime @default(now())
+  content     String
+  description String
 
-  refRobots         Robot[]
+  refRobots Robot[]
 }
 
-model Role{
-  id                 String @id @default(auto()) @map("_id") @db.ObjectId
-  name               String
-  createdAt          DateTime @default(now())
-  description        String
-  image              String?
-  defaultRole        Boolean?
+model Role {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime @default(now())
+  description String
+  image       String?
+  defaultRole Boolean?
 
-  channels           String[]
+  channels String[]
 
-  assignIds        String[] @db.ObjectId
-  assign           User[] @relation("assign", fields: [assignIds], references: [id])
+  assignIds String[] @db.ObjectId
+  assign    User[]   @relation("assign", fields: [assignIds], references: [id])
 }
 
-model WXBasis{
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  createdAt       DateTime @default(now())
-  termScreenName  String
-  online          Boolean
-  qrUrl           String?
-  defaultAIType   String?
+model WXBasis {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  createdAt      DateTime @default(now())
+  termScreenName String
+  online         Boolean
+  qrUrl          String?
+  defaultAIType  String?
 
-  ownerUserId     String   @db.ObjectId  @unique
-  user User @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
+  ownerUserId String @unique @db.ObjectId
+  user        User   @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
 
-  wxContacts      WXContacts[]
+  wxContacts WXContacts[]
 }
 
-model WXContacts{
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  alias           String?
-  wxContactID            String?
-  createdAt       DateTime @default(now())
+model WXContacts {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  alias       String?
+  wxContactID String?
+  createdAt   DateTime @default(now())
 
-  wxInstanceId   String   @db.ObjectId  @unique
-  wxInstance     WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
+  wxInstanceId String  @unique @db.ObjectId
+  wxInstance   WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
 
-  isGroup       Boolean @default(false)
+  isGroup       Boolean   @default(false)
   aiType        String
   knowledgeName String
   expired       DateTime?

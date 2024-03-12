@@ -17,6 +17,7 @@ export default async function MasksLayout({
     <Sidebar>
       <div className="h-full">
         <MaskList items={masks!}/>
+        {masks?.length === 0 && children}
       </div>
     </Sidebar>
   );

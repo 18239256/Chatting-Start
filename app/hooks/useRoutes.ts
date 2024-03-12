@@ -51,7 +51,13 @@ const useRoutes = () => {
       label: 'Roles', 
       href: '/roles', 
       icon: FaIdBadge, 
-      active: /^\/role.*$/.test(pathname || "")
+      active: /^\/roles.*$/.test(pathname || "")
+    },
+    { 
+      label: 'WeChat', 
+      href: '/wechat', 
+      icon: FaIdBadge, 
+      active: /^\/wechat.*$/.test(pathname || "")
     },
     {
       label: 'Logout', 
