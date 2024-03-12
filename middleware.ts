@@ -15,5 +15,6 @@ export const config = {
     "/roles/:path*",
     "/masks/:path*",
     "/robotmarket/:path*",
+    "/imentries/:path*",
   ]
 };

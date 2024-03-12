@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { HiChat } from 'react-icons/hi';
 import { BiSolidMask } from 'react-icons/bi';
 import { HiBookOpen, HiUsers } from 'react-icons/hi2';
-import {FaIdBadge, FaRobot, FaStore} from 'react-icons/fa6'
+import {FaIdBadge, FaRobot, FaStore, FaWeixin} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
 import { RiLogoutBoxFill } from "react-icons/ri";
 
@@ -54,10 +54,10 @@ const useRoutes = () => {
       active: /^\/roles.*$/.test(pathname || "")
     },
     { 
-      label: 'IM', 
-      href: '/wechat', 
-      icon: FaIdBadge, 
-      active: /^\/wechat.*$/.test(pathname || "")
+      label: 'IMEntries', 
+      href: '/imentries', 
+      icon: FaWeixin, 
+      active: /^\/imentries.*$/.test(pathname || "")
     },
     {
       label: 'Logout', 
