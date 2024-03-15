@@ -26,6 +26,7 @@ import {
     ModalHeader,
     ModalBody,
     Progress,
+    Spinner,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 import { contactArrayType } from "@/app/types";
@@ -33,6 +34,10 @@ import { SearchIcon } from "@/app/resources/icons/SearchIcon";
 import { ChevronDownIcon } from "@/app/resources/icons/ChevronDownIcon";
 import DatePicker from "@/app/components/inputs/DatePicker";
 import { isExpired } from "./utils";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { BiGroup, BiUser } from "react-icons/bi";
 
 const columns = [
     {
@@ -80,25 +85,26 @@ interface WXContactListProps {
 const WXContactList: React.FC<WXContactListProps> = ({
     contacts,
 }) => {
+    const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    const [isLoading, setIsLoading] = React.useState(false);
 
-    const setExpiredDate = async (newDate: Date) => {
-        // console.log('setExpiredDate called ', newDate);
-        // axios.post(`/api/users/update`, {
-        //     id: data.id,
-        //     expiredAt: newDate,
-        // }).then((ret) => {
-        //     console.log(`成功更新有效期`, ret.data);
-        //     router.refresh();
-        // })
-        //     .catch(() => toast.error('出错了!'))
-        //     .finally(() => setIsLoading(false));
-
-        // setexpiredDate(newDate);
+    const setExpiredDate = async (contact: contactArrayType, newDate: Date) => {
+        setIsLoading(true);
+        axios.post(`/api/imentries/updatecontact`, {
+            id: contact.id,
+            expired: newDate,
+        }).then((ret) => {
+            console.log(`成功更新有效期`, ret.data);
+            toast.success('成功更新有效期');
+            router.refresh();
+        })
+            .catch(() => toast.error('出错了!'))
+            .finally(() => setIsLoading(false));
     };
 
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
@@ -180,15 +186,18 @@ const WXContactList: React.FC<WXContactListProps> = ({
         switch (columnKey) {
             case "name":
                 return (
-                    <Chip className="capitalize" size="sm" variant="flat">
-                        {cellValue?.toString()}
-                    </Chip>
+                    <div className="flex flex-row gap-1">
+                        {contact.isRoom ? (<BiGroup size={24} />) : (<BiUser size={24} />)}
+                        <Chip className="capitalize" size="sm" variant="flat">
+                            {cellValue?.toString()}
+                        </Chip>
+                    </div>
                 );
             case "expired":
                 return (
                     <DatePicker
                         selected={cellValue as Date}
-                        onChange={(date) => setExpiredDate(date!)}
+                        onChange={(newDate) => setExpiredDate(contact, newDate!)}
                         placeholderText="服务结束日期"
                         isClearable
                         warning={isExpired(cellValue as Date)}
@@ -292,7 +301,10 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                 >
                                     {contactTypeOptions.map((status) => (
                                         <DropdownItem key={status.uid} className="capitalize">
-                                            {status.name}
+                                            <div className="flex flex-row items-center">
+                                                {status.uid == "person" ? (<BiUser size={20} />) : (<BiGroup size={20} />)}
+                                                {status.name}
+                                            </div>
                                         </DropdownItem>
                                     ))}
                                 </DropdownMenu>
@@ -392,7 +404,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                         </TableColumn>
                     )}
                 </TableHeader>
-                <TableBody items={sortedItems} emptyContent={"没有找到项目"}>
+                <TableBody items={sortedItems} emptyContent={"没有找到项目"} isLoading={isLoading} loadingContent={<Spinner label="Loading..." />}>
                     {(item) => (
                         <TableRow key={item.index}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
