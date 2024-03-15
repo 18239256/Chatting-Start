@@ -6,6 +6,7 @@ import clsx from "clsx";
 import WXCreateModal from "./WXCreateModal";
 import { useState } from "react";
 import {Image,Avatar} from "@nextui-org/react";
+import WXContactList from "./WXContactList";
 
 interface WXAdminProps {
     wxBasis: WXBasis & {wxContacts : WXContacts[]};
@@ -72,14 +73,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                     height={300}
                     alt="微信二维码"
                 />}
-                <div className="flex flex-col md:flex-row md:gap-4 md:flex-wrap md:justify-start flex-1">
-                    {contacts?.map((contact) => (
-                        <WXContactBox
-                            key={contact.id}
-                            data={contact}
-                        />
-                    ))}
-                </div>
+                <WXContactList contacts={contacts} />
             </div>)}
 
         </>

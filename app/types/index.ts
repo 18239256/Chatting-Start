@@ -68,3 +68,14 @@ export type knowledgeFileArrayType={
   fileName: string,
   ext: string,
 };
+
+export type contactArrayType={
+  id: string,
+  index: number,
+  name: string,
+  alias: string,
+  aiType: string,
+  kdName: string,
+  expired: Date | null,
+  isRoom: boolean,
+};
