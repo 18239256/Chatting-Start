@@ -201,12 +201,12 @@ model WXContacts {
   wxContactID String?
   createdAt   DateTime @default(now())
 
-  wxInstanceId String  @unique @db.ObjectId
+  wxInstanceId String  @db.ObjectId
   wxInstance   WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
 
-  isGroup       Boolean   @default(false)
-  aiType        String
-  knowledgeName String
+  isRoom        Boolean   @default(false)
+  aiType        String?
+  knowledgeName String?
   expired       DateTime?
 }
 

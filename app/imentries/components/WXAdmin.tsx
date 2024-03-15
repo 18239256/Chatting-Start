@@ -1,14 +1,14 @@
 'use client';
 
-import { WXBasis, User } from "@prisma/client";
+import { WXBasis, User, WXContacts } from "@prisma/client";
 import WXContactBox from "./WXContactBox";
 import clsx from "clsx";
 import WXCreateModal from "./WXCreateModal";
 import { useState } from "react";
-import { stringify } from "querystring";
+import {Image,Avatar} from "@nextui-org/react";
 
 interface WXAdminProps {
-    wxBasis: WXBasis;
+    wxBasis: WXBasis & {wxContacts : WXContacts[]};
     curUser: User | null;
 }
 
@@ -17,6 +17,8 @@ const WXAdmin: React.FC<WXAdminProps> = ({
     curUser,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [online, setOnline] = useState(wxBasis.online);
+    const contacts = wxBasis.wxContacts;
     return (
         <>
             <WXCreateModal
@@ -49,7 +51,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                 </div>
             </div>) 
             : (<div className="px-5">
-                <div className="flex justify-between mb-4 pt-4 gap-2">
+                <div className="flex justify-start mb-4 pt-4 gap-4 items-center">
                     <div
                         className="
                         text-2xl 
@@ -59,14 +61,24 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                     >
                         微信机器人配置
                     </div>
+                    <Avatar isBordered 
+                        color={online? "success":"default"}
+                        className="w-4 h-4 text-tiny"
+                        src=" " />
                 </div>
-                <div className="flex flex-col lg:flex-row md:gap-6 lg:pr-20">
-                    {/* {items?.map((item) => (
+                {!online && <Image 
+                    src={wxBasis.qrUrl!}
+                    width={300}
+                    height={300}
+                    alt="微信二维码"
+                />}
+                <div className="flex flex-col md:flex-row md:gap-4 md:flex-wrap md:justify-start flex-1">
+                    {contacts?.map((contact) => (
                         <WXContactBox
-                            key={item.id}
-                            data={item}
+                            key={contact.id}
+                            data={contact}
                         />
-                    ))} */}
+                    ))}
                 </div>
             </div>)}
 
