@@ -1,6 +1,6 @@
 'use client';
 
-import { WXContacts } from "@prisma/client";
+import { Robot, WXContacts } from "@prisma/client";
 import {
     Table,
     TableHeader,
@@ -29,7 +29,7 @@ import {
     Spinner,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
-import { contactArrayType } from "@/app/types";
+import { FullRobotConversationType, contactArrayType } from "@/app/types";
 import { SearchIcon } from "@/app/resources/icons/SearchIcon";
 import { ChevronDownIcon } from "@/app/resources/icons/ChevronDownIcon";
 import DatePicker from "@/app/components/inputs/DatePicker";
@@ -79,19 +79,39 @@ const columns = [
 ];
 
 interface WXContactListProps {
-    contacts: WXContacts[];
+    contacts: (WXContacts & {robot: Robot | null})[];    
+    robotConversations: FullRobotConversationType[];
 }
 
 const WXContactList: React.FC<WXContactListProps> = ({
     contacts,
+    robotConversations,
 }) => {
     const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    // const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     const [isLoading, setIsLoading] = React.useState(false);
+
+    
+    const contactTypeOptions = [
+        { name: "个人", uid: "person" },
+        { name: "群聊", uid: "room" },
+    ];
+    
+    const statusFilterValue = React.useMemo(
+        () => {
+            if (statusFilter === "all") 
+                return contactTypeOptions.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
+            
+            const sfs = Array.from(statusFilter);
+            const cts = contactTypeOptions.filter((ct)=> sfs.includes(ct.uid));
+            return cts.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
+        },
+        [statusFilter]
+    );
 
     const setExpiredDate = async (contact: contactArrayType, newDate: Date) => {
         setIsLoading(true);
@@ -120,8 +140,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 index: i + 1,
                 name: contacts[i].name,
                 alias: contacts[i].alias || "",
-                aiType: contacts[i].aiType || "",
-                kdName: contacts[i].knowledgeName || "",
+                robot: contacts[i].robot,
                 expired: contacts[i].expired,
                 isRoom: contacts[i].isRoom,
             })
@@ -135,10 +154,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
         room: "danger",
     };
 
-    const contactTypeOptions = [
-        { name: "个人", uid: "person" },
-        { name: "群聊", uid: "room" },
-    ];
 
     const [page, setPage] = React.useState(1);
 
@@ -288,7 +303,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                             <Dropdown>
                                 <DropdownTrigger className="hidden sm:flex">
                                     <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                                        文件类型
+                                        {statusFilterValue}
                                     </Button>
                                 </DropdownTrigger>
                                 <DropdownMenu

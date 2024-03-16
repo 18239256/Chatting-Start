@@ -153,6 +153,8 @@ model Robot {
 
   maskId String?    @db.ObjectId
   mask   RobotMask? @relation(fields: [maskId], references: [id])
+
+  wxContacts  WXContacts[]
 }
 
 model RobotMask {
@@ -205,9 +207,11 @@ model WXContacts {
   wxInstance   WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
 
   isRoom        Boolean   @default(false)
-  aiType        String?
-  knowledgeName String?
   expired       DateTime?
+
+  
+  robotId       String? @db.ObjectId
+  robot         Robot? @relation(fields: [robotId], references: [id], onDelete: Cascade)
 }
 
 enum RoleType {

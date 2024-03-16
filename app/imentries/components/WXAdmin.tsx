@@ -1,25 +1,28 @@
 'use client';
 
-import { WXBasis, User, WXContacts } from "@prisma/client";
-import WXContactBox from "./WXContactBox";
-import clsx from "clsx";
+import { WXBasis, User, WXContacts, Robot } from "@prisma/client";
+// import WXContactBox from "./WXContactBox";
+// import clsx from "clsx";
 import WXCreateModal from "./WXCreateModal";
 import { useState } from "react";
 import {Image,Avatar} from "@nextui-org/react";
 import WXContactList from "./WXContactList";
+import { FullRobotConversationType } from "@/app/types";
 
 interface WXAdminProps {
-    wxBasis: WXBasis & {wxContacts : WXContacts[]};
+    wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} | null;
     curUser: User | null;
+    robotConversations: FullRobotConversationType[];
 }
 
 const WXAdmin: React.FC<WXAdminProps> = ({
     wxBasis,
     curUser,
+    robotConversations,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [online, setOnline] = useState(wxBasis.online);
-    const contacts = wxBasis.wxContacts;
+    const [online, setOnline] = useState(wxBasis?.online);
+    const contacts = wxBasis?.wxContacts;
     return (
         <>
             <WXCreateModal
@@ -73,7 +76,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                     height={300}
                     alt="微信二维码"
                 />}
-                <WXContactList contacts={contacts} />
+                {contacts && <WXContactList contacts={contacts} robotConversations={robotConversations}/>}
             </div>)}
 
         </>

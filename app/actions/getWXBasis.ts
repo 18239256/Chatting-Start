@@ -7,17 +7,20 @@ const getWXBasis = async () => {
   if (!currentUser?.email) {
     return null;
   }
-
+  
   try {
     const wxBasis = await prisma.wXBasis.findUnique({
       where: {
         ownerUserId: currentUser.id
       },
       include:{
-        wxContacts: true,
+        wxContacts:{
+          include:{
+            robot: true,
+          }
+        },
       }    
     });
-    
     return wxBasis;
   } catch (error: any) {
     return null;

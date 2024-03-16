@@ -14,8 +14,7 @@ export async function POST(
       id,
       name,
       alias,
-      aiType,
-      knowledgeName,
+      robotId,
       expired,
     } = body;
 
@@ -30,9 +29,8 @@ export async function POST(
       data: {
         name,
         alias,
-        aiType,
-        knowledgeName,
         expired,
+        robotId,
       }
     });
 

@@ -73,9 +73,7 @@ export type contactArrayType={
   id: string,
   index: number,
   name: string,
-  alias: string,
-  aiType: string,
-  kdName: string,
+  robot: Robot | null,
   expired: Date | null,
   isRoom: boolean,
 };
