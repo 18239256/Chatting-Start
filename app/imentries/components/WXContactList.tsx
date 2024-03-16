@@ -56,13 +56,8 @@ const columns = [
         sortable: true,
     },
     {
-        key: "aiType",
-        label: "AI类型",
-        sortable: true,
-    },
-    {
-        key: "kdName",
-        label: "知识库名称",
+        key: "ai",
+        label: "AI",
         sortable: true,
     },
     {
@@ -92,7 +87,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    // const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     const [isLoading, setIsLoading] = React.useState(false);
 
     
@@ -105,7 +99,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
         () => {
             if (statusFilter === "all") 
                 return contactTypeOptions.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
-            
+
             const sfs = Array.from(statusFilter);
             const cts = contactTypeOptions.filter((ct)=> sfs.includes(ct.uid));
             return cts.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
@@ -213,7 +207,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                     <DatePicker
                         selected={cellValue as Date}
                         onChange={(newDate) => setExpiredDate(contact, newDate!)}
-                        placeholderText="服务结束日期"
+                        placeholderText="选择日期"
                         isClearable
                         warning={isExpired(cellValue as Date)}
                         success={!isExpired(cellValue as Date)}
