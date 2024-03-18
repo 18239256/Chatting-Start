@@ -127,12 +127,9 @@ const WXContactList: React.FC<WXContactListProps> = ({
             return;
         }
         setIsLoading(true);
-        const conversationId = keys.keys().next().value;
-        const conFinded = robotConversations.find((rc)=> rc.id == conversationId);
-        const otherRobotUser = conFinded?.users.filter((user) => user.isRobot == true);
         axios.post(`/api/imentries/updatecontact`, {
             id: contact.id,
-            robotId: otherRobotUser![0].robot?.id,
+            robotId: keys.keys().next().value,
         }).then((ret) => {
             toast.success('成功更新AI机器人');
             router.refresh();
@@ -140,6 +137,12 @@ const WXContactList: React.FC<WXContactListProps> = ({
             .catch(() => toast.error('出错了!'))
             .finally(() => setIsLoading(false));
     };
+
+    function getRobotIdByCon(con: FullRobotConversationType): string | undefined {
+        const robotUser = con.users.filter((user) => user.isRobot == true);
+        return robotUser[0].robot?.id;
+    }
+
 
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "index",
@@ -222,15 +225,14 @@ const WXContactList: React.FC<WXContactListProps> = ({
                         </Chip>
                     </div>
                 );
-            case "robot":
+            case "robot":                
                 return (
                     <Dropdown>
                         <DropdownTrigger>
                             <Button
-                                variant="bordered"
+                                variant="bordered" color={contact.robot? "success":"danger"}
                             >
-                                {/* {cellValue !== null ? cellValue?.name :"没有AI服务"} */}
-                                {contact.robot?.name}
+                                {contact.robot ? contact.robot.name : "没有AI服务"}
                             </Button>
                         </DropdownTrigger>
                         <DropdownMenu 
@@ -240,7 +242,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                             selectedKeys={new Set([contact.robot?.id!])}
                             onSelectionChange={(keys) => changedAI(keys, contact)}>
                             {robotConversations.map((con) => (
-                                <DropdownItem key={con.id} className="capitalize">
+                                <DropdownItem key={getRobotIdByCon(con)} className="capitalize">
                                     <RobotSelectItem data={con}/>
                                 </DropdownItem>
                             ))}
