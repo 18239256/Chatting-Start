@@ -54,9 +54,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
     sm:text-sm 
     sm:leading-6`,
     !secondary && !warning && !success && !danger && 'ring-gray-300 focus:ring-sky-600 ',
-    warning && 'ring-pink-400 focus:ring-pink-600 ',
+    warning && 'ring-pink-400 focus:ring-pink-600 text-pink-400',
     secondary && 'ring-orange-400 focus:ring-orange-600 ',
-    success && 'ring-green-400 focus:ring-green-600 ',
+    success && 'ring-green-400 focus:ring-green-600 text-green-400',
     danger && 'ring-rose-400 focus:ring-rose-600 ',
     disabled && 'opacity-50 cursor-default'
   )}
