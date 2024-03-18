@@ -133,7 +133,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
             id: contact.id,
             robotId: robotId,
         }).then((ret) => {
-            toast.success('成功更新AI机器人');
+            toast.success('更新AI机器人成功');
             router.refresh();
         })
             .catch(() => toast.error('出错了!'))
