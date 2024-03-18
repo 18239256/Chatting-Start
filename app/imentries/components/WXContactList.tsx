@@ -27,6 +27,7 @@ import {
     ModalBody,
     Progress,
     Spinner,
+    SelectSection,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 import { FullRobotConversationType, contactArrayType } from "@/app/types";
@@ -38,6 +39,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { BiGroup, BiUser } from "react-icons/bi";
+import RobotSelectItem from "./RobotSelectItem";
 
 const columns = [
     {
@@ -56,7 +58,7 @@ const columns = [
         sortable: true,
     },
     {
-        key: "ai",
+        key: "robot",
         label: "AI",
         sortable: true,
     },
@@ -74,7 +76,7 @@ const columns = [
 ];
 
 interface WXContactListProps {
-    contacts: (WXContacts & {robot: Robot | null})[];    
+    contacts: (WXContacts & { robot: Robot | null })[];
     robotConversations: FullRobotConversationType[];
 }
 
@@ -89,20 +91,19 @@ const WXContactList: React.FC<WXContactListProps> = ({
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
 
-    
     const contactTypeOptions = [
         { name: "个人", uid: "person" },
         { name: "群聊", uid: "room" },
     ];
-    
+
     const statusFilterValue = React.useMemo(
         () => {
-            if (statusFilter === "all") 
-                return contactTypeOptions.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
+            if (statusFilter === "all")
+                return contactTypeOptions.map((ct) => ct.name).join(", ").replaceAll("_", " ");
 
             const sfs = Array.from(statusFilter);
-            const cts = contactTypeOptions.filter((ct)=> sfs.includes(ct.uid));
-            return cts.map((ct)=> ct.name).join(", ").replaceAll("_", " ");
+            const cts = contactTypeOptions.filter((ct) => sfs.includes(ct.uid));
+            return cts.map((ct) => ct.name).join(", ").replaceAll("_", " ");
         },
         [statusFilter]
     );
@@ -113,8 +114,24 @@ const WXContactList: React.FC<WXContactListProps> = ({
             id: contact.id,
             expired: newDate,
         }).then((ret) => {
-            console.log(`成功更新有效期`, ret.data);
             toast.success('成功更新有效期');
+            router.refresh();
+        })
+            .catch(() => toast.error('出错了!'))
+            .finally(() => setIsLoading(false));
+    };
+
+    const changedAI = async(keys: Selection, contact: contactArrayType) => {
+        if(keys == "all") {
+            toast.error("只能选择一个机器人");
+            return;
+        }
+        setIsLoading(true);
+        axios.post(`/api/imentries/updatecontact`, {
+            id: contact.id,
+            robotId: keys.keys().next().value,
+        }).then((ret) => {
+            toast.success('成功更新AI机器人');
             router.refresh();
         })
             .catch(() => toast.error('出错了!'))
@@ -201,6 +218,30 @@ const WXContactList: React.FC<WXContactListProps> = ({
                             {cellValue?.toString()}
                         </Chip>
                     </div>
+                );
+            case "robot":
+                return (
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Button
+                                variant="bordered"
+                            >
+                                {cellValue? cellValue.toString():"没有AI服务"}
+                            </Button>
+                        </DropdownTrigger>
+                        <DropdownMenu 
+                            variant="faded" 
+                            aria-label="robot selection" 
+                            selectionMode="single" 
+                            selectedKeys={new Set([contact.robot?.id!])}
+                            onSelectionChange={(keys) => changedAI(keys, contact)}>
+                            {robotConversations.map((con) => (
+                                <DropdownItem key={con.id} className="capitalize">
+                                    <RobotSelectItem data={con}/>
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </Dropdown>
                 );
             case "expired":
                 return (

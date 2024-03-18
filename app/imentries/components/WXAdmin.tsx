@@ -1,8 +1,6 @@
 'use client';
 
 import { WXBasis, User, WXContacts, Robot } from "@prisma/client";
-// import WXContactBox from "./WXContactBox";
-// import clsx from "clsx";
 import WXCreateModal from "./WXCreateModal";
 import { useState } from "react";
 import {Image,Avatar} from "@nextui-org/react";

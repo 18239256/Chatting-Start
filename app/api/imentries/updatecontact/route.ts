@@ -22,17 +22,35 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const result = await prisma.wXContacts.update({
-      where: {
-        id: id
-      },
-      data: {
-        name,
-        alias,
-        expired,
-        robotId,
-      }
-    });
+    let result = null;
+    if (robotId){
+        result =  await prisma.wXContacts.update({
+        where: {
+          id: id
+        },
+        data: {
+          name,
+          alias,
+          expired,
+          robot: {
+            connect: {
+              id: robotId,
+            }
+          },
+        }
+      });
+    }else{
+      result =  await prisma.wXContacts.update({
+        where: {
+          id: id
+        },
+        data: {
+          name,
+          alias,
+          expired,
+        }
+      });
+    }
 
     return NextResponse.json(result);
 
