@@ -39,6 +39,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { BiGroup, BiUser } from "react-icons/bi";
+import { TiDelete } from "react-icons/ti";
 import RobotSelectItem from "./RobotSelectItem";
 
 const columns = [
@@ -121,15 +122,16 @@ const WXContactList: React.FC<WXContactListProps> = ({
             .finally(() => setIsLoading(false));
     };
 
-    const changedAI = async(keys: Selection, contact: contactArrayType) => {
-        if(keys == "all") {
+    const changedAI = async (keys: Selection | null, contact: contactArrayType) => {
+        if (keys == "all") {
             toast.error("只能选择一个机器人");
             return;
-        }
+        };
+        const robotId = keys ? keys.keys().next().value : "diconnect";
         setIsLoading(true);
         axios.post(`/api/imentries/updatecontact`, {
             id: contact.id,
-            robotId: keys.keys().next().value,
+            robotId: robotId,
         }).then((ret) => {
             toast.success('成功更新AI机器人');
             router.refresh();
@@ -225,29 +227,37 @@ const WXContactList: React.FC<WXContactListProps> = ({
                         </Chip>
                     </div>
                 );
-            case "robot":                
+            case "robot":
                 return (
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button
-                                variant="bordered" color={contact.robot? "success":"danger"}
-                            >
-                                {contact.robot ? contact.robot.name : "没有AI服务"}
-                            </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu 
-                            variant="faded" 
-                            aria-label="robot selection" 
-                            selectionMode="single" 
-                            selectedKeys={new Set([contact.robot?.id!])}
-                            onSelectionChange={(keys) => changedAI(keys, contact)}>
-                            {robotConversations.map((con) => (
-                                <DropdownItem key={getRobotIdByCon(con)} className="capitalize">
-                                    <RobotSelectItem data={con}/>
-                                </DropdownItem>
-                            ))}
-                        </DropdownMenu>
-                    </Dropdown>
+                    <div className="flex flex-row items-center gap-1">
+                        <Dropdown>
+                            <DropdownTrigger>
+                                <Button
+                                    variant="bordered" color={contact.robot ? "success" : "danger"}
+                                >
+                                    {contact.robot ? contact.robot.name : "没有AI服务"}
+                                </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                variant="faded"
+                                aria-label="robot selection"
+                                selectionMode="single"
+                                selectedKeys={new Set([contact.robot?.id!])}
+                                onSelectionChange={(keys) => changedAI(keys, contact)}>
+                                {robotConversations.map((con) => (
+                                    <DropdownItem key={getRobotIdByCon(con)} className="capitalize">
+                                        <RobotSelectItem data={con} />
+                                    </DropdownItem>
+                                ))}
+                            </DropdownMenu>
+                        </Dropdown>
+                        {contact.robot && <Tooltip className=" text-sky-800" content="取消">
+                            <span className="text-lg text-sky-800 cursor-pointer active:opacity-50"
+                                onClick={() => changedAI(null, contact)}>
+                                <TiDelete />
+                            </span>
+                        </Tooltip>}
+                    </div>
                 );
             case "expired":
                 return (

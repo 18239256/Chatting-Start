@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import robotmarket from "@/app/robotmarket/page";
 
 export async function POST(
   request: Request,
@@ -22,13 +23,19 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    let result = null;
-    if (robotId){
-        result =  await prisma.wXContacts.update({
-        where: {
-          id: id
-        },
-        data: {
+    let data = null;
+    if (robotId) {
+      if (robotId === "diconnect") {
+        data = {
+          name,
+          alias,
+          expired,
+          robot: {
+            disconnect: true,
+          },
+        };
+      } else {
+        data = {
           name,
           alias,
           expired,
@@ -37,20 +44,22 @@ export async function POST(
               id: robotId,
             }
           },
-        }
-      });
-    }else{
-      result =  await prisma.wXContacts.update({
-        where: {
-          id: id
-        },
-        data: {
-          name,
-          alias,
-          expired,
-        }
-      });
+        };
+      }
+    } else {
+      data = {
+        name,
+        alias,
+        expired,
+      };
     }
+
+    const result = await prisma.wXContacts.update({
+      where: {
+        id: id
+      },
+      data: data,
+    });
 
     return NextResponse.json(result);
 
