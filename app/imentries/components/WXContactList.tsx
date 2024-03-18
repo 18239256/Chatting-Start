@@ -127,9 +127,12 @@ const WXContactList: React.FC<WXContactListProps> = ({
             return;
         }
         setIsLoading(true);
+        const conversationId = keys.keys().next().value;
+        const conFinded = robotConversations.find((rc)=> rc.id == conversationId);
+        const otherRobotUser = conFinded?.users.filter((user) => user.isRobot == true);
         axios.post(`/api/imentries/updatecontact`, {
             id: contact.id,
-            robotId: keys.keys().next().value,
+            robotId: otherRobotUser![0].robot?.id,
         }).then((ret) => {
             toast.success('成功更新AI机器人');
             router.refresh();
@@ -226,7 +229,8 @@ const WXContactList: React.FC<WXContactListProps> = ({
                             <Button
                                 variant="bordered"
                             >
-                                {cellValue? cellValue.toString():"没有AI服务"}
+                                {/* {cellValue !== null ? cellValue?.name :"没有AI服务"} */}
+                                {contact.robot?.name}
                             </Button>
                         </DropdownTrigger>
                         <DropdownMenu 

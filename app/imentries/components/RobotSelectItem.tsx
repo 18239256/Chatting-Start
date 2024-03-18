@@ -20,7 +20,6 @@ const RobotSelectItem: React.FC<RobotSelectItemProps> = ({
     const curUser = useCurrentUser(data);
 
     return (
-        // <DropdownItem key={otherRobotUser.robot?.id} className="capitalize">
         <div className="flex flex-row items-center">
             <Badge
                 isOneChar
@@ -39,7 +38,6 @@ const RobotSelectItem: React.FC<RobotSelectItemProps> = ({
             </Badge>
             {otherRobotUser.name}
         </div>
-        // </DropdownItem>
     );
 }
 
