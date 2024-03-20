@@ -6,7 +6,7 @@ import AvatarWithSearch from "@/app/components/AvatarWithSearch";
 import useCurrentUser from "@/app/hooks/useCurrentUser";
 import useRobotOtherUser from "@/app/hooks/useRobotOtherUser";
 import { FullRobotConversationType } from "@/app/types";
-import { Badge, DropdownItem } from "@nextui-org/react";
+import { Badge } from "@nextui-org/react";
 
 
 interface RobotSelectItemProps {

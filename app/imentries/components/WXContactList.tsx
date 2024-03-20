@@ -28,6 +28,9 @@ import {
     Progress,
     Spinner,
     SelectSection,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 import { FullRobotConversationType, contactArrayType } from "@/app/types";
@@ -41,6 +44,8 @@ import { useRouter } from "next/navigation";
 import { BiGroup, BiUser } from "react-icons/bi";
 import { TiDelete } from "react-icons/ti";
 import RobotSelectItem from "./RobotSelectItem";
+import { RiMessage3Line } from "react-icons/ri";
+import AddIssueMessageForm from "./AddIssueMessageForm";
 
 const columns = [
     {
@@ -272,9 +277,16 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 );
             case "actions":
                 return (
-                    <div className="relative flex items-center gap-2">
-
-                    </div>
+                    <Popover showArrow placement="left" backdrop="blur">
+                        <PopoverTrigger>
+                            <span className="text-lg text-primary cursor-pointer active:opacity-50">
+                                <RiMessage3Line />
+                            </span>
+                        </PopoverTrigger>
+                        <PopoverContent className="p-1">
+                            <AddIssueMessageForm contact={contact} />
+                        </PopoverContent>
+                    </Popover>
                 );
             default:
                 return cellValue?.toString();

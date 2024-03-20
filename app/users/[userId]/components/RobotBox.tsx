@@ -95,7 +95,7 @@ const RobotBox: React.FC<RobotBoxProps> = ({
           <DatePicker
             selected={expiredDate}
             onChange={(date) => setExpiredDate(date!)}
-            placeholderText="失效日期"
+            placeholderText="永久有效"
             isClearable
             warning={!notExpired}
             success={notExpired}

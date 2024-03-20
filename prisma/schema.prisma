@@ -212,6 +212,21 @@ model WXContacts {
   
   robotId       String? @db.ObjectId
   robot         Robot? @relation(fields: [robotId], references: [id], onDelete: Cascade)
+
+  issueMessages WXIssueMessages[]
+}
+
+model WXIssueMessages{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  message     String
+  deliveried  Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  deliveryAt  DateTime?
+  issuedAt    DateTime @default(now())
+
+  recipientId String  @db.ObjectId
+  recipient   WXContacts @relation(fields: [recipientId], references: [id])
 }
 
 enum RoleType {
