@@ -277,7 +277,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 );
             case "actions":
                 return (
-                    <Popover showArrow placement="left" backdrop="blur">
+                    <Popover showArrow placement="left" backdrop="opaque">
                         <PopoverTrigger>
                             <span className="text-lg text-primary cursor-pointer active:opacity-50">
                                 <RiMessage3Line />

@@ -5,7 +5,7 @@ import { contactArrayType } from "@/app/types";
 import { Button, Card, CardBody, CardFooter, CardHeader, Spinner } from "@nextui-org/react";
 import axios from "axios";
 import React from "react";
-import toast, { ToastIcon } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 
 interface AddIssueMessageFormProps {
@@ -26,6 +26,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             message: message,
             issuedAt: issueDate,
         }).then((ret) => {
+            toast.success('发送消息成功!')
             setMessage("");
         })
             .catch(() => toast.error('出错了!'))
