@@ -44,7 +44,7 @@ import { useRouter } from "next/navigation";
 import { BiGroup, BiUser } from "react-icons/bi";
 import { TiDelete } from "react-icons/ti";
 import RobotSelectItem from "./RobotSelectItem";
-import { RiMessage3Line } from "react-icons/ri";
+import { RiDeleteBinLine, RiMessage3Line } from "react-icons/ri";
 import AddIssueMessageForm from "./AddIssueMessageForm";
 
 const columns = [
@@ -139,6 +139,21 @@ const WXContactList: React.FC<WXContactListProps> = ({
             robotId: robotId,
         }).then((ret) => {
             toast.success('更新AI机器人成功');
+            router.refresh();
+        })
+            .catch(() => toast.error('出错了!'))
+            .finally(() => setIsLoading(false));
+    };
+
+    const removeContact = async (contact: contactArrayType) => {
+        if (!confirm("确认删除选中的项目?")) return;
+        setIsLoading(true);
+        axios.delete(`/api/imentries/deletecontact`, {
+            data:{
+                id: contact.id,
+            }
+        }).then((ret) => {
+            toast.success('删除成功!');
             router.refresh();
         })
             .catch(() => toast.error('出错了!'))
@@ -277,16 +292,23 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 );
             case "actions":
                 return (
-                    <Popover showArrow placement="left" backdrop="opaque">
-                        <PopoverTrigger>
-                            <span className="text-lg text-primary cursor-pointer active:opacity-50">
-                                <RiMessage3Line />
+                    <div className="relative flex items-center gap-2">
+                        <Popover showArrow placement="left" backdrop="opaque">
+                            <PopoverTrigger>
+                                <span className="text-lg text-primary cursor-pointer active:opacity-50">
+                                    <RiMessage3Line />
+                                </span>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-1">
+                                <AddIssueMessageForm contact={contact} />
+                            </PopoverContent>
+                        </Popover>
+                        <Tooltip color="danger" content="删除">
+                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => removeContact(contact)} >
+                                <RiDeleteBinLine />
                             </span>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-1">
-                            <AddIssueMessageForm contact={contact} />
-                        </PopoverContent>
-                    </Popover>
+                        </Tooltip>
+                    </div>
                 );
             default:
                 return cellValue?.toString();
