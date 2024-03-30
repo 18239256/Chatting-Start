@@ -218,7 +218,9 @@ model WXContacts {
 
 model WXIssueMessages{
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  message     String
+  message     String?
+  fileName    String?
+  isTextMessage Boolean @default(true)
   deliveried  Boolean  @default(false)
   
   createdAt   DateTime @default(now())

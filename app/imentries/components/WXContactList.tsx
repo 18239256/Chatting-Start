@@ -484,7 +484,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 bottomContent={bottomContent}
                 bottomContentPlacement="outside"
                 classNames={{
-                    wrapper: "max-h-full",
+                    wrapper: "max-h-full overflow-visible",
                 }}
                 selectedKeys={selectedKeys}
                 sortDescriptor={sortDescriptor}

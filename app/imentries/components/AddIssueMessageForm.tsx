@@ -2,10 +2,13 @@
 
 import DatePicker from "@/app/components/inputs/DatePicker";
 import { contactArrayType } from "@/app/types";
-import { Button, Card, CardBody, CardFooter, CardHeader, Spinner } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Spinner, Switch } from "@nextui-org/react";
+import { PiTextTFill } from "react-icons/pi";
+import { FaFileImage } from "react-icons/fa";
 import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
+import MultilmediaUploader from "./MultilmediaUploader";
 
 
 interface AddIssueMessageFormProps {
@@ -16,6 +19,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
     contact,
 }) => {
     const [isSending, setIsSending] = React.useState(false);
+    const [isMedia, setIsMedia] = React.useState(false);
     const [message, setMessage] = React.useState("");
     const [issueDate, setIssueDate] = React.useState(new Date());
 
@@ -54,8 +58,18 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
                 </Button>
             </CardHeader>
             <CardBody className="px-3 py-0 w-96">
-                <p className="text-default-500 text-small">消息内容</p>
-                <textarea value={message} onChange={(e) => setMessage(e.target.value)} className='form-input
+                <div className="flex flex-1 gap-2 mb-2 items-center justify-between">
+                    <p className="text-default-500 text-small">消息内容</p>
+                    <Switch
+                        isSelected={isMedia}
+                        onValueChange={setIsMedia}
+                        size="md"
+                        color="primary"
+                        startContent={<FaFileImage />}
+                        endContent={<PiTextTFill />}
+                    />
+                </div>
+                {!isMedia && <textarea value={message} onChange={(e) => setMessage(e.target.value)} className='form-input
             block 
             w-full 
             h-full
@@ -73,7 +87,8 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             focus:ring-inset 
             focus:ring-sky-600 
             sm:text-sm 
-            sm:leading-6'></textarea>
+            sm:leading-6'></textarea>}
+            {isMedia && <MultilmediaUploader />}
             </CardBody>
             <CardFooter className="gap-3">
                 <div className="flex gap-1 items-center">
