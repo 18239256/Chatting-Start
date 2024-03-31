@@ -35,31 +35,31 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
                 isTextMessage: true,
             }
         }
-        else {
-            const formData = new FormData();
+        else if (mediaFiles && mediaFiles.length > 0) {
+                const formData = new FormData();
 
-            for (const file of Array.from(mediaFiles ?? [])) {
-                formData.append(file.name, file);
-                //只发送最后一张图片，如果要发送全部图片，需要更改此函数逻辑
-                postData = {
-                    recipientId: contact.id,
-                    fileName: file.name,
-                    issuedAt: issueDate,
-                    isTextMessage: false,
-            }
-            };
+                for (const file of Array.from(mediaFiles ?? [])) {
+                    formData.append(file.name, file);
+                    //只发送最后一张图片，如果要发送全部图片，需要更改此函数逻辑
+                    postData = {
+                        recipientId: contact.id,
+                        fileName: file.name,
+                        issuedAt: issueDate,
+                        isTextMessage: false,
+                    }
+                };
 
-            await axios.post("/api/upload", formData);
-
+                await axios.post("/api/upload", formData);
         };
 
-        axios.post(`/api/imentries/addIssueMessage`, postData)
-            .then((ret) => {
-                toast.success('发送消息成功!')
-                setMessage("");
-            })
-            .catch(() => toast.error('出错了!'))
-            .finally(() => setIsSending(false));
+        if (postData)
+            axios.post(`/api/imentries/addIssueMessage`, postData)
+                .then((ret) => {
+                    toast.success('发送消息成功!')
+                    setMessage("");
+                })
+                .catch(() => toast.error('出错了!'))
+                .finally(() => setIsSending(false));
 
     };
 
