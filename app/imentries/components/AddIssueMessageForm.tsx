@@ -21,20 +21,46 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
     const [isSending, setIsSending] = React.useState(false);
     const [isMedia, setIsMedia] = React.useState(false);
     const [message, setMessage] = React.useState("");
+    const [mediaFiles, setMediaFiles] = React.useState<File[]>();
     const [issueDate, setIssueDate] = React.useState(new Date());
 
     const issueMessage = async () => {
         setIsSending(true);
-        axios.post(`/api/imentries/addIssueMessage`, {
-            recipientId: contact.id,
-            message: message,
-            issuedAt: issueDate,
-        }).then((ret) => {
-            toast.success('发送消息成功!')
-            setMessage("");
-        })
+        let postData: any;
+        if (!isMedia) {
+            postData = {
+                recipientId: contact.id,
+                message: message,
+                issuedAt: issueDate,
+                isTextMessage: true,
+            }
+        }
+        else {
+            const formData = new FormData();
+
+            for (const file of Array.from(mediaFiles ?? [])) {
+                formData.append(file.name, file);
+                //只发送最后一张图片，如果要发送全部图片，需要更改此函数逻辑
+                postData = {
+                    recipientId: contact.id,
+                    fileName: file.name,
+                    issuedAt: issueDate,
+                    isTextMessage: false,
+            }
+            };
+
+            await axios.post("/api/upload", formData);
+
+        };
+
+        axios.post(`/api/imentries/addIssueMessage`, postData)
+            .then((ret) => {
+                toast.success('发送消息成功!')
+                setMessage("");
+            })
             .catch(() => toast.error('出错了!'))
             .finally(() => setIsSending(false));
+
     };
 
     return (
@@ -88,7 +114,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             focus:ring-sky-600 
             sm:text-sm 
             sm:leading-6'></textarea>}
-            {isMedia && <MultilmediaUploader />}
+                {isMedia && <MultilmediaUploader onChange={setMediaFiles} />}
             </CardBody>
             <CardFooter className="gap-3">
                 <div className="flex gap-1 items-center">

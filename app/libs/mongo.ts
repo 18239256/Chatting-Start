@@ -26,7 +26,7 @@ export async function connectToDb() {
 
   const client = (global.client = new MongoClient(MONGODB_URI!, {}));
   const bucket = (global.bucket = new GridFSBucket(client.db(), {
-    bucketName: "images",
+    bucketName: "medias",
   }));
 
   await global.client.connect();
@@ -39,7 +39,7 @@ export async function fileExists(filename: string): Promise<boolean> {
   const { client } = await connectToDb();
   const count = await client
     .db()
-    .collection("images.files")
+    .collection("medias.files")
     .countDocuments({ filename });
 
   return !!count;

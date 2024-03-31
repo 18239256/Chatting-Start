@@ -13,7 +13,9 @@ export async function POST(
     const {
         recipientId,
         message,
+        fileName,
         issuedAt,
+        isTextMessage,
     } = body;
 
     if (!currentUser?.id) {
@@ -23,7 +25,9 @@ export async function POST(
     const newWX = await prisma.wXIssueMessages.create({
         data: {
             message,
+            fileName,
             issuedAt,
+            isTextMessage,
             recipient:{
                 connect:{
                     id: recipientId,

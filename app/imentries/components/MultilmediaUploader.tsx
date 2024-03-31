@@ -3,8 +3,14 @@
 import axios from "axios";
 import React, { FormEvent, useRef } from "react";
 
-const MultimediaUploader = () => {
-  // 1. add reference to input element
+interface MultimediaUploaderProps {
+  onChange?: (file:File[]) => void | null;
+}
+
+const MultimediaUploader : React.FC<MultimediaUploaderProps> = ({
+  onChange,
+}) => {
+  // 1. add reference to input elements
   const ref = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -22,16 +28,21 @@ const MultimediaUploader = () => {
     // 4. use axios to send the FormData
     await axios.post("/api/upload", formData);
   };
+
+  const fileSelected = (data: any) => {
+    if(onChange) onChange(data.target.files);
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input type="file" name="files" ref={ref} accept="image/*,video/*" />
-        <button
+        <input type="file" name="files" ref={ref} accept="image/*,video/*" onChange={fileSelected}/>
+        {/* <button
           type="submit"
           className="px-2 py-1 rounded-md bg-violet-50 text-violet-500"
         >
           Upload
-        </button>
+        </button> */}
       </form>
     </>
   );
