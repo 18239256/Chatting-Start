@@ -19,10 +19,18 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
     contact,
 }) => {
     const [isSending, setIsSending] = React.useState(false);
+    const [isEmptyContent, setIsEmptyContent] = React.useState(true);
     const [isMedia, setIsMedia] = React.useState(false);
     const [message, setMessage] = React.useState("");
     const [mediaFiles, setMediaFiles] = React.useState<File[]>();
     const [issueDate, setIssueDate] = React.useState(new Date());
+    
+    React.useEffect(() => {
+        if(isMedia)
+            setIsEmptyContent(mediaFiles == undefined);
+        else
+            setIsEmptyContent(message == "");
+    }, [isMedia, message, mediaFiles]);
 
     const issueMessage = async () => {
         setIsSending(true);
@@ -78,7 +86,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
                     size="sm"
                     variant={isSending ? "bordered" : "solid"}
                     onPress={issueMessage}
-                    disabled={!isSending}
+                    isDisabled = {isSending || isEmptyContent}
                 >
                     {isSending ? <Spinner size="sm" /> : "发送"}
                 </Button>
