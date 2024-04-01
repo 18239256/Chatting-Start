@@ -40,7 +40,7 @@ const UserList: React.FC<UserListProps> = ({
               py-4
             "
           >
-            用户
+            用户管理
           </div>
         </div>
         {items.map((item) => (
