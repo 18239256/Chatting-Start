@@ -21,7 +21,7 @@ const MultimediaUploader: React.FC<MultimediaUploaderProps> = ({
 
   React.useEffect(()=>{
     setMediaFiles(initFiles);
-  },[]);
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

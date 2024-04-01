@@ -32,6 +32,10 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             setIsEmptyContent(message == "");
     }, [isMedia, message, mediaFiles]);
 
+    const showMediaUploader =  React.useMemo(() => {
+        return (<MultilmediaUploader initFiles={mediaFiles} onChange={setMediaFiles} />);
+    },[mediaFiles]);
+
     const issueMessage = async () => {
         setIsSending(true);
         let postData: any;
@@ -123,7 +127,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             focus:ring-sky-600 
             sm:text-sm 
             sm:leading-6'></textarea>}
-                {isMedia && <MultilmediaUploader initFiles={mediaFiles} onChange={setMediaFiles} />}
+                {isMedia && showMediaUploader}
             </CardBody>
             <CardFooter className="gap-3">
                 <div className="flex gap-1 items-center">
