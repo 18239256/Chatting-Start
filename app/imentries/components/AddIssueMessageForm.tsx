@@ -22,7 +22,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
     const [isEmptyContent, setIsEmptyContent] = React.useState(true);
     const [isMedia, setIsMedia] = React.useState(false);
     const [message, setMessage] = React.useState("");
-    const [mediaFiles, setMediaFiles] = React.useState<File[]>();
+    const [mediaFiles, setMediaFiles] = React.useState<FileList>();
     const [issueDate, setIssueDate] = React.useState(new Date());
     
     React.useEffect(() => {
@@ -65,6 +65,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
                 .then((ret) => {
                     toast.success('发送消息成功!')
                     setMessage("");
+                    setMediaFiles(undefined);
                 })
                 .catch(() => toast.error('出错了!'))
                 .finally(() => setIsSending(false));
@@ -122,7 +123,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             focus:ring-sky-600 
             sm:text-sm 
             sm:leading-6'></textarea>}
-                {isMedia && <MultilmediaUploader onChange={setMediaFiles} />}
+                {isMedia && <MultilmediaUploader initFiles={mediaFiles} onChange={setMediaFiles} />}
             </CardBody>
             <CardFooter className="gap-3">
                 <div className="flex gap-1 items-center">
