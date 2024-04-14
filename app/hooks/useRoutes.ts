@@ -5,7 +5,7 @@ import { BiSolidMask } from 'react-icons/bi';
 import { HiBookOpen, HiUsers } from 'react-icons/hi2';
 import {FaIdBadge, FaRobot, FaStore, FaWeixin} from 'react-icons/fa6'
 import { signOut } from "next-auth/react";
-import { RiLogoutBoxFill } from "react-icons/ri";
+import { RiCustomerServiceFill, RiLogoutBoxFill } from "react-icons/ri";
 
 const useRoutes = () => {
   const pathname = usePathname();
@@ -38,7 +38,7 @@ const useRoutes = () => {
     { 
       label: 'Masks', 
       href: '/masks', 
-      icon: BiSolidMask, 
+      icon: RiCustomerServiceFill, 
       active: /^\/masks.*$/.test(pathname || "")
     },
     { 

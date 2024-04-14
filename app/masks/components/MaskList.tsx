@@ -22,7 +22,7 @@ const MaskList: React.FC<MaskListProps> = ({
                         text-neutral-800 
                         "
                     >
-                        机器人面具
+                        岗位管理
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row md:gap-6 lg:pr-20">

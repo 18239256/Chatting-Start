@@ -21,6 +21,7 @@ import useActiveList from "@/app/hooks/useActiveList";
 import useCurrentUser from '@/app/hooks/useCurrentUser';
 import { Badge, Button, Chip } from '@nextui-org/react';
 import CodeModal from './CodeModal';
+import { RiCustomerServiceFill } from 'react-icons/ri';
 
 function classNames(...classes:any) {
   return classes.filter(Boolean).join(' ')
@@ -137,7 +138,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
           <Menu as="div" className="relative inline-block text-left">
             <div className="flex flex-col px-6">
               <Menu.Button className="hidden lg:inline-flex items-center gap-1 rounded-md bg-blue-50 px-3 py-1 lg:text-sm font-semibold text-sky-500 cursor-pointer" >
-                <BiMask size={26} />
+                <RiCustomerServiceFill size={26} />
                 {mask}
                 <HiChevronDown className="-mr-1 h-5 w-5 text-sky-500" aria-hidden="true" />
               </Menu.Button>
@@ -165,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({ conversation, masks}) => {
                         )}
                       >
                         <div className='inline-flex items-center gap-1 rounded-md bg-blue-50 py-1 text-sm font-semibold text-sky-500'>
-                          <BiMask size={26} />
+                          <RiCustomerServiceFill size={26} />
                           {mask.title}</div>
                         <div className='text-gray-400'>{mask.content}</div>
                       </button>
