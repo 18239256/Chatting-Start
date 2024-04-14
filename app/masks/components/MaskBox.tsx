@@ -6,8 +6,8 @@ import { format } from "date-fns";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { BiMask } from "react-icons/bi";
 import { useState } from "react";
+import { RiCustomerServiceFill } from "react-icons/ri";
 
 
 interface MaskBoxProps {
@@ -51,7 +51,7 @@ const MaskBox: React.FC<MaskBoxProps> = ({
     <Card className="shrink-0 mb-4 max-w-1/2 basis-1/2 sm:max-w-1/3 sm:basis-1/3 lg:max-w-1/4 lg:basis-1/4">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
-          <BiMask size={26} />
+          <RiCustomerServiceFill size={26} />
           <div className="flex flex-col gap-1 items-start justify-center">
             {!isEdit && <h4 className="text-small font-semibold leading-none text-default-600">{title}</h4>}
             {isEdit && <input type='text' value={title}  onChange={(e) => setTitle(e.target.value)} className='form-input

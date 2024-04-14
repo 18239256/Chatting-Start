@@ -10,7 +10,6 @@ import { Conversation, RobotMask} from "@prisma/client";
 import Avatar from "@/app/components/Avatar";
 import ProfileDrawer from './ProfileDrawer';
 import { FullUserType } from '@/app/types';
-import { BiMask } from 'react-icons/bi';
 import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
