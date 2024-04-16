@@ -24,7 +24,8 @@ const ShareRobotBox: React.FC<ShareRobotBoxProps> = ({
   const [isUsed, setIsUsed] = useState(data.consumeIds.includes(curUser?.id));
   const [isInvisible] = useState(curUser.id === data.user.robotOwnerId);
 
-  useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
+  // 暂时注释掉，影响前端打开页面速度
+  // useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
 
   const onPressFire=(isUsed:boolean)=>{
     if (isUsed) {

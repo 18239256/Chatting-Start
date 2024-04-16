@@ -19,7 +19,9 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
   selected
 }) => {
   const router = useRouter();
-  useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
+
+  // 暂时注释掉，影响前端打开页面速度
+  // useEffect(()=>{router.refresh();},[]);  //首次进入页面刷新数据
   
   const handleClick = useCallback(() => {
     router.push(`/knowledge/${data.id}`);
