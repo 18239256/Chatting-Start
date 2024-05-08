@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import EmptyState from "../components/EmptyState";
 import Body from "./components/Body";
 import getRoles from "@/app/actions/getRoles";
+import getRobotTemplates from "@/app/actions/getRobotTemplates";
+import getKnowledgesByUserId from "@/app/actions/getKnowledgesByUserId";
 
 interface IParams {
   userId: string;
@@ -11,6 +13,8 @@ interface IParams {
 const UserId = async ({ params }: { params: IParams }) => {
   const user = await getUserById(params.userId);
   const roles = await getRoles();
+  const robotTmpls = await getRobotTemplates();
+  const knowledges = await getKnowledgesByUserId(params.userId);
 
   if (!user) {
     return (
@@ -25,7 +29,7 @@ const UserId = async ({ params }: { params: IParams }) => {
     <div className="lg:pl-80 h-full">
       <div className="h-full flex flex-col">
         <Header user={user} />
-        <Body user={user} roles={roles} />
+        <Body user={user} roles={roles} knowledges={knowledges} robotTmpls={robotTmpls} />
       </div>
     </div>
   );

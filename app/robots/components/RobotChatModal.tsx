@@ -30,6 +30,7 @@ interface RobotChatModalProps {
   onClose: () => void;
   robotTmpls: RobotTemplate[];
   knowledges: Knowledge[];
+  ownerUserId?: string;
 }
 
 function CheckIcon(props: any) {
@@ -55,7 +56,8 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
   isOpen,
   onClose,
   robotTmpls = [],
-  knowledges = []
+  knowledges = [],
+  ownerUserId,
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -92,10 +94,13 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     if (getTmplObj()?.knowledgeAbility) {
       const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0] });
       param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName };
-    }else if(getTmplObj()?.searchAbility){
+    } else if (getTmplObj()?.searchAbility) {
       param = { ...data, robotTmpl: getTmplObj(), searchEngineName: "bing" };
-    }else
+    } else
       param = { ...data, robotTmpl: getTmplObj() };
+
+    if (ownerUserId)
+      param = { ...param, ownerUserId: ownerUserId };
 
     console.log('param', param);
 
@@ -108,15 +113,18 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
         if (callback?.status === 200) {
           toast.success('创建成功');
-
-          // Create new 1 by 1 conversation by new robot user
-          axios.post('/api/conversations', { userId: callback?.data.userId })
-            .then(() => {
-              onClose();
-              router.push('/robots');
-            })
-            .catch(() => toast.error('Something went wrong!'))
-            .finally(() => setIsLoading(false));
+          if (!ownerUserId) {
+            // Create new 1 by 1 conversation by new robot user
+            axios.post('/api/conversations', { userId: callback?.data.userId })
+              .then(() => {
+                onClose();
+                router.push('/robots');
+              })
+              .catch(() => toast.error('Something went wrong!'))
+              .finally(() => setIsLoading(false));
+          }
+          onClose();
+          router.refresh();
         }
       })
       .catch(() => toast.error('出错了!'))
@@ -275,10 +283,10 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                 alt="Avatar"
                               />
                             </div>
-                            {t.knowledgeAbility && 
-                            <div
-                              key={1}
-                              className={`
+                            {t.knowledgeAbility &&
+                              <div
+                                key={1}
+                                className={`
                                 absolute
                                 inline-block 
                                 rounded-full 
@@ -287,12 +295,12 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                 w-[21px]
                                 ${positionMap[2]}
                               `}>
-                              <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
-                            </div>}
-                            {t.searchAbility && 
-                            <div
-                              key={1}
-                              className={`
+                                <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
+                              </div>}
+                            {t.searchAbility &&
+                              <div
+                                key={1}
+                                className={`
                                 absolute
                                 inline-block 
                                 rounded-full 
@@ -301,8 +309,8 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
                                 w-[21px]
                                 ${positionMap[2]}
                               `}>
-                              <FaSearch className="h-4 w-5 text-green-600 bg-gray-100" />
-                            </div>}
+                                <FaSearch className="h-4 w-5 text-green-600 bg-gray-100" />
+                              </div>}
                           </div>
                           <p>
                             {t.name}

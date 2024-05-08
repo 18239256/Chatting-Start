@@ -10,7 +10,7 @@ interface IParams {
   roleId: string;
 }
 
-const ConversationId = async ({ params }: { params: IParams }) => {
+const RoleId = async ({ params }: { params: IParams }) => {
     const role = await getRoleById(params.roleId);
     const users = await getUsers();
     const curUser = await getCurrentUser();
@@ -36,4 +36,4 @@ const ConversationId = async ({ params }: { params: IParams }) => {
   );
 }
 
-export default ConversationId;
+export default RoleId;

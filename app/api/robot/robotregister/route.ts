@@ -17,6 +17,7 @@ export async function POST(
             robotTmpl,
             knowledgeBaseName,
             searchEngineName,
+            ownerUserId,
         } = body;
 
         if(!name || !robotTmpl){
@@ -38,7 +39,7 @@ export async function POST(
                         name,
                         email: "robot" +  now().toString().slice(-6) + "@ai.com",
                         isRobot:true,
-                        robotOwnerId: currentUser?.id,
+                        robotOwnerId: ownerUserId? ownerUserId: currentUser?.id,
                         image: "/images/robotbaby.jpg",
                     }
                 },
