@@ -118,7 +118,6 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
           axios.post('/api/conversations', conParam)
           .then((callback) => {
             onClose();
-            console.log('callback', callback);
             router.push(`/robots/${callback?.data.id}`);
           })
           .catch(() => toast.error('出错了!'))

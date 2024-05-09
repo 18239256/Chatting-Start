@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { FullUserType } from "@/app/types";
 import { RiDeleteBinLine } from "react-icons/ri";
 import DatePicker from "@/app/components/inputs/DatePicker";
+import { BiMessageRoundedAdd } from "react-icons/bi";
 
 
 interface RobotBoxProps {
@@ -45,6 +46,18 @@ const RobotBox: React.FC<RobotBoxProps> = ({
     }
     return;
   };
+
+  const createConversation = async () => {
+    setIsLoading(true);
+    axios.post('/api/conversations', { userId: data.id })
+      .then((callback) => {
+        toast.success('创建成功');
+        router.push(`/robots/${callback?.data.id}`);
+      })
+      .catch(() => toast.error('出错了!'))
+      .finally(() => setIsLoading(false));
+    return;
+  }
 
   const setExpiredDate = async (newDate: Date) => {
     console.log('setExpiredDate called ', newDate);
@@ -101,6 +114,15 @@ const RobotBox: React.FC<RobotBoxProps> = ({
             success={notExpired}
           />
         </div>
+        {!isLoading?
+        <Tooltip color="primary" content="发起对话">
+          <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={createConversation}>
+            <BiMessageRoundedAdd />
+          </span>
+        </Tooltip>
+        :
+        <Spinner color="primary" size="sm"/>
+        }
       </CardFooter>
     </Card>
   );
