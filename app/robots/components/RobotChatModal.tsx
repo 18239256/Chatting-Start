@@ -113,18 +113,16 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
 
         if (callback?.status === 200) {
           toast.success('创建成功');
-          if (!ownerUserId) {
-            // Create new 1 by 1 conversation by new robot user
-            axios.post('/api/conversations', { userId: callback?.data.userId })
-              .then(() => {
-                onClose();
-                router.push('/robots');
-              })
-              .catch(() => toast.error('Something went wrong!'))
-              .finally(() => setIsLoading(false));
-          }
-          onClose();
-          router.refresh();
+          const conParam = ownerUserId ? { userId: callback?.data.userId, puppetCurUserId: ownerUserId } : { userId: callback?.data.userId };
+          // Create new 1 by 1 conversation by new robot user
+          axios.post('/api/conversations', conParam)
+          .then((callback) => {
+            onClose();
+            console.log('callback', callback);
+            router.push(`/robots/${callback?.data.id}`);
+          })
+          .catch(() => toast.error('出错了!'))
+          .finally(() => setIsLoading(false));
         }
       })
       .catch(() => toast.error('出错了!'))

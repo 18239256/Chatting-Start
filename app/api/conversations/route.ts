@@ -14,7 +14,8 @@ export async function POST(
       userId,
       isGroup,
       members,
-      name
+      name,
+      puppetCurUserId,
     } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
@@ -24,6 +25,8 @@ export async function POST(
     if (isGroup && (!members || members.length < 2 || !name)) {
       return new NextResponse('Invalid data', { status: 400 });
     }
+
+    const currentUserId = puppetCurUserId ? puppetCurUserId : currentUser.id;
 
     if (isGroup) {
       const newConversation = await prisma.conversation.create({
@@ -36,7 +39,7 @@ export async function POST(
                 id: member.value 
               })),
               {
-                id: currentUser.id
+                id: currentUserId
               }
             ]
           }
@@ -67,12 +70,12 @@ export async function POST(
         OR: [
           {
             userIds: {
-              equals: [currentUser.id, userId]
+              equals: [currentUserId, userId]
             }
           },
           {
             userIds: {
-              equals: [userId, currentUser.id]
+              equals: [userId, currentUserId]
             }
           }
         ]
@@ -90,7 +93,7 @@ export async function POST(
         users: {
           connect: [
             {
-              id: currentUser.id
+              id: currentUserId
             },
             {
               id: userId
@@ -135,10 +138,10 @@ export async function POST(
     Object.assign(robotObj,{robot:robotData});  //robotObj被赋值后的作用是什么？看不懂了！
 
     // 如果机器人的所有者ID不是当前登录用户的ID，就是共享机器人，需要更新当前用户的sharedRobotIds
-    if(robotData?.user.robotOwnerId !== currentUser.id){
+    if(robotData?.user.robotOwnerId !== currentUserId){
       const updateRobot = await prisma.user.update({
         where: {
-          id: currentUser.id,
+          id: currentUserId,
         },
         data: {
           shareRobots:{

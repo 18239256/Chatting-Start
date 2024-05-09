@@ -41,6 +41,7 @@ export async function POST(
                         isRobot:true,
                         robotOwnerId: ownerUserId? ownerUserId: currentUser?.id,
                         image: "/images/robotbaby.jpg",
+                        expiredAt: null,
                     }
                 },
                 robotTemp:{
