@@ -77,6 +77,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const router = useRouter();
 
     const [uploadOpen, setUploadOpen] = React.useState(false);
+    const [curFiles, setcurFiles] = React.useState<string[]>(files);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
@@ -89,18 +90,22 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         direction: "ascending",
     });
 
+    React.useEffect(() => {
+        setcurFiles(files);
+    }, [files]);
+
     const filesArray = useMemo(() => {
         let ret = [];
-        for (let i = 0; i < files.length; i++) {
+        for (let i = 0; i < curFiles.length; i++) {
             ret.push({
                 index: i + 1,
-                fileName: files[i],
-                ext: files[i].substring(files[i].lastIndexOf(".") + 1),
+                fileName: curFiles[i],
+                ext: curFiles[i].substring(curFiles[i].lastIndexOf(".") + 1),
             })
 
         };
         return ret;
-    }, [files]);
+    }, [curFiles]);
 
     const extColorMap: Record<string, ChipProps["color"]> = {
         pdf: "success",
@@ -195,6 +200,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
             axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
                 .then((ret) => {
                     toast.success(`${file_names[0]} 已经成功删除`);
+                    setcurFiles(curFiles.filter(f => f !== file_names[0]));
                     router.refresh();
                 })
                 .catch(() => toast.error('出错了!'))
@@ -311,6 +317,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
             .then((res) => {
                 console.log('res', res);
                 toast.success('上传成功!');
+                setcurFiles(curFiles.concat([...fileNames]));
                 onClose();
             })
             .catch(() => toast.error('出错了!'))

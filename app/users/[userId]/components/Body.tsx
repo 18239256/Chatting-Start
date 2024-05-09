@@ -2,31 +2,39 @@
 
 import { Knowledge, RobotTemplate, Role, User } from "@prisma/client";
 import RobotBox from "./RobotBox";
-import { Key, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FullUserType } from "@/app/types";
 import { ListboxWrapper } from "@/app/components/lists/ListboxWrapper";
-import { Button, Chip, Listbox, ListboxItem, ScrollShadow, Selection, Tab, Tabs } from "@nextui-org/react";
+import { Button, Chip, Listbox, ListboxItem, ScrollShadow, Select, SelectItem, Selection, Tab, Tabs } from "@nextui-org/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import AvatarRole from "@/app/components/AvatarRole";
 import Tools from "@/app/libs/tools"
 import RobotChatModal from "@/app/robots/components/RobotChatModal";
+import KnowBody from "@/app/knowledge/[knowledgeId]/components/Body";
+import { HiBookOpen } from "react-icons/hi2";
+import KnowledgeModal from "@/app/knowledge/components/KnowledgeModal";
 
 interface BodyProps {
     user: User & { robotUsers: FullUserType[], assignRole: Role[] },
     roles: Role[],
-    knowledges: Knowledge[],    
+    knowledges: Knowledge[],
     robotTmpls: RobotTemplate[],
 }
 
 const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
     const [robotsCount, setRobotsCount] = useState(user.robotUsers.length);
-    const [rolesCount, setRolesCount] = useState(user.assignRole.length);    
+    const [rolesCount, setRolesCount] = useState(user.assignRole.length);
+    const [knowledgesCount, setKnowledgesCount] = useState(knowledges.length);
     const [isRobotModalOpen, setIsRobotModalOpen] = useState(false);
+    const [isKnowledgeModalOpen, setIsKnowledgeModalOpen] = useState(false);
     const [userRoles, setUserRoles] = useState<Selection>(new Set(user.assignRoleIds));
     const arrayUserRoles = Array.from(userRoles);
     const [dirtyOfUserRoles, setDirtyOfUserRoles] = useState(false);
+    const [knowledgeSelection, setKnowledgeSelection] = useState<Selection>(new Set([]));
+    const [knowledgeSelObj, setKnowledgeSelObj] = useState<Knowledge>();
+    const [knowledgeFileList, setKnowledgeFileList] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
@@ -72,6 +80,27 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
         );
     }, [arrayUserRoles.length]);
 
+    // 知识库变更，重新查新知识库中的文件列表
+    useEffect(() => {
+        setIsLoading(true);
+        const selectedKnowledgeId = Array.from(knowledgeSelection)[0];
+        axios.post('/api/knowledges/getknowledgefilelist', { knowledgeId: selectedKnowledgeId })
+            .then((callback) => {
+                if (callback?.status !== 200) {
+                    toast.error('查询失败');
+                }
+
+                if (callback?.status == 200) {
+                    setKnowledgeFileList(callback.data);
+                    setKnowledgeSelObj(knowledges.find(k => k.id == selectedKnowledgeId));
+                }
+            })
+            .catch((err) => toast.error(`${err}`))
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, [knowledgeSelection]);
+
     useEffect(() => {
         if (userRoles === "all")
             setDirtyOfUserRoles(!Tools.ArrayEqual(user.assignRoleIds, [...roles.map((u) => u.id)]));
@@ -87,18 +116,27 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
         setRobotsCount(user.robotUsers.length);
     }, [user.robotUsers.length]);
 
+    useEffect(() => {
+        setKnowledgesCount(knowledges.length);
+    }, [knowledges.length]);
+
     return (
         <>
-        <RobotChatModal
-          ownerUserId={user.id}
-          knowledges={knowledges}
-          robotTmpls={robotTmpls}
-          isOpen={isRobotModalOpen}
-          onClose={() => setIsRobotModalOpen(false)}
-        />
+            <RobotChatModal
+                ownerUserId={user.id}
+                knowledges={knowledges}
+                robotTmpls={robotTmpls}
+                isOpen={isRobotModalOpen}
+                onClose={() => setIsRobotModalOpen(false)}
+            />
+            <KnowledgeModal
+                curUser={user}
+                isOpen={isKnowledgeModalOpen}
+                onClose={() => setIsKnowledgeModalOpen(false)}
+            />
             <div className="px-5">
                 <Tabs aria-label="Options" className="pt-4">
-                <Tab key="roles" title={
+                    <Tab key="roles" title={
                         <div className="flex items-center space-x-2">
                             <span>角色</span>
                             <Chip size="sm" variant="faded" className=" text-gray-400">{rolesCount}</Chip>
@@ -156,6 +194,40 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
                                 />
                             ))}
                         </div>
+                    </Tab>
+                    <Tab key="knowledges" title={
+                        <div className="flex items-center space-x-2">
+                            <span>知识库</span>
+                            <Chip size="sm" variant="faded" className=" text-gray-400">{knowledgesCount}</Chip>
+                        </div>
+                    }>
+                        <div className="flex justify-between mb-2 gap-2">
+                            <Select
+                                items={knowledges}
+                                placeholder="选择一个知识库"
+                                labelPlacement="outside"
+                                startContent={<HiBookOpen color="gray" size={20} />}
+                                selectedKeys={knowledgeSelection}
+                                onSelectionChange={setKnowledgeSelection}
+                                className="max-w-xs">
+                                {(know) => (
+                                    <SelectItem key={know.id} textValue={know.displayName}>
+                                        <div className="flex gap-2 items-center">
+                                            <HiBookOpen color="gray" size={20} />
+                                            <div className="flex flex-col">
+                                                <span className="text-small">{know.displayName}</span>
+                                                <span className="text-tiny text-default-400">{know.description}</span>
+                                            </div>
+                                        </div>
+                                    </SelectItem>
+                                )
+                                }
+                            </Select>
+                            <Button color="primary" className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={() => setIsKnowledgeModalOpen(true)}>
+                                创建知识库
+                            </Button>
+                        </div>
+                        {knowledgeSelObj && <KnowBody knowledge={knowledgeSelObj} files={knowledgeFileList} />}
                     </Tab>
                 </Tabs>
             </div>
