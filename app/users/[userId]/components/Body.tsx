@@ -223,9 +223,14 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
                                 )
                                 }
                             </Select>
-                            <Button color="primary" className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={() => setIsKnowledgeModalOpen(true)}>
-                                创建知识库
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button color="primary" className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={() => setIsKnowledgeModalOpen(true)}>
+                                    创建知识库
+                                </Button>
+                                <Button color="danger">
+                                    删除知识库
+                                </Button>
+                            </div>
                         </div>
                         {knowledgeSelObj && <KnowBody knowledge={knowledgeSelObj} files={knowledgeFileList} />}
                     </Tab>
