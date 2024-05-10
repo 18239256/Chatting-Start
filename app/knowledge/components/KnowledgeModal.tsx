@@ -49,7 +49,7 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
 
         const param = {
           knowledgeBaseDisplayName: data.name,
-          knowledgeBaseRealName: `${data.name}_${curUser.id.slice(0,6)}`,
+          knowledgeBaseRealName: `${data.name}_${curUser.id.slice(0,6)}_${new Date().getMilliseconds()}`,
           knowledgeBaseDesc: data.description,
           belongToUserId: curUser.id,
         };

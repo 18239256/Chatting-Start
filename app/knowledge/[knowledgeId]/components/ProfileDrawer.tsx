@@ -10,6 +10,7 @@ import { Knowledge } from '@prisma/client';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Tooltip } from '@nextui-org/react';
+import { useRouter } from 'next/navigation';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -22,6 +23,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     onClose,
     data,
 }) => {
+    const router = useRouter();
     const [isEdit, setIsEdit] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [name, setName] = useState(data.displayName);
@@ -57,7 +59,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             <ConfirmModal
                 knowledge={data}
                 isOpen={confirmOpen}
-                onClose={() => setConfirmOpen(false)}
+                onClose={() => {setConfirmOpen(false);}}
             />
             <Transition.Root show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-50" onClose={closeMyself}>
@@ -123,7 +125,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                         </>)}
                                                         {!isEdit &&
                                                             <Tooltip  content="删除" className='bg-red-500  text-gray-200'>
-                                                            <div onClick={() => setConfirmOpen(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
+                                                            <div onClick={() => setConfirmOpen(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer justify-center hover:bg-red-500 hover:text-gray-50">
                                                                 <IoTrash size={20} />
                                                             </div>
                                                             </Tooltip>

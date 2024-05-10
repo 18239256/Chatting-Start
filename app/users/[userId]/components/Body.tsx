@@ -15,6 +15,7 @@ import RobotChatModal from "@/app/robots/components/RobotChatModal";
 import KnowBody from "@/app/knowledge/[knowledgeId]/components/Body";
 import { HiBookOpen } from "react-icons/hi2";
 import KnowledgeModal from "@/app/knowledge/components/KnowledgeModal";
+import DelKnowConfirmModal from "@/app/knowledge/[knowledgeId]/components/ConfirmModal";
 
 interface BodyProps {
     user: User & { robotUsers: FullUserType[], assignRole: Role[] },
@@ -29,6 +30,7 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
     const [knowledgesCount, setKnowledgesCount] = useState(knowledges.length);
     const [isRobotModalOpen, setIsRobotModalOpen] = useState(false);
     const [isKnowledgeModalOpen, setIsKnowledgeModalOpen] = useState(false);
+    const [isKnowledgeDelConfirmOpen, setIsKnowledgeDelConfirmOpen] = useState(false);
     const [userRoles, setUserRoles] = useState<Selection>(new Set(user.assignRoleIds));
     const arrayUserRoles = Array.from(userRoles);
     const [dirtyOfUserRoles, setDirtyOfUserRoles] = useState(false);
@@ -134,6 +136,12 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
                 isOpen={isKnowledgeModalOpen}
                 onClose={() => setIsKnowledgeModalOpen(false)}
             />
+            {knowledgeSelObj &&
+            <DelKnowConfirmModal
+                knowledge={knowledgeSelObj}
+                isOpen={isKnowledgeDelConfirmOpen}
+                onClose={() => setIsKnowledgeDelConfirmOpen(false)}
+            />}
             <div className="px-5">
                 <Tabs aria-label="Options" className="pt-4">
                     <Tab key="roles" title={
@@ -227,7 +235,7 @@ const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
                                 <Button color="primary" className="bg-sky-500 hover:bg-sky-600 disabled:bg-gray-200" onClick={() => setIsKnowledgeModalOpen(true)}>
                                     创建知识库
                                 </Button>
-                                <Button color="danger">
+                                <Button color={!knowledgeSelObj?"default":"danger"}onClick={() => setIsKnowledgeDelConfirmOpen(true)} disabled={!knowledgeSelObj}>
                                     删除知识库
                                 </Button>
                             </div>

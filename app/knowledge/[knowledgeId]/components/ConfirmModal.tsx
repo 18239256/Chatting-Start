@@ -7,7 +7,6 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Modal from '@/app/components/modals/Modal';
 import Button from '@/app/components/Button';
-import useConversation from '@/app/hooks/useConversation';
 import { toast } from 'react-hot-toast';
 import { Knowledge } from '@prisma/client';
 
@@ -33,11 +32,13 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       knowledgeBaseName:knowledge.realName,
     })
     .then((ret) => {
-      router.push('/knowledge');
+      onClose();
       router.refresh();
     })
     .catch(() => toast.error('出错了!'))
-    .finally(() => setIsLoading(false))
+    .finally(() => {
+      setIsLoading(false);
+    })
   }, [router,knowledge, onClose]);
 
   return (
