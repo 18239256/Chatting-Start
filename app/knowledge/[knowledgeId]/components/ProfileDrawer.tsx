@@ -122,13 +122,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                             </Tooltip>
                                                         </>)}
                                                         {!isEdit &&
-                                                        <div onClick={() => setConfirmOpen(true)} className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75">
                                                             <Tooltip  content="删除" className='bg-red-500  text-gray-200'>
-                                                            <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
+                                                            <div onClick={() => setConfirmOpen(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-gray-50">
                                                                 <IoTrash size={20} />
                                                             </div>
                                                             </Tooltip>
-                                                        </div>}
+                                                        }
                                                     </div>
                                                     <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                                                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
