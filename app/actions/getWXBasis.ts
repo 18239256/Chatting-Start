@@ -11,7 +11,7 @@ const getWXBasis = async () => {
   try {
     const wxBasis = await prisma.wXBasis.findUnique({
       where: {
-        ownerUserId: currentUser.id
+        ownerUserId: currentUser.id,
       },
       include:{
         wxContacts:{

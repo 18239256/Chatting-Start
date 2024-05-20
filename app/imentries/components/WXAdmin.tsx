@@ -21,6 +21,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [online, setOnline] = useState(wxBasis?.online);
     const contacts = wxBasis?.wxContacts;
+    const quota = {'maxPersonNumber' : wxBasis?.maxPersonNumber, 'maxRoomNumber': wxBasis?.maxRoomNumber};
     return (
         <>
             <WXCreateModal
@@ -74,7 +75,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                     height={300}
                     alt="微信二维码"
                 />}
-                {contacts && <WXContactList contacts={contacts} robotConversations={robotConversations}/>}
+                {contacts && <WXContactList contacts={contacts} robotConversations={robotConversations} quota={quota}/>}
             </div>)}
 
         </>

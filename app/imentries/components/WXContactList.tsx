@@ -78,17 +78,21 @@ const columns = [
 interface WXContactListProps {
     contacts: (WXContacts & { robot: Robot | null })[];
     robotConversations: FullRobotConversationType[];
+    quota:{maxPersonNumber: number | null | undefined, maxRoomNumber:number | null | undefined}
 }
 
 const WXContactList: React.FC<WXContactListProps> = ({
     contacts,
     robotConversations,
+    quota,
 }) => {
     const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [contactTypeFilter, setContactTypeFilter] = React.useState<Selection>("all");
     const [robAssignFilter, setRobAssignFilter] = React.useState<Selection>("all");
+    const [countOfServedPerson, setCountOfServedPerson] = React.useState(0);
+    const [countOfServedRoom, setCountOfServedRoom] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -177,7 +181,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
         return robotUser[0].robot?.id;
     }
 
-
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "index",
         direction: "ascending",
@@ -185,6 +188,9 @@ const WXContactList: React.FC<WXContactListProps> = ({
 
     const contactsArray = useMemo(() => {
         let ret = [];
+        //计算有效配置的群聊和个人机器人服务数量
+        let countOSR = 0;
+        let countOSP = 0;
         for (let i = 0; i < contacts.length; i++) {
             ret.push({
                 id: contacts[i].id,
@@ -195,8 +201,17 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 expired: contacts[i].expired,
                 isRoom: contacts[i].isRoom,
             })
-
+            if(contacts[i].robot !== null && contacts[i].expired !== null ? contacts[i].expired!.getTime() >= Date.now() : false){
+                console.log('contacts[i].isRoom', contacts[i].isRoom);
+                if(contacts[i].isRoom)
+                    countOSR++;
+                else
+                    countOSP++;
+            }
         };
+        //设置最新的有效配置群聊和个人机器人服务数量
+        setCountOfServedRoom(countOSR);
+        setCountOfServedPerson(countOSP);
         return ret;
     }, [contacts]);
 
@@ -204,7 +219,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
         person: "success",
         room: "danger",
     };
-
 
     const [page, setPage] = React.useState(1);
 
@@ -463,7 +477,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                         </div>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-default-400 text-small">共 {contactsArray.length} 个文件</span>
+                        <span className="text-default-400 text-small">共 {contactsArray.length} 个联系人，已配置 {countOfServedRoom}/{quota.maxRoomNumber} 群聊 {countOfServedPerson}/{quota.maxPersonNumber} 个人</span> 
                         <label className="flex items-center text-default-400 text-small">
                             每页行数:
                             <select

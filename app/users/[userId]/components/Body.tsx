@@ -1,6 +1,6 @@
 'use client';
 
-import { Knowledge, RobotTemplate, Role, User } from "@prisma/client";
+import { Knowledge, Robot, RobotTemplate, Role, User, WXBasis, WXContacts } from "@prisma/client";
 import RobotBox from "./RobotBox";
 import { useEffect, useMemo, useState } from "react";
 import { FullUserType } from "@/app/types";
@@ -22,9 +22,10 @@ interface BodyProps {
     roles: Role[],
     knowledges: Knowledge[],
     robotTmpls: RobotTemplate[],
+    wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} | null,
 }
 
-const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls }) => {
+const Body: React.FC<BodyProps> = ({ user, roles, knowledges, robotTmpls, wxBasis }) => {
     const [robotsCount, setRobotsCount] = useState(user.robotUsers.length);
     const [rolesCount, setRolesCount] = useState(user.assignRole.length);
     const [knowledgesCount, setKnowledgesCount] = useState(knowledges.length);
