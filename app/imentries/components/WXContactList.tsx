@@ -20,17 +20,11 @@ import {
     ChipProps,
     SortDescriptor,
     Tooltip,
-    useDisclosure,
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    Progress,
     Spinner,
-    SelectSection,
     Popover,
     PopoverTrigger,
     PopoverContent,
+    Badge,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 import { FullRobotConversationType, contactArrayType } from "@/app/types";
@@ -264,7 +258,16 @@ const WXContactList: React.FC<WXContactListProps> = ({
             case "name":
                 return (
                     <div className="flex flex-row gap-1">
-                        {contact.isRoom ? (<BiGroup size={24} />) : (<BiUser size={24} />)}
+                        <Badge
+                            isOneChar
+                            content=""
+                            isInvisible={!(contact.robot !== null && contact.expired !== null ? contact.expired.getTime() >= Date.now() : false) }
+                            color="success"
+                            shape="circle"
+                            placement="top-left"
+                        >
+                            {contact.isRoom ? (<BiGroup size={24} />) : (<BiUser size={24} />)}
+                        </Badge>
                         <Chip className="capitalize" size="sm" variant="flat">
                             {cellValue?.toString()}
                         </Chip>
