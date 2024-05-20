@@ -15,6 +15,9 @@ const getWXBasis = async () => {
       },
       include:{
         wxContacts:{
+          orderBy:{
+            createdAt:'desc',
+          },
           include:{
             robot: true,
           }

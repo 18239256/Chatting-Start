@@ -93,7 +93,8 @@ const WXContactList: React.FC<WXContactListProps> = ({
     const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-    const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
+    const [contactTypeFilter, setContactTypeFilter] = React.useState<Selection>("all");
+    const [robAssignFilter, setRobAssignFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -102,16 +103,33 @@ const WXContactList: React.FC<WXContactListProps> = ({
         { name: "群聊", uid: "room" },
     ];
 
+    const contactAssignRobotOptions = [
+        { name: "AI托管", uid: "assigned" },
+        { name: "未配置", uid: "unassigned" },
+    ];
+
+    const robAssginFilterValue = React.useMemo(
+        () => {
+            if (robAssignFilter === "all")
+                return contactAssignRobotOptions.map((ct) => ct.name).join(" ").replaceAll("_", " ");
+
+            const sfs = Array.from(robAssignFilter);
+            const cts = contactAssignRobotOptions.filter((ct) => sfs.includes(ct.uid));
+            return cts.map((ct) => ct.name).join(" | ").replaceAll("_", " ");
+        },
+        [robAssignFilter]
+    );
+
     const statusFilterValue = React.useMemo(
         () => {
-            if (statusFilter === "all")
-                return contactTypeOptions.map((ct) => ct.name).join(", ").replaceAll("_", " ");
+            if (contactTypeFilter === "all")
+                return contactTypeOptions.map((ct) => ct.name).join(" ").replaceAll("_", " ");
 
-            const sfs = Array.from(statusFilter);
+            const sfs = Array.from(contactTypeFilter);
             const cts = contactTypeOptions.filter((ct) => sfs.includes(ct.uid));
-            return cts.map((ct) => ct.name).join(", ").replaceAll("_", " ");
+            return cts.map((ct) => ct.name).join(" | ").replaceAll("_", " ");
         },
-        [statusFilter]
+        [contactTypeFilter]
     );
 
     const setExpiredDate = async (contact: contactArrayType, newDate: Date) => {
@@ -206,13 +224,18 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 || contact.alias?.toLowerCase().includes(filterValue.toLowerCase())
             );
         }
-        if (statusFilter !== "all" && Array.from(statusFilter).length !== contactTypeOptions.length) {
+        if (contactTypeFilter !== "all" && Array.from(contactTypeFilter).length !== contactTypeOptions.length) {
             filteredContacts = filteredContacts.filter((contact) =>
-                Array.from(statusFilter).includes(contact.isRoom ? "room" : "person"),
+                Array.from(contactTypeFilter).includes(contact.isRoom ? "room" : "person"),
+            );
+        }
+        if (robAssignFilter !== "all" && Array.from(robAssignFilter).length !== contactAssignRobotOptions.length) {
+            filteredContacts = filteredContacts.filter((contact) =>
+                Array.from(robAssignFilter).includes(contact.robot === null? "unassigned" : "assigned"),
             );
         }
         return filteredContacts;
-    }, [contactsArray, filterValue, statusFilter, contactTypeOptions, hasSearchFilter]);
+    }, [contactsArray, filterValue, contactTypeFilter,robAssignFilter, contactTypeOptions, contactAssignRobotOptions, hasSearchFilter]);
 
     const pages = React.useMemo(() => {
         return Math.ceil(filteredItems.length / rowsPerPage);
@@ -255,7 +278,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                 <Button
                                     variant="bordered" color={contact.robot ? "success" : "danger"}
                                 >
-                                    {contact.robot ? contact.robot.name : "没有AI服务"}
+                                    {contact.robot ? contact.robot.name : "分配机器人"}
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -395,14 +418,39 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                     disallowEmptySelection
                                     aria-label="Table Columns"
                                     closeOnSelect={false}
-                                    selectedKeys={statusFilter}
+                                    selectedKeys={contactTypeFilter}
                                     selectionMode="multiple"
-                                    onSelectionChange={setStatusFilter}
+                                    onSelectionChange={setContactTypeFilter}
                                 >
                                     {contactTypeOptions.map((status) => (
                                         <DropdownItem key={status.uid} className="capitalize">
                                             <div className="flex flex-row items-center">
                                                 {status.uid == "person" ? (<BiUser size={20} />) : (<BiGroup size={20} />)}
+                                                {status.name}
+                                            </div>
+                                        </DropdownItem>
+                                    ))}
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+                        <div className="flex gap-3">
+                            <Dropdown>
+                                <DropdownTrigger className="hidden sm:flex">
+                                    <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                                        {robAssginFilterValue}
+                                    </Button>
+                                </DropdownTrigger>
+                                <DropdownMenu
+                                    disallowEmptySelection
+                                    aria-label="Table Columns"
+                                    closeOnSelect={false}
+                                    selectedKeys={robAssignFilter}
+                                    selectionMode="multiple"
+                                    onSelectionChange={setRobAssignFilter}
+                                >
+                                    {contactAssignRobotOptions.map((status) => (
+                                        <DropdownItem key={status.uid} className="capitalize">
+                                            <div className="flex flex-row items-center">
                                                 {status.name}
                                             </div>
                                         </DropdownItem>
@@ -430,7 +478,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
         );
     }, [
         filterValue,
-        statusFilter,
+        contactTypeFilter,
         onSearchChange,
         onRowsPerPageChange,
         contactsArray.length,
