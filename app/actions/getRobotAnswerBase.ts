@@ -78,7 +78,7 @@ const getRobotAnswerBase = async(
             messages: history,
             temperature: robot?.temperature || 0.7,
             n: robot?.historyRound || 1,
-            max_tokens: 1024,
+            max_tokens: 1024*2,
             stop: [],
             stream: false,
             presence_penalty: 0,
