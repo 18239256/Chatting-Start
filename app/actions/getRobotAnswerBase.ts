@@ -20,7 +20,7 @@ const getRobotAnswerBase = async(
         const AIParam: OPENAIFastAPIKBParamType = {
             query: message,
             knowledge_base_name: robot.knowledgeBaseName || "",
-            model_name: "Qwen-14B-Chat",
+            model_name: "chatglm2-6b",
             history: history,
             temperature: robot.temperature || 0.7,
             top_k: robot.topK || 3,
@@ -42,7 +42,7 @@ const getRobotAnswerBase = async(
         const AIParam: OPENAIFastAPISearchParamType = {
             query: message,
             search_engine_name: robot.searchEngineName || "",
-            model_name: "Qwen-14B-Chat",
+            model_name: "chatglm2-6b",
             history: history,
             temperature: robot.temperature || 0.7,
             top_k: robot.topK || 3,
@@ -74,7 +74,7 @@ const getRobotAnswerBase = async(
         console.log('<==fastchat messages history==>\n', history);
 
         const AIParam: OPENAIFastAPIParamType = {
-            model: "Qwen-14B-Chat",
+            model: "chatglm2-6b",
             messages: history,
             temperature: robot?.temperature || 0.7,
             n: robot?.historyRound || 1,
