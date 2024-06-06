@@ -46,7 +46,7 @@ const MaskList: React.FC<MaskListProps> = ({
                     {items?.map((item) => (
                         <MaskBox
                             key={item.id}
-                            data={item}
+                            mask={item}
                         />
                     ))}
                 </div>

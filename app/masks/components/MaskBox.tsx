@@ -1,30 +1,31 @@
 'use client';
 
 import { RobotMask } from "@prisma/client";
-import { Card, CardHeader, CardBody, CardFooter, Button} from "@nextui-org/react";
+import { Card, CardHeader, CardBody, CardFooter, Button, Tooltip} from "@nextui-org/react";
 import { format } from "date-fns";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { RiCustomerServiceFill } from "react-icons/ri";
-
+import { RiCustomerServiceFill, RiDeleteBinLine } from "react-icons/ri";
+import ConfirmModal from "./ConfirmModal";
 
 interface MaskBoxProps {
-  data: RobotMask;
+  mask: RobotMask;
 }
 
 const MaskBox: React.FC<MaskBoxProps> = ({
-  data,
+  mask,
 }) => {
   const router = useRouter();
   const [isEdit, setIsEdit] = useState(false);
-  const [title, setTitle] = useState(data.title);
-  const [content, setContent] = useState(data.content);
+  const [title, setTitle] = useState(mask.title);
+  const [content, setContent] = useState(mask.content);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const reset = () => {
-    setTitle(data.title);
-    setContent(data.content);
+    setTitle(mask.title);
+    setContent(mask.content);
     setIsEdit(false);
   };
 
@@ -33,10 +34,10 @@ const MaskBox: React.FC<MaskBoxProps> = ({
       setIsEdit(true);
     } else {
       axios.post('/api/mask/maskupdate', {
-        id: data.id,
+        id: mask.id,
         title: title,
         content: content,
-        description: data.description,
+        description: mask.description,
       })
         .then()
         .catch((err) => toast.error('保存修改时出错了!', err))
@@ -48,7 +49,12 @@ const MaskBox: React.FC<MaskBoxProps> = ({
   };
 
   return (
-    <Card className="shrink-0 mb-1 basis-full md:basis-96 lg:basis-80">
+    <> <ConfirmModal
+      mask={mask}
+      isOpen={confirmOpen}
+      onClose={() => { setConfirmOpen(false); }}
+    />
+      <Card className="shrink-0 mb-1 basis-full md:basis-96 lg:basis-80">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
           <RiCustomerServiceFill size={26} className=" text-gray-400"/>
@@ -123,12 +129,17 @@ const MaskBox: React.FC<MaskBoxProps> = ({
             sm:text-sm 
             sm:leading-6'></textarea>}
       </CardBody>
-      <CardFooter className="gap-3 justify-end">
+      <CardFooter className="gap-3 justify-between">
+        <Tooltip color="danger" content="删除">
+          <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() =>setConfirmOpen(true) } >
+            <RiDeleteBinLine />
+          </span>
+        </Tooltip>
         <div className="flex gap-1">
-        <h5 className="text-small tracking-tight text-default-400">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</h5>
+          <h5 className="text-small tracking-tight text-default-400">{format(new Date(mask.createdAt), 'yyyy年MM月dd 创建')}</h5>
         </div>
       </CardFooter>
-    </Card>
+    </Card></>
   );
 }
 
