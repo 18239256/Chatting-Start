@@ -15,6 +15,8 @@ interface TextareaProps {
   errors: FieldErrors,
   disabled?: boolean,
   placeholder?: string,
+  rows?:number,
+  cols?:number,
 }
 
 const Textarea: React.FC<TextareaProps> = ({
@@ -25,6 +27,8 @@ const Textarea: React.FC<TextareaProps> = ({
   errors,
   disabled,
   placeholder,
+  rows,
+  cols,
 }) => {
   return ( 
     <div>
@@ -46,6 +50,8 @@ const Textarea: React.FC<TextareaProps> = ({
           autoComplete={id}
           disabled={disabled}
           placeholder={placeholder}
+          rows={rows}
+          cols={cols}
           {...register(id, { required })}
           className={clsx(`
             form-input

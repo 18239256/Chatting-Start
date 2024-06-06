@@ -13,6 +13,7 @@ import RobotChatModal from "./RobotChatModal";
 import { RMQC } from "@/app/libs/RMQClient";
 import { find } from "lodash";
 import { BiSolidMessageRoundedAdd } from "react-icons/bi";
+import { Tooltip } from "@nextui-org/react";
 
 
 interface RobotListProps {
@@ -122,6 +123,7 @@ const RobotList: React.FC<RobotListProps> = ({
               <div className="text-2xl font-bold text-neutral-800">
                 机器人
               </div>
+              <Tooltip className=" bg-sky-500 text-gray-50" content="创建机器人">
               <div
                 onClick={() => setIsModalOpen(true)}
                 className="
@@ -137,6 +139,7 @@ const RobotList: React.FC<RobotListProps> = ({
               >
                 <BiSolidMessageRoundedAdd size={20} />
               </div>
+              </Tooltip>
             </div>
             {items.map((item) => (
               <RobotBox

@@ -16,7 +16,7 @@ export default async function MasksLayout({
     // \s*\/\/\s*@ts-expect-error
     <Sidebar>
       <div className="h-full">
-        <MaskList items={masks!}/>
+        <MaskList items={masks!} curUser={currentUser!}/>
         {masks?.length === 0 && children}
       </div>
     </Sidebar>

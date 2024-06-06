@@ -51,7 +51,7 @@ const MaskBox: React.FC<MaskBoxProps> = ({
     <Card className="shrink-0 mb-1 basis-full md:basis-96 lg:basis-80">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
-          <RiCustomerServiceFill size={26} />
+          <RiCustomerServiceFill size={26} className=" text-gray-400"/>
           <div className="flex flex-col gap-1 items-start justify-center">
             {!isEdit && <h4 className="text-small font-semibold leading-none text-default-600">{title}</h4>}
             {isEdit && <input type='text' value={title}  onChange={(e) => setTitle(e.target.value)} className='form-input
