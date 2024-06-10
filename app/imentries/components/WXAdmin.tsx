@@ -2,10 +2,11 @@
 
 import { WXBasis, User, WXContacts, Robot } from "@prisma/client";
 import WXCreateModal from "./WXCreateModal";
-import { useState } from "react";
-import {Image,Avatar} from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import {Image,Avatar, Tabs, Tab, Chip} from "@nextui-org/react";
 import WXContactList from "./WXContactList";
 import { FullRobotConversationType } from "@/app/types";
+import WXGroupSending from "./WXGroupSending";
 
 interface WXAdminProps {
     wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} | null;
@@ -19,9 +20,15 @@ const WXAdmin: React.FC<WXAdminProps> = ({
     robotConversations,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [contactCount, setContactCount] = useState(0);
     const [online, setOnline] = useState(wxBasis?.online);
     const contacts = wxBasis?.wxContacts;
     const quota = {'maxPersonNumber' : wxBasis?.maxPersonNumber, 'maxRoomNumber': wxBasis?.maxRoomNumber};
+
+    useEffect(() => {
+        setContactCount(wxBasis?.wxContacts.length!);
+    }, [wxBasis?.wxContacts.length]);
+
     return (
         <>
             <WXCreateModal
@@ -75,7 +82,26 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                     height={300}
                     alt="微信二维码"
                 />}
-                {contacts && <WXContactList contacts={contacts} robotConversations={robotConversations} quota={quota}/>}
+                {online && 
+                    <Tabs aria-label="Options" className="pt-4">
+                        <Tab key="asign" title={
+                            <div className="flex items-center space-x-2">
+                                <span>AI 托管</span>
+                                <Chip size="sm" variant="faded" className=" text-gray-400">{contactCount}</Chip>
+                            </div>
+                        }>
+                            {contacts && <WXContactList contacts={contacts} robotConversations={robotConversations} quota={quota} />}
+                        </Tab>
+                        <Tab key="groupsending" title={
+                            <div className="flex items-center space-x-2">
+                                <span>群发信息</span>
+                                <Chip size="sm" variant="faded" className=" text-gray-400">{1}</Chip>
+                            </div>
+                        }>
+                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} quota={quota} />}                            
+                        </Tab>
+                    </Tabs>
+                }
             </div>)}
 
         </>

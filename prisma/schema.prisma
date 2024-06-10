@@ -216,6 +216,9 @@ model WXContacts {
   robot         Robot? @relation(fields: [robotId], references: [id], onDelete: Cascade)
 
   issueMessages WXIssueMessages[]
+  
+  groupIssueMessagesIds String[] @db.ObjectId
+  groupIssueMessages WXGroupIssueMessages[] @relation("groupsending", fields: [groupIssueMessagesIds], references: [id])
 }
 
 model WXIssueMessages{
@@ -231,6 +234,21 @@ model WXIssueMessages{
 
   recipientId String  @db.ObjectId
   recipient   WXContacts @relation(fields: [recipientId], references: [id])
+}
+
+model WXGroupIssueMessages{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  message     String?
+  fileName    String?
+  isTextMessage Boolean @default(true)
+  deliveried  Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  deliveryAt  DateTime?
+  issuedAt    DateTime @default(now())
+
+  recipientIds String[] @db.ObjectId
+  recipients WXContacts[] @relation("groupsending", fields: [recipientIds], references: [id])
 }
 
 enum RoleType {
