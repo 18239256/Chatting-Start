@@ -18,7 +18,7 @@ import Button from '@/app/components/Button';
 interface CreateGrpMsgModalProps {
     isOpen?: boolean;
     onClose: () => void;
-    curUser: User;
+    curUser: User | null;
 }
 
 const CreateGrpMsgModal: React.FC<CreateGrpMsgModalProps> = ({ 
@@ -49,9 +49,9 @@ const CreateGrpMsgModal: React.FC<CreateGrpMsgModalProps> = ({
 
         const param = {
           knowledgeBaseDisplayName: data.name,
-          knowledgeBaseRealName: `${data.name}_${curUser.id.slice(0,6)}_${new Date().getMilliseconds()}`,
+          knowledgeBaseRealName: `${data.name}_${curUser?.id.slice(0,6)}_${new Date().getMilliseconds()}`,
           knowledgeBaseDesc: data.description,
-          belongToUserId: curUser.id,
+          belongToUserId: curUser?.id,
         };
       
         axios.post('/api/knowledges', param)

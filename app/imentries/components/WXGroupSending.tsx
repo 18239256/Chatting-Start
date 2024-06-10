@@ -41,6 +41,7 @@ import RobotSelectItem from "./RobotSelectItem";
 import { RiDeleteBinLine, RiMessage3Line } from "react-icons/ri";
 import AddIssueMessageForm from "./AddIssueMessageForm";
 import { PlusIcon } from "@/app/knowledge/[knowledgeId]/components/resource/PlusIcon";
+import WXCreateGroupSendingModal from "./WXCreateGroupSendingModal";
 
 const columns = [
     {
@@ -92,6 +93,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
     const [robAssignFilter, setRobAssignFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
     const contactTypeOptions = [
         { name: "个人", uid: "person" },
@@ -411,7 +413,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
                                     ))}
                                 </DropdownMenu>
                             </Dropdown>
-                            <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={() => {} }>
+                            <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={() => setIsCreateModalOpen(true) }>
                                 新建群发
                             </Button>
                         </div>
@@ -480,6 +482,11 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
 
     return (
         <div className="flex-1 overflow-y-auto">
+            <WXCreateGroupSendingModal
+                    curUser={null}
+                    isOpen={isCreateModalOpen}
+                    onClose={() => setIsCreateModalOpen(false)}
+            />
             <Table
                 aria-label="没有找到联系人或群聊!"
                 isHeaderSticky
