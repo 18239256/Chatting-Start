@@ -40,6 +40,7 @@ import { TiDelete } from "react-icons/ti";
 import RobotSelectItem from "./RobotSelectItem";
 import { RiDeleteBinLine, RiMessage3Line } from "react-icons/ri";
 import AddIssueMessageForm from "./AddIssueMessageForm";
+import { PlusIcon } from "@/app/knowledge/[knowledgeId]/components/resource/PlusIcon";
 
 const columns = [
     {
@@ -48,7 +49,7 @@ const columns = [
         sortable: true,
     },
     {
-        key: "name",
+        key: "title",
         label: "名称",
         sortable: true,
     },
@@ -75,24 +76,20 @@ const columns = [
 
 ];
 
-interface WXContactListProps {
+interface WXGroupSendingProps {
     contacts: (WXContacts & { robot: Robot | null })[];
     robotConversations: FullRobotConversationType[];
-    quota:{maxPersonNumber: number | null | undefined, maxRoomNumber:number | null | undefined}
 }
 
-const WXContactList: React.FC<WXContactListProps> = ({
+const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
     contacts,
     robotConversations,
-    quota,
 }) => {
     const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [contactTypeFilter, setContactTypeFilter] = React.useState<Selection>("all");
     const [robAssignFilter, setRobAssignFilter] = React.useState<Selection>("all");
-    const [countOfServedPerson, setCountOfServedPerson] = React.useState(0);
-    const [countOfServedRoom, setCountOfServedRoom] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -100,23 +97,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
         { name: "个人", uid: "person" },
         { name: "群聊", uid: "room" },
     ];
-
-    const contactAssignRobotOptions = [
-        { name: "AI托管", uid: "assigned" },
-        { name: "未配置", uid: "unassigned" },
-    ];
-
-    const robAssginFilterValue = React.useMemo(
-        () => {
-            if (robAssignFilter === "all")
-                return contactAssignRobotOptions.map((ct) => ct.name).join(" ").replaceAll("_", " ");
-
-            const sfs = Array.from(robAssignFilter);
-            const cts = contactAssignRobotOptions.filter((ct) => sfs.includes(ct.uid));
-            return cts.map((ct) => ct.name).join(" | ").replaceAll("_", " ");
-        },
-        [robAssignFilter]
-    );
 
     const statusFilterValue = React.useMemo(
         () => {
@@ -188,9 +168,6 @@ const WXContactList: React.FC<WXContactListProps> = ({
 
     const contactsArray = useMemo(() => {
         let ret = [];
-        //计算有效配置的群聊和个人机器人服务数量
-        let countOSR = 0;
-        let countOSP = 0;
         for (let i = 0; i < contacts.length; i++) {
             ret.push({
                 id: contacts[i].id,
@@ -201,17 +178,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 expired: contacts[i].expired,
                 isRoom: contacts[i].isRoom,
             })
-            if(contacts[i].robot !== null && contacts[i].expired !== null ? contacts[i].expired!.getTime() >= Date.now() : false){
-                console.log('contacts[i].isRoom', contacts[i].isRoom);
-                if(contacts[i].isRoom)
-                    countOSR++;
-                else
-                    countOSP++;
-            }
         };
-        //设置最新的有效配置群聊和个人机器人服务数量
-        setCountOfServedRoom(countOSR);
-        setCountOfServedPerson(countOSP);
         return ret;
     }, [contacts]);
 
@@ -237,13 +204,8 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 Array.from(contactTypeFilter).includes(contact.isRoom ? "room" : "person"),
             );
         }
-        if (robAssignFilter !== "all" && Array.from(robAssignFilter).length !== contactAssignRobotOptions.length) {
-            filteredContacts = filteredContacts.filter((contact) =>
-                Array.from(robAssignFilter).includes(contact.robot === null? "unassigned" : "assigned"),
-            );
-        }
         return filteredContacts;
-    }, [contactsArray, filterValue, contactTypeFilter,robAssignFilter, contactTypeOptions, contactAssignRobotOptions, hasSearchFilter]);
+    }, [contactsArray, filterValue, contactTypeFilter,robAssignFilter, contactTypeOptions, hasSearchFilter]);
 
     const pages = React.useMemo(() => {
         return Math.ceil(filteredItems.length / rowsPerPage);
@@ -449,35 +411,13 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                     ))}
                                 </DropdownMenu>
                             </Dropdown>
-                        </div>
-                        <div className="flex gap-3">
-                            <Dropdown>
-                                <DropdownTrigger className="hidden sm:flex">
-                                    <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                                        {robAssginFilterValue}
-                                    </Button>
-                                </DropdownTrigger>
-                                <DropdownMenu
-                                    disallowEmptySelection
-                                    aria-label="Table Columns"
-                                    closeOnSelect={false}
-                                    selectedKeys={robAssignFilter}
-                                    selectionMode="multiple"
-                                    onSelectionChange={setRobAssignFilter}
-                                >
-                                    {contactAssignRobotOptions.map((status) => (
-                                        <DropdownItem key={status.uid} className="capitalize">
-                                            <div className="flex flex-row items-center">
-                                                {status.name}
-                                            </div>
-                                        </DropdownItem>
-                                    ))}
-                                </DropdownMenu>
-                            </Dropdown>
+                            <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={() => {} }>
+                                新建群发
+                            </Button>
                         </div>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-default-400 text-small">共 {contactsArray.length} 个联系人，已配置 {countOfServedRoom}/{quota.maxRoomNumber} 群聊 {countOfServedPerson}/{quota.maxPersonNumber} 个人</span> 
+                        <span className="text-default-400 text-small">共 {contactsArray.length} 个未群发记录</span> 
                         <label className="flex items-center text-default-400 text-small">
                             每页行数:
                             <select
@@ -581,4 +521,4 @@ const WXContactList: React.FC<WXContactListProps> = ({
     );
 };
 
-export default WXContactList;
+export default WXGroupSendingList;

@@ -22,6 +22,11 @@ const getWXBasis = async () => {
             robot: true,
           }
         },
+        wxGroupIssueMessages:{
+          orderBy:{
+            issuedAt:'desc',
+          }
+        },
       }    
     });
     return wxBasis;

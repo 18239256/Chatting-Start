@@ -1,6 +1,6 @@
 'use client';
 
-import { WXBasis, User, WXContacts, Robot } from "@prisma/client";
+import { WXBasis, User, WXContacts, Robot, WXGroupIssueMessages } from "@prisma/client";
 import WXCreateModal from "./WXCreateModal";
 import { useEffect, useState } from "react";
 import {Image,Avatar, Tabs, Tab, Chip} from "@nextui-org/react";
@@ -9,7 +9,7 @@ import { FullRobotConversationType } from "@/app/types";
 import WXGroupSending from "./WXGroupSending";
 
 interface WXAdminProps {
-    wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} | null;
+    wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} & {wxGroupIssueMessages: WXGroupIssueMessages []} | null;
     curUser: User | null;
     robotConversations: FullRobotConversationType[];
 }
@@ -21,6 +21,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [contactCount, setContactCount] = useState(0);
+    const [groupMessageCount, setGroupMessageCount] = useState(0);
     const [online, setOnline] = useState(wxBasis?.online);
     const contacts = wxBasis?.wxContacts;
     const quota = {'maxPersonNumber' : wxBasis?.maxPersonNumber, 'maxRoomNumber': wxBasis?.maxRoomNumber};
@@ -29,6 +30,10 @@ const WXAdmin: React.FC<WXAdminProps> = ({
         setContactCount(wxBasis?.wxContacts.length!);
     }, [wxBasis?.wxContacts.length]);
 
+    useEffect(() => {
+        setGroupMessageCount(wxBasis?.wxGroupIssueMessages.length!);
+    }, [wxBasis?.wxGroupIssueMessages.length]);
+    
     return (
         <>
             <WXCreateModal
@@ -95,10 +100,10 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                         <Tab key="groupsending" title={
                             <div className="flex items-center space-x-2">
                                 <span>群发信息</span>
-                                <Chip size="sm" variant="faded" className=" text-gray-400">{1}</Chip>
+                                <Chip size="sm" variant="faded" className=" text-gray-400">{groupMessageCount}</Chip>
                             </div>
                         }>
-                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} quota={quota} />}                            
+                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                            
                         </Tab>
                     </Tabs>
                 }
