@@ -9,14 +9,15 @@ import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
 import MultilmediaUploader from "./MultilmediaUploader";
+import Tools from "@/app/libs/tools";
 
 
 interface AddIssueMessageFormProps {
-    contact: contactArrayType,
+    contacts: contactArrayType[],
 }
 
 const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
-    contact,
+    contacts,
 }) => {
     const [isSending, setIsSending] = React.useState(false);
     const [isEmptyContent, setIsEmptyContent] = React.useState(true);
@@ -36,12 +37,16 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
         return (<MultilmediaUploader initFiles={mediaFiles} onChange={setMediaFiles} />);
     },[mediaFiles]);
 
+    const title = React.useMemo(()=>{
+        return Tools.truncateString(Array.from(contacts,(contact)=> contact.name).toString(), 15) + `(共${contacts.length}个)`;
+    },[contacts]);
+
     const issueMessage = async () => {
         setIsSending(true);
         let postData: any;
         if (!isMedia) {
             postData = {
-                recipientId: contact.id,
+                recipientIds: Array.from(contacts,(contact)=> contact.id),
                 message: message,
                 issuedAt: issueDate,
                 isTextMessage: true,
@@ -54,7 +59,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
                     formData.append(file.name, file);
                     //只发送最后一张图片，如果要发送全部图片，需要更改此函数逻辑
                     postData = {
-                        recipientId: contact.id,
+                        recipientIds: Array.from(contacts,(contact)=> contact.id),
                         fileName: file.name,
                         issuedAt: issueDate,
                         isTextMessage: false,
@@ -81,7 +86,7 @@ const AddIssueMessageForm: React.FC<AddIssueMessageFormProps> = ({
             <CardHeader className="justify-between">
                 <div className="flex gap-3">
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="text-small font-semibold leading-none text-default-600">{contact.name}</h4>
+                        <h4 className="text-small font-semibold leading-none text-default-600">{title}</h4>
                     </div>
                 </div>
                 <Button

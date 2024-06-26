@@ -15,6 +15,13 @@ class Tools {
         }
         return true;
     }
+
+    public static truncateString (str: string, num: number) {
+        if (str.length > num) {
+            return str.slice(0, num > 3 ? num - 3 : num) + '...';
+        }
+        return str;
+    };
 }
 
 export default Tools;

@@ -25,6 +25,7 @@ import {
     PopoverTrigger,
     PopoverContent,
     Badge,
+    Switch,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
 import { FullRobotConversationType, contactArrayType } from "@/app/types";
@@ -35,7 +36,7 @@ import { isExpired } from "./utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { BiGroup, BiUser } from "react-icons/bi";
+import { BiGroup, BiSolidSelectMultiple, BiUser } from "react-icons/bi";
 import { TiDelete } from "react-icons/ti";
 import RobotSelectItem from "./RobotSelectItem";
 import { RiDeleteBinLine, RiMessage3Line } from "react-icons/ri";
@@ -75,6 +76,8 @@ const columns = [
 
 ];
 
+const multiVisibleColumns = ["index","name","alias","robot","expired"];
+
 interface WXContactListProps {
     contacts: (WXContacts & { robot: Robot | null })[];
     robotConversations: FullRobotConversationType[];
@@ -95,6 +98,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
     const [countOfServedRoom, setCountOfServedRoom] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
+    const [isMultipleSelection, setIsMultipleSelection] = React.useState(false);
 
     const contactTypeOptions = [
         { name: "个人", uid: "person" },
@@ -105,6 +109,11 @@ const WXContactList: React.FC<WXContactListProps> = ({
         { name: "AI托管", uid: "assigned" },
         { name: "未配置", uid: "unassigned" },
     ];
+
+    const headerColumns = React.useMemo(() => {
+        if (!isMultipleSelection) return columns;
+        return columns.filter((column) => multiVisibleColumns.includes(column.key));
+    }, [isMultipleSelection]);
 
     const robAssginFilterValue = React.useMemo(
         () => {
@@ -214,6 +223,12 @@ const WXContactList: React.FC<WXContactListProps> = ({
         setCountOfServedPerson(countOSP);
         return ret;
     }, [contacts]);
+
+    const multiSelectedContacts = useMemo(() => {
+        if(selectedKeys == "all")
+            return contactsArray;
+        return contactsArray.filter((contact,index)=> selectedKeys.has((index+1).toString()));
+    }, [selectedKeys]);
 
     const extColorMap: Record<string, ChipProps["color"]> = {
         person: "success",
@@ -340,7 +355,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                 </span>
                             </PopoverTrigger>
                             <PopoverContent className="p-1">
-                                <AddIssueMessageForm contact={contact} />
+                                <AddIssueMessageForm contacts={[contact]} />
                             </PopoverContent>
                         </Popover>
                         <Tooltip color="danger" content="删除">
@@ -477,8 +492,31 @@ const WXContactList: React.FC<WXContactListProps> = ({
                         </div>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-default-400 text-small">共 {contactsArray.length} 个联系人，已配置 {countOfServedRoom}/{quota.maxRoomNumber} 群聊 {countOfServedPerson}/{quota.maxPersonNumber} 个人</span> 
-                        <label className="flex items-center text-default-400 text-small">
+                        <div className=" flex items-center gap-4">
+                            <span className="text-default-400 text-small">共 {contactsArray.length} 个联系人，已配置 {countOfServedRoom}/{quota.maxRoomNumber} 群聊 {countOfServedPerson}/{quota.maxPersonNumber} 个人</span>
+                            <Switch
+                                isSelected={isMultipleSelection}
+                                onValueChange={setIsMultipleSelection}
+                                size="md"
+                                color="primary"
+                                startContent={<BiSolidSelectMultiple />}
+                                endContent={<BiSolidSelectMultiple />}
+                            />
+                            {isMultipleSelection && 
+                                <Popover showArrow placement="bottom" backdrop="opaque">
+                                    <PopoverTrigger>
+                                        <Button color="primary" variant="ghost" 
+                                        isDisabled={!(selectedKeys === "all" ? true : selectedKeys.size > 0)} >
+                                            创建群消息
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="p-1">
+                                        <AddIssueMessageForm contacts={multiSelectedContacts} />
+                                    </PopoverContent>
+                                </Popover>
+                            }
+                        </div>
+                       <label className="flex items-center text-default-400 text-small">
                             每页行数:
                             <select
                                 className="bg-transparent outline-none text-default-400 text-small border-0 focus:ring-0"
@@ -508,11 +546,12 @@ const WXContactList: React.FC<WXContactListProps> = ({
         return (
             <div className="py-2 px-4 flex justify-between items-center">
                 <div className="flex">
+                    {isMultipleSelection &&
                     <span className="w-[100%] text-small text-default-400">
                         {selectedKeys === "all"
                             ? "选中所有文件"
                             : `${selectedKeys.size} / ${filteredItems.length} 被选择`}
-                    </span>
+                    </span>}
                 </div>
                 {Boolean(pages > 1) ? (<>
                     <Pagination
@@ -536,7 +575,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                     </div></>) : null}
             </div>
         );
-    }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
+    }, [selectedKeys, isMultipleSelection, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
 
     return (
         <div className="flex-1 overflow-y-auto">
@@ -544,7 +583,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 aria-label="没有找到联系人或群聊!"
                 isHeaderSticky
                 isStriped
-                selectionMode="none"
+                selectionMode={isMultipleSelection? "multiple":"none"}
                 color="primary"
                 bottomContent={bottomContent}
                 bottomContentPlacement="outside"
@@ -558,7 +597,7 @@ const WXContactList: React.FC<WXContactListProps> = ({
                 onSelectionChange={setSelectedKeys}
                 onSortChange={setSortDescriptor}
             >
-                <TableHeader columns={columns}>
+                <TableHeader columns={headerColumns}>
                     {(column) => (
                         <TableColumn
                             key={column.key}

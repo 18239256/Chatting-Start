@@ -103,7 +103,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                                 <Chip size="sm" variant="faded" className=" text-gray-400">{groupMessageCount}</Chip>
                             </div>
                         }>
-                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                            
+                            {/* {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                             */}
                         </Tab>
                     </Tabs>
                 }

@@ -11,7 +11,7 @@ export async function POST(
     const currentUser = await getCurrentUser();
     const body = await request.json();
     const {
-        recipientId,
+        recipientIds,
         message,
         fileName,
         issuedAt,
@@ -22,21 +22,27 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const newWX = await prisma.wXIssueMessages.create({
+    let newWXs:any[] = [];
+    recipientIds.forEach(async (recipientId:string) => {
+      const newWX = await prisma.wXIssueMessages.create({
         data: {
-            message,
-            fileName,
-            issuedAt,
-            isTextMessage,
-            recipient:{
-                connect:{
-                    id: recipientId,
-                }
+          message,
+          fileName,
+          issuedAt,
+          isTextMessage,
+          recipient: {
+            connect: {
+              id: recipientId,
             }
+          }
         }
-    });
+      });
 
-    return NextResponse.json(newWX);
+      newWXs.push(newWX);
+    });
+    
+
+    return NextResponse.json(newWXs);
 
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
