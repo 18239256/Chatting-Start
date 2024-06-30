@@ -1,7 +1,7 @@
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "./getCurrentUser";
 
-const getWXBasis = async () => {
+const getWXIssueMessages = async () => {
   const currentUser = await getCurrentUser();
 
   if (!currentUser?.email) {
@@ -9,30 +9,23 @@ const getWXBasis = async () => {
   }
   
   try {
-    const wxBasis = await prisma.wXBasis.findUnique({
+    const wxIssueMessages = await prisma.wXIssueMessages.findMany({
       where: {
-        ownerUserId: currentUser.id,
+        deliveried: false,
+        recipient:{
+          wxInstance:{
+            ownerUserId: currentUser.id,
+          }
+        }
       },
       include:{
-        wxContacts:{
-          orderBy:{
-            createdAt:'desc',
-          },
-          include:{
-            robot: true,
-          }
-        },
-        wxGroupIssueMessages:{
-          orderBy:{
-            issuedAt:'desc',
-          }
-        },
+        recipient:true,
       }    
     });
-    return wxBasis;
+    return wxIssueMessages;
   } catch (error: any) {
     return null;
   }
 };
 
-export default getWXBasis;
+export default getWXIssueMessages;

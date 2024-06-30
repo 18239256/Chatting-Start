@@ -1,21 +1,23 @@
 'use client';
 
-import { WXBasis, User, WXContacts, Robot, WXGroupIssueMessages } from "@prisma/client";
+import { WXBasis, User, WXContacts, Robot, WXGroupIssueMessages, WXIssueMessages } from "@prisma/client";
 import WXCreateModal from "./WXCreateModal";
 import { useEffect, useState } from "react";
 import {Image,Avatar, Tabs, Tab, Chip} from "@nextui-org/react";
 import WXContactList from "./WXContactList";
 import { FullRobotConversationType } from "@/app/types";
-import WXGroupSending from "./WXGroupSending";
+import WXMessageLogs from "./WXMessageLogs";
 
 interface WXAdminProps {
     wxBasis: WXBasis & {wxContacts : (WXContacts  & {robot: Robot | null})[]} & {wxGroupIssueMessages: WXGroupIssueMessages []} | null;
+    wxIssueMessges: (WXIssueMessages & {recipient: WXContacts})[] | null;
     curUser: User | null;
     robotConversations: FullRobotConversationType[];
 }
 
 const WXAdmin: React.FC<WXAdminProps> = ({
     wxBasis,
+    wxIssueMessges,
     curUser,
     robotConversations,
 }) => {
@@ -103,7 +105,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                                 <Chip size="sm" variant="faded" className=" text-gray-400">{groupMessageCount}</Chip>
                             </div>
                         }>
-                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                            
+                            {contacts && <WXMessageLogs messages={wxIssueMessges} />}                            
                         </Tab>
                     </Tabs>
                 }

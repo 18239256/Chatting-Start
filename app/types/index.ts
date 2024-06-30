@@ -77,3 +77,19 @@ export type contactArrayType={
   expired: Date | null,
   isRoom: boolean,
 };
+
+export type wxMessageArrayType={
+  id: string,
+  index: number,
+  message: string,
+  filename: string,
+  isTextMessage: boolean,
+  deliveried: boolean,
+  createdAt: Date,
+  deliveryAt: Date | null,
+  issuedAt: Date,
+  contact_name: string,
+  contact_alias: string,
+  contact_isRoom: boolean,
+  contact_createdAt: boolean,
+};

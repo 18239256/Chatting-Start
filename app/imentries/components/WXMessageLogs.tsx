@@ -1,6 +1,6 @@
 'use client';
 
-import { Robot, WXContacts } from "@prisma/client";
+import { WXContacts, WXIssueMessages } from "@prisma/client";
 import {
     Table,
     TableHeader,
@@ -27,7 +27,7 @@ import {
     Badge,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
-import { FullRobotConversationType, contactArrayType } from "@/app/types";
+import { FullRobotConversationType, contactArrayType, wxMessageArrayType } from "@/app/types";
 import { SearchIcon } from "@/app/resources/icons/SearchIcon";
 import { ChevronDownIcon } from "@/app/resources/icons/ChevronDownIcon";
 import DatePicker from "@/app/components/inputs/DatePicker";
@@ -36,10 +36,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { BiGroup, BiUser } from "react-icons/bi";
-import { TiDelete } from "react-icons/ti";
-import RobotSelectItem from "./RobotSelectItem";
-import { RiDeleteBinLine, RiMessage3Line } from "react-icons/ri";
-import AddIssueMessageForm from "./AddIssueMessageForm";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { PlusIcon } from "@/app/knowledge/[knowledgeId]/components/resource/PlusIcon";
 import WXCreateGroupSendingModal from "./WXCreateGroupSendingModal";
 
@@ -50,23 +47,23 @@ const columns = [
         sortable: true,
     },
     {
-        key: "title",
-        label: "名称",
+        key: "contact_name",
+        label: "接收者",
         sortable: true,
     },
     {
-        key: "alias",
-        label: "别名",
+        key: "content",
+        label: "内容",
+        sortable: false,
+    },
+    {
+        key: "createdAt",
+        label: "创建时间",
         sortable: true,
     },
     {
-        key: "robot",
-        label: "AI",
-        sortable: true,
-    },
-    {
-        key: "expired",
-        label: "到期时间",
+        key: "issuedAt",
+        label: "计划发送时间",
         sortable: true,
     },
     {
@@ -77,20 +74,17 @@ const columns = [
 
 ];
 
-interface WXGroupSendingProps {
-    contacts: (WXContacts & { robot: Robot | null })[];
-    robotConversations: FullRobotConversationType[];
+interface WXMessageLogsProps {
+    messages: (WXIssueMessages & {recipient: WXContacts})[] | null;
 }
 
-const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
-    contacts,
-    robotConversations,
+const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
+    messages,
 }) => {
     const router = useRouter();
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [contactTypeFilter, setContactTypeFilter] = React.useState<Selection>("all");
-    const [robAssignFilter, setRobAssignFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
@@ -112,10 +106,10 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
         [contactTypeFilter]
     );
 
-    const setExpiredDate = async (contact: contactArrayType, newDate: Date) => {
+    const setIssuedDate = async (message: wxMessageArrayType, newDate: Date) => {
         setIsLoading(true);
         axios.post(`/api/imentries/updatecontact`, {
-            id: contact.id,
+            id: message.id,
             expired: newDate,
         }).then((ret) => {
             toast.success('成功更新有效期');
@@ -125,30 +119,12 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
             .finally(() => setIsLoading(false));
     };
 
-    const changedAI = async (keys: Selection | null, contact: contactArrayType) => {
-        if (keys == "all") {
-            toast.error("只能选择一个机器人");
-            return;
-        };
-        const robotId = keys ? keys.keys().next().value : "diconnect";
-        setIsLoading(true);
-        axios.post(`/api/imentries/updatecontact`, {
-            id: contact.id,
-            robotId: robotId,
-        }).then((ret) => {
-            toast.success('更新AI机器人成功');
-            router.refresh();
-        })
-            .catch(() => toast.error('出错了!'))
-            .finally(() => setIsLoading(false));
-    };
-
-    const removeContact = async (contact: contactArrayType) => {
-        if (!confirm("确认删除选中的项目?")) return;
+    const removeMessage = async (message: wxMessageArrayType) => {
+        if (!confirm("确认删除选中的消息?")) return;
         setIsLoading(true);
         axios.delete(`/api/imentries/deletecontact`, {
             data:{
-                id: contact.id,
+                id: message.id,
             }
         }).then((ret) => {
             toast.success('删除成功!');
@@ -158,56 +134,53 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
             .finally(() => setIsLoading(false));
     };
 
-    function getRobotIdByCon(con: FullRobotConversationType): string | undefined {
-        const robotUser = con.users.filter((user) => user.isRobot == true);
-        return robotUser[0].robot?.id;
-    }
-
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
         column: "index",
         direction: "ascending",
     });
 
-    const contactsArray = useMemo(() => {
-        let ret = [];
-        for (let i = 0; i < contacts.length; i++) {
+    const messagesArray = useMemo(() => {
+        let ret:any[] = [];
+        if(messages === null) return ret;
+        for (let i = 0; i < messages.length; i++) {
             ret.push({
-                id: contacts[i].id,
+                id: messages[i].id,
                 index: i + 1,
-                name: contacts[i].name,
-                alias: contacts[i].alias || "",
-                robot: contacts[i].robot,
-                expired: contacts[i].expired,
-                isRoom: contacts[i].isRoom,
+                message: messages[i].message,
+                filename: messages[i].fileName,
+                isTextMessage: messages[i].isTextMessage,
+                deliveried: messages[i].deliveried,
+                createdAt: messages[i].createdAt,
+                deliveryAt: messages[i].deliveryAt,
+                issuedAt: messages[i].issuedAt,
+                contact_name: messages[i].recipient.name,
+                contact_alias: messages[i].recipient.alias,
+                contact_isRoom: messages[i].recipient.isRoom,
+                contact_createdAt: messages[i].recipient.createdAt,
             })
         };
         return ret;
-    }, [contacts]);
-
-    const extColorMap: Record<string, ChipProps["color"]> = {
-        person: "success",
-        room: "danger",
-    };
+    }, [messages]);
 
     const [page, setPage] = React.useState(1);
 
     const hasSearchFilter = Boolean(filterValue);
 
     const filteredItems = React.useMemo(() => {
-        let filteredContacts = [...contactsArray];
+        let filteredmessages = [...messagesArray];
         if (hasSearchFilter) {
-            filteredContacts = filteredContacts.filter((contact) =>
-                contact.name.toLowerCase().includes(filterValue.toLowerCase())
-                || contact.alias?.toLowerCase().includes(filterValue.toLowerCase())
+            filteredmessages = filteredmessages.filter((msg) =>
+                msg.message.toLowerCase().includes(filterValue.toLowerCase())
+                || msg.filename?.toLowerCase().includes(filterValue.toLowerCase())
             );
         }
         if (contactTypeFilter !== "all" && Array.from(contactTypeFilter).length !== contactTypeOptions.length) {
-            filteredContacts = filteredContacts.filter((contact) =>
-                Array.from(contactTypeFilter).includes(contact.isRoom ? "room" : "person"),
+            filteredmessages = filteredmessages.filter((msg) =>
+                Array.from(contactTypeFilter).includes(msg.contact_isRoom ? "room" : "person"),
             );
         }
-        return filteredContacts;
-    }, [contactsArray, filterValue, contactTypeFilter,robAssignFilter, contactTypeOptions, hasSearchFilter]);
+        return filteredmessages;
+    }, [messagesArray, filterValue, contactTypeFilter,contactTypeOptions, hasSearchFilter]);
 
     const pages = React.useMemo(() => {
         return Math.ceil(filteredItems.length / rowsPerPage);
@@ -230,85 +203,44 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
         });
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((contact: contactArrayType, columnKey: React.Key) => {
-        const cellValue = contact[columnKey as keyof contactArrayType];
+    const renderCell = React.useCallback((message: wxMessageArrayType, columnKey: React.Key) => {
+        const cellValue = message[columnKey as keyof wxMessageArrayType];
         switch (columnKey) {
-            case "name":
+            case "contact_name":
                 return (
-                    <div className="flex flex-row gap-1">
-                        <Badge
-                            isOneChar
-                            content=""
-                            isInvisible={!(contact.robot !== null && contact.expired !== null ? contact.expired.getTime() >= Date.now() : false) }
-                            color="success"
-                            shape="circle"
-                            placement="top-left"
-                        >
-                            {contact.isRoom ? (<BiGroup size={24} />) : (<BiUser size={24} />)}
-                        </Badge>
-                        <Chip className="capitalize" size="sm" variant="flat">
-                            {cellValue?.toString()}
-                        </Chip>
+                    <div className="flex flex-row gap-1 items-center">
+                        {message.contact_isRoom ? (<BiGroup size={24} />) : (<BiUser size={24} />)}
+                        <div className="flex flex-col gap-1 items-start justify-center">
+                            <Chip className="capitalize" size="sm" variant="flat">
+                                {message.contact_name}
+                            </Chip>
+                            <h4 className="text-xs leading-none text-default-300">
+                                {message.contact_alias}
+                            </h4>
+                        </div>
                     </div>
                 );
-            case "robot":
+            case "createdAt":
                 return (
-                    <div className="flex flex-row items-center gap-1">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button
-                                    variant="bordered" color={contact.robot ? "success" : "danger"}
-                                >
-                                    {contact.robot ? contact.robot.name : "分配机器人"}
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu
-                                variant="faded"
-                                aria-label="robot selection"
-                                selectionMode="single"
-                                selectedKeys={new Set([contact.robot?.id!])}
-                                onSelectionChange={(keys) => changedAI(keys, contact)}>
-                                {robotConversations.map((con) => (
-                                    <DropdownItem key={getRobotIdByCon(con)} className="capitalize">
-                                        <RobotSelectItem data={con} />
-                                    </DropdownItem>
-                                ))}
-                            </DropdownMenu>
-                        </Dropdown>
-                        {contact.robot && <Tooltip className=" text-sky-800" content="取消">
-                            <span className="text-lg text-sky-800 cursor-pointer active:opacity-50"
-                                onClick={() => changedAI(null, contact)}>
-                                <TiDelete />
-                            </span>
-                        </Tooltip>}
+                    <div className="text-small leading-none text-default-500">
+                        {message.createdAt.toLocaleString()}
                     </div>
                 );
-            case "expired":
+            case "issuedAt":
                 return (
                     <DatePicker
                         selected={cellValue as Date}
-                        onChange={(newDate) => setExpiredDate(contact, newDate!)}
+                        onChange={(newDate) => setIssuedDate(message, newDate!)}
                         placeholderText="选择日期"
-                        isClearable
                         warning={isExpired(cellValue as Date)}
                         success={!isExpired(cellValue as Date)}
                     />
-                );
+                ); 
             case "actions":
                 return (
                     <div className="relative flex items-center gap-2">
-                        <Popover showArrow placement="left" backdrop="opaque">
-                            <PopoverTrigger>
-                                <span className="text-lg text-primary cursor-pointer active:opacity-50">
-                                    <RiMessage3Line />
-                                </span>
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                                <AddIssueMessageForm contacts={[contact]} />
-                            </PopoverContent>
-                        </Popover>
                         <Tooltip color="danger" content="删除">
-                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => removeContact(contact)} >
+                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => removeMessage(message)} >
                                 <RiDeleteBinLine />
                             </span>
                         </Tooltip>
@@ -317,7 +249,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
             default:
                 return cellValue?.toString();
         };
-    }, [extColorMap]);
+    }, []);
 
     const onNextPage = React.useCallback(() => {
         if (page < pages) {
@@ -419,7 +351,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
                         </div>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-default-400 text-small">共 {contactsArray.length} 个未群发记录</span> 
+                        <span className="text-default-400 text-small">共 {messagesArray.length} 个未群发记录</span> 
                         <label className="flex items-center text-default-400 text-small">
                             每页行数:
                             <select
@@ -440,7 +372,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
         contactTypeFilter,
         onSearchChange,
         onRowsPerPageChange,
-        contactsArray.length,
+        messagesArray.length,
         hasSearchFilter,
         contactTypeOptions,
         onClear
@@ -528,4 +460,4 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
     );
 };
 
-export default WXGroupSendingList;
+export default WXMessageLogs;
