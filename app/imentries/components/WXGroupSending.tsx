@@ -304,7 +304,7 @@ const WXGroupSendingList: React.FC<WXGroupSendingProps> = ({
                                 </span>
                             </PopoverTrigger>
                             <PopoverContent className="p-1">
-                                <AddIssueMessageForm contact={contact} />
+                                <AddIssueMessageForm contacts={[contact]} />
                             </PopoverContent>
                         </Popover>
                         <Tooltip color="danger" content="删除">

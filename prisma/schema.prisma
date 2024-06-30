@@ -228,11 +228,11 @@ model WXIssueMessages{
   message     String?
   fileName    String?
   isTextMessage Boolean @default(true)
-  deliveried  Boolean  @default(false)
+  deliveried  Boolean  @default(false)  //消息发送状态
   
-  createdAt   DateTime @default(now())
-  deliveryAt  DateTime?
-  issuedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())  //创建消息时间
+  deliveryAt  DateTime?                 //实际发送消息时间
+  issuedAt    DateTime @default(now())  //计划发送消息时间
 
   recipientId String  @db.ObjectId
   recipient   WXContacts @relation(fields: [recipientId], references: [id])
@@ -244,11 +244,11 @@ model WXGroupIssueMessages{
   message     String?
   fileName    String?
   isTextMessage Boolean @default(true)
-  deliveried  Boolean  @default(false)
+  deliveried  Boolean  @default(false)  //消息发送状态
   
-  createdAt   DateTime @default(now())
-  deliveryAt  DateTime?
-  issuedAt    DateTime @default(now())
+  createdAt   DateTime @default(now())  //创建消息时间
+  deliveryAt  DateTime?                 //实际发送消息时间
+  issuedAt    DateTime @default(now())  //计划发送消息时间
 
   recipientIds String[] @db.ObjectId
   recipients WXContacts[] @relation("groupsending", fields: [recipientIds], references: [id])

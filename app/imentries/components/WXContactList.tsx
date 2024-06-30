@@ -500,8 +500,9 @@ const WXContactList: React.FC<WXContactListProps> = ({
                                 size="md"
                                 color="primary"
                                 startContent={<BiSolidSelectMultiple />}
-                                endContent={<BiSolidSelectMultiple />}
-                            />
+                                endContent={<BiSolidSelectMultiple />}>
+                                群发
+                            </Switch>
                             {isMultipleSelection && 
                                 <Popover showArrow placement="bottom" backdrop="opaque">
                                     <PopoverTrigger>

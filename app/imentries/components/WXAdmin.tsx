@@ -99,11 +99,11 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                         </Tab>
                         <Tab key="groupsending" title={
                             <div className="flex items-center space-x-2">
-                                <span>群发信息</span>
+                                <span>群发记录</span>
                                 <Chip size="sm" variant="faded" className=" text-gray-400">{groupMessageCount}</Chip>
                             </div>
                         }>
-                            {/* {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                             */}
+                            {contacts && <WXGroupSending contacts={contacts} robotConversations={robotConversations} />}                            
                         </Tab>
                     </Tabs>
                 }
