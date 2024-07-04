@@ -23,7 +23,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [contactCount, setContactCount] = useState(0);
-    const [groupMessageCount, setGroupMessageCount] = useState(0);
+    const [messageCount, setMessageCount] = useState(0);
     const [online, setOnline] = useState(wxBasis?.online);
     const contacts = wxBasis?.wxContacts;
     const quota = {'maxPersonNumber' : wxBasis?.maxPersonNumber, 'maxRoomNumber': wxBasis?.maxRoomNumber};
@@ -33,8 +33,8 @@ const WXAdmin: React.FC<WXAdminProps> = ({
     }, [wxBasis?.wxContacts.length]);
 
     useEffect(() => {
-        setGroupMessageCount(wxBasis?.wxGroupIssueMessages.length!);
-    }, [wxBasis?.wxGroupIssueMessages.length]);
+        setMessageCount(wxIssueMessges?.length!);
+    }, [wxIssueMessges]);
     
     return (
         <>
@@ -102,7 +102,7 @@ const WXAdmin: React.FC<WXAdminProps> = ({
                         <Tab key="groupsending" title={
                             <div className="flex items-center space-x-2">
                                 <span>群发记录</span>
-                                <Chip size="sm" variant="faded" className=" text-gray-400">{groupMessageCount}</Chip>
+                                <Chip size="sm" variant="faded" className=" text-gray-400">{messageCount}</Chip>
                             </div>
                         }>
                             {contacts && <WXMessageLogs messages={wxIssueMessges} />}                            

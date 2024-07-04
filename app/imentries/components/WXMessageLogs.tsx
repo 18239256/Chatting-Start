@@ -27,7 +27,7 @@ import {
     Badge,
 } from "@nextui-org/react";
 import React, { useMemo } from "react";
-import { FullRobotConversationType, contactArrayType, wxMessageArrayType } from "@/app/types";
+import { contactArrayType, wxMessageArrayType } from "@/app/types";
 import { SearchIcon } from "@/app/resources/icons/SearchIcon";
 import { ChevronDownIcon } from "@/app/resources/icons/ChevronDownIcon";
 import DatePicker from "@/app/components/inputs/DatePicker";
@@ -87,7 +87,6 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
     const [contactTypeFilter, setContactTypeFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
     const contactTypeOptions = [
         { name: "个人", uid: "person" },
@@ -108,11 +107,11 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
 
     const setIssuedDate = async (message: wxMessageArrayType, newDate: Date) => {
         setIsLoading(true);
-        axios.post(`/api/imentries/updatecontact`, {
+        axios.post(`/api/imentries/updateissuemessage`, {
             id: message.id,
-            expired: newDate,
+            issuedAt: newDate,
         }).then((ret) => {
-            toast.success('成功更新有效期');
+            toast.success('成功更新发送日期');
             router.refresh();
         })
             .catch(() => toast.error('出错了!'))
@@ -122,7 +121,7 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
     const removeMessage = async (message: wxMessageArrayType) => {
         if (!confirm("确认删除选中的消息?")) return;
         setIsLoading(true);
-        axios.delete(`/api/imentries/deletecontact`, {
+        axios.delete(`/api/imentries/deleteissuemessaage`, {
             data:{
                 id: message.id,
             }
@@ -169,9 +168,12 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
     const filteredItems = React.useMemo(() => {
         let filteredmessages = [...messagesArray];
         if (hasSearchFilter) {
-            filteredmessages = filteredmessages.filter((msg) =>
+            filteredmessages = filteredmessages.filter((msg) => 
+            msg.contact_name.toLowerCase().includes(filterValue.toLowerCase())
+            || msg.contact_alias.toLowerCase().includes(filterValue.toLowerCase())
+            || (msg.isTextMessage?
                 msg.message.toLowerCase().includes(filterValue.toLowerCase())
-                || msg.filename?.toLowerCase().includes(filterValue.toLowerCase())
+                : msg.filename.toLowerCase().includes(filterValue.toLowerCase()))
             );
         }
         if (contactTypeFilter !== "all" && Array.from(contactTypeFilter).length !== contactTypeOptions.length) {
@@ -220,12 +222,18 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
                         </div>
                     </div>
                 );
-            case "createdAt":
+            case "content":
                 return (
                     <div className="text-small leading-none text-default-500">
-                        {message.createdAt.toLocaleString()}
+                        {message.isTextMessage? message.message : message.filename}
                     </div>
                 );
+            case "createdAt":
+                    return (
+                        <div className="text-small leading-none text-default-500">
+                            {message.createdAt.toLocaleString()}
+                        </div>
+                    );
             case "issuedAt":
                 return (
                     <DatePicker
@@ -314,7 +322,7 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
                                 ],
                             }}
                             variant="flat"
-                            placeholder="搜索名称或别名..."
+                            placeholder="搜索接收者或内容..."
                             startContent={<SearchIcon />}
                             value={filterValue}
                             onClear={() => onClear()}
@@ -345,13 +353,10 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
                                     ))}
                                 </DropdownMenu>
                             </Dropdown>
-                            <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={() => setIsCreateModalOpen(true) }>
-                                新建群发
-                            </Button>
                         </div>
                     </div>
                     <div className="flex justify-between items-center">
-                        <span className="text-default-400 text-small">共 {messagesArray.length} 个未群发记录</span> 
+                        <span className="text-default-400 text-small">共 {messagesArray.length} 个待发记录</span> 
                         <label className="flex items-center text-default-400 text-small">
                             每页行数:
                             <select
@@ -414,11 +419,6 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
 
     return (
         <div className="flex-1 overflow-y-auto">
-            <WXCreateGroupSendingModal
-                    curUser={null}
-                    isOpen={isCreateModalOpen}
-                    onClose={() => setIsCreateModalOpen(false)}
-            />
             <Table
                 aria-label="没有找到联系人或群聊!"
                 isHeaderSticky
