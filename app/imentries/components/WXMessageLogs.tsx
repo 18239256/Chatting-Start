@@ -242,6 +242,10 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
                         placeholderText="选择日期"
                         warning={isExpired(cellValue as Date)}
                         success={!isExpired(cellValue as Date)}
+                        timeInputLabel="时间:"
+                        dateFormat="MM/dd/yyyy h:mm aa"
+                        showTimeInput
+                        popperPlacement="bottom-start"
                     />
                 ); 
             case "actions":
