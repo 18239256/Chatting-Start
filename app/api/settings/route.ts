@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import bcrypt from "bcryptjs";
 
 export async function POST(
   request: Request,
@@ -12,20 +13,32 @@ export async function POST(
     const {
       name,
       image,
+      password,
     } = body;
 
     if (!currentUser?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
+    let data = null
+    if(password && password != "") {
+      data = {
+        image: image,
+        name: name,
+        hashedPassword: await bcrypt.hash(password, 12),
+      }
+    } else {
+      data = {
+        image: image,
+        name: name,
+      }
+    }
+
     const updatedUser = await prisma.user.update({
       where: {
         id: currentUser.id
       },
-      data: {
-        image: image,
-        name: name
-      },
+      data: data,
     });
 
     return NextResponse.json(updatedUser)
