@@ -422,7 +422,7 @@ const WXMessageLogs: React.FC<WXMessageLogsProps> = ({
     }, [selectedKeys, items.length, page, pages, hasSearchFilter, filteredItems.length, onNextPage, onPreviousPage]);
 
     return (
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
             <Table
                 aria-label="没有找到联系人或群聊!"
                 isHeaderSticky

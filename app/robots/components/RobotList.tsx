@@ -143,9 +143,9 @@ const RobotList: React.FC<RobotListProps> = ({
             </div>
             {items.map((item) => (
               <RobotBox
-                key={item.id}
+                key={item?.id}
                 data={item}
-                selected={conversationId === item.id}
+                selected={conversationId === item?.id}
               />
             ))}
           </div>
