@@ -20,7 +20,7 @@ console.log('NEXT_PUBLIC_LLM_API_URI', process.env.NEXT_PUBLIC_LLM_API_URI);
         const AIParam: OPENAIFastAPIKBParamType = {
             query: message,
             knowledge_base_name: robot.knowledgeBaseName || "",
-            model_name: "chatglm2-6b",
+            model_name: process.env.NEXT_PUBLIC_LLM_MODEL_NAME || "",
             history: history,
             temperature: robot.temperature || 0.7,
             top_k: robot.topK || 3,
@@ -42,7 +42,7 @@ console.log('NEXT_PUBLIC_LLM_API_URI', process.env.NEXT_PUBLIC_LLM_API_URI);
         const AIParam: OPENAIFastAPISearchParamType = {
             query: message,
             search_engine_name: robot.searchEngineName || "",
-            model_name: "chatglm2-6b",
+            model_name: process.env.NEXT_PUBLIC_LLM_MODEL_NAME || "",
             history: history,
             temperature: robot.temperature || 0.7,
             top_k: robot.topK || 3,
@@ -74,7 +74,7 @@ console.log('NEXT_PUBLIC_LLM_API_URI', process.env.NEXT_PUBLIC_LLM_API_URI);
         console.log('<==fastchat messages history==>\n', history);
 
         const AIParam: OPENAIFastAPIParamType = {
-            model: "chatglm2-6b",
+            model: process.env.NEXT_PUBLIC_LLM_MODEL_NAME || "",
             messages: history,
             temperature: robot?.temperature || 0.7,
             n: robot?.historyRound || 1,
