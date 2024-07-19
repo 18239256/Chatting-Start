@@ -7,7 +7,7 @@ const getRobotAnswerBase = async(
     message: string,
     history: {role:string, content:string}[] = [],
 ) => {
-
+console.log('NEXT_PUBLIC_LLM_API_URI', process.env.NEXT_PUBLIC_LLM_API_URI);
     let reply: any ={};
 
     //Insert mask infor into message history
@@ -31,7 +31,7 @@ const getRobotAnswerBase = async(
 
         console.log('Knowledge AI Param', AIParam);
 
-        await axios.post(robot.robotTemp.apiUrl, AIParam).then((callback) => {
+        await axios.post(process.env.NEXT_PUBLIC_LLM_API_URI+robot.robotTemp.apiUrl, AIParam).then((callback) => {
             if (callback.status === 200)
                 reply = callback.data;
         }).catch((err) => {
@@ -51,7 +51,7 @@ const getRobotAnswerBase = async(
 
         console.log('Search AI Param', AIParam);
 
-        await axios.post(robot.robotTemp.apiUrl, AIParam).then((callback) => {
+        await axios.post(process.env.NEXT_PUBLIC_LLM_API_URI+robot.robotTemp.apiUrl, AIParam).then((callback) => {
             if (callback.status === 200)
                 reply = callback.data;
         }).catch((err) => {
@@ -86,7 +86,7 @@ const getRobotAnswerBase = async(
         }
 
         if (robot) {
-            await axios.post(robot.robotTemp.apiUrl, AIParam).then((callback) => {
+            await axios.post(process.env.NEXT_PUBLIC_LLM_API_URI+robot.robotTemp.apiUrl, AIParam).then((callback) => {
                 if (callback.status === 200)
                     reply = { answer: callback.data };
             })
