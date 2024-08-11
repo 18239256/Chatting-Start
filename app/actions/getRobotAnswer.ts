@@ -14,7 +14,9 @@ const getRobotAnswer = async (
         const currentUser = await getCurrentUser();
         
         if (!currentUser?.id) {
-            return "";
+            return {
+                answer:"非法用户访问!",
+            };
         }
         
         const messages = await getMessages(conversationId);
@@ -52,10 +54,12 @@ const getRobotAnswer = async (
             }
         }
 
-        return getRobotAnswerBase(robotUserFull?.robot, message, allMessages);
+        return await getRobotAnswerBase(robotUserFull?.robot, message, allMessages);
 
     } catch (error: any) {
-        return "";
+        return {
+            answer:"机器人应答出现错误!",
+        };
     }
 };
 

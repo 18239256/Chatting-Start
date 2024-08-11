@@ -5,6 +5,7 @@ import { RMQC } from "@/app/libs/RMQClient";
 import prisma from "@/app/libs/prismadb";
 import getConversationById from "@/app/actions/getConversationById";
 import getRobotAnswer from "@/app/actions/getRobotAnswer";
+import { RobotReplyType } from "@/app/types";
 
 export async function POST(
   request: Request,
@@ -30,12 +31,12 @@ export async function POST(
         return currentValue.id !== currentUser.id;
     })
 
-    let retMessage:{answer:string, docs?:[]};
+    let retMessage: RobotReplyType;
     if(null !== robotUser?.expiredAt && robotUser?.expiredAt! < new Date()){
       retMessage = {
         answer:"机器人使用期限已经到了!",
     }}else    
-      retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id);
+      retMessage = await getRobotAnswer(robotUser?.id, message, conversation?.id) as RobotReplyType;
     
     const updateMessage = await prisma.message.update({
       where:{

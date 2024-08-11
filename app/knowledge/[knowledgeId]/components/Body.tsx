@@ -49,12 +49,12 @@ const columns = [
         sortable: true,
     },
     {
-        key: "fileName",
+        key: "file_name",
         label: "文档",
         sortable: true,
     },
     {
-        key: "ext",
+        key: "file_ext",
         label: "类型",
         sortable: true,
     },
@@ -68,7 +68,7 @@ const columns = [
 
 interface BodyProps {
     knowledge: Knowledge;
-    files: string[];
+    files: knowledgeFileArrayType[];
 }
 
 
@@ -77,7 +77,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const router = useRouter();
 
     const [uploadOpen, setUploadOpen] = React.useState(false);
-    const [curFiles, setcurFiles] = React.useState<string[]>(files);
+    const [curFiles, setcurFiles] = React.useState<knowledgeFileArrayType[]>(files);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
@@ -99,8 +99,12 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         for (let i = 0; i < curFiles.length; i++) {
             ret.push({
                 index: i + 1,
-                fileName: curFiles[i],
-                ext: curFiles[i].substring(curFiles[i].lastIndexOf(".") + 1),
+                file_name: curFiles[i].file_name,
+                file_ext: curFiles[i].file_ext.substring(1),
+                create_time: curFiles[i].create_time,
+                in_folder: curFiles[i].in_folder,
+                in_db: curFiles[i].in_db,
+                file_size: curFiles[i].file_size,
             })
 
         };
@@ -131,12 +135,12 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         let filteredFiles = [...filesArray];
         if (hasSearchFilter) {
             filteredFiles = filteredFiles.filter((file) =>
-                file.fileName.toLowerCase().includes(filterValue.toLowerCase()),
+                file.file_name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
         if (statusFilter !== "all" && Array.from(statusFilter).length !== extsOptions.length) {
             filteredFiles = filteredFiles.filter((file) =>
-                Array.from(statusFilter).includes(file.ext),
+                Array.from(statusFilter).includes(file.file_ext),
             );
         }
         return filteredFiles;
@@ -178,7 +182,6 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         });
 
         try {
-
             const result = await fetch(apiUrl);
             const blob = await result.blob();
             const url = window.URL.createObjectURL(blob);
@@ -195,29 +198,34 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         return;
     };
 
-    const removeDoc = async (knowledgeRN: string, file_names: string[]) => {
-        if (confirm("确认删除选中的文档?"))   //后续优化这个确认对话框
+    const removeDoc = async (knowledgeRN: string, files: knowledgeFileArrayType[]) => {
+        if (confirm("确认删除选中的文档?")) {   //后续优化这个确认对话框
+            let file_names: string[] = [];
+            files.forEach(f => {
+                file_names.push(f.file_name);
+            });
             axios.post(`/api/knowledges/deletedocs`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
                 .then((ret) => {
-                    toast.success(`${file_names[0]} 已经成功删除`);
-                    setcurFiles(curFiles.filter(f => f !== file_names[0]));
+                    toast.success(`${files[0].file_name} 已经成功删除`);
+                    setcurFiles(curFiles.filter(f => f !== files[0]));
                     router.refresh();
                 })
                 .catch(() => toast.error('出错了!'))
                 .finally(() => setSelectedKeys(new Set([])))
-        return;
+            return;
+        }
     };
 
     const removeSelectedFiles = async () => {
-        let files: string[] = [];
+        let files: knowledgeFileArrayType[] = [];
         if (selectedKeys === 'all') {
             filteredItems.map((f) => {
-                files.push(f.fileName);
+                files.push(f);
             })
         } else {
             Array.from(selectedKeys).map((f) => {
-                console.log('fileName', filteredItems[Number(f) - 1].fileName);
-                files.push(filteredItems[Number(f) - 1].fileName);
+                console.log('fileName', filteredItems[Number(f) - 1].file_name);
+                files.push(filteredItems[Number(f) - 1]);
             });
         }
         if (files.length > 0)
@@ -230,7 +238,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         switch (columnKey) {
             case "ext":
                 return (
-                    <Chip className="capitalize" color={extColorMap[file.ext]} size="sm" variant="flat">
+                    <Chip className="capitalize" color={extColorMap[file.file_ext]} size="sm" variant="flat">
                         {cellValue}
                     </Chip>
                 );
@@ -238,12 +246,12 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                 return (
                     <div className="relative flex items-center gap-2">
                         <Tooltip color="primary" content="下载文档">
-                            <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={() => downloadDoc(knowledge.realName, file.fileName)}>
+                            <span className="text-lg text-primary cursor-pointer active:opacity-50" onClick={() => downloadDoc(knowledge.realName, file.file_name)}>
                                 <RiEyeLine />
                             </span>
                         </Tooltip>
                         <Tooltip color="danger" content="删除文档">
-                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => removeDoc(knowledge.realName, [file.fileName])}>
+                            <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => removeDoc(knowledge.realName, [file])}>
                                 <RiDeleteBinLine />
                             </span>
                         </Tooltip>
@@ -317,11 +325,10 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
             .then((res) => {
                 console.log('res', res);
                 toast.success('上传成功!');
-                setcurFiles(curFiles.concat([...fileNames]));
                 onClose();
             })
-            .catch(() => toast.error('出错了!'))
-            .finally(() => router.refresh());
+            .catch((error) => {onClose();console.log(`出错了! ${error}`);})
+            .finally(() => {onClose();router.refresh()});
     }
 
     const topContent = React.useMemo(() => {

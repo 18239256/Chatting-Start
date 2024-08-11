@@ -16,8 +16,8 @@ const delKnowledgeFiles = async (
         if (knowledgeBaseName) {
             const param = {
                 knowledge_base_name: knowledgeBaseName,
-                vector_store_type: "faiss",
-                embed_model: "m3e-base"
+                vector_store_type: process.env.NEXT_PUBLIC_VECTOR_STORE_TYPE,
+                embed_model: process.env.NEXT_PUBLIC_EMBED_MODEL_NAME,
             };
             const apiUrl = format({
                 protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,

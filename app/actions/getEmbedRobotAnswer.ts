@@ -1,5 +1,3 @@
-import axios from "axios";
-import { OPENAIFastAPIKBParamType, OPENAIFastAPIParamType } from "../types";
 import { Robot, RobotMask, RobotTemplate } from "@prisma/client";
 
 const getEmbedRobotAnswer = async (

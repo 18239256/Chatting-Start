@@ -1,3 +1,4 @@
+import { knowledgeFileArrayType } from "@/app/types";
 import getCurrentUser from "../getCurrentUser";
 import axios from "axios";
 import { format } from "url";
@@ -6,7 +7,7 @@ const getKnowledgeFileList = async (
     knowledgeId: string
 ) => {
     try {
-        let ret : string[] = [];
+        let ret : knowledgeFileArrayType[] = [];
         const currentUser = await getCurrentUser();
         
         if (!currentUser?.id) {
