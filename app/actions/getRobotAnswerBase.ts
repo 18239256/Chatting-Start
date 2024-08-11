@@ -47,7 +47,7 @@ const getRobotAnswerBase = async(
         }
 
         console.log('Knowledge AI Param', AIParams);
-        apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +'/samples/chat/completions';
+        apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/${robot.knowledgeBaseName}/chat/completions`;
 
     }else if (robot?.robotTemp.searchAbility){
         AIParams = {
