@@ -84,7 +84,7 @@ const getRobotAnswerBase = async(
         const response = await axios.post(apiUrl, AIParams,{responseType:"stream"});
         response.data.on('data', (chunk:any) => {
             const chunkTxt : string = chunk.toString('utf8');
-            if(chunkTxt.slice(0,5).toLowerCase() === "data:"){
+            if(chunkTxt.toLowerCase().startsWith("data:")){
                 if (!isEmpty(tmpTxt)) {
                     const jsonTmp =  JSON.parse(tmpTxt);
                     if("docs" in jsonTmp)
@@ -95,7 +95,8 @@ const getRobotAnswerBase = async(
                 tmpTxt = chunkTxt.slice(6);
             }
             else
-                tmpTxt += chunkTxt;
+                if(!chunkTxt.toLowerCase().startsWith(": ping"))
+                    tmpTxt += chunkTxt;
         });
         response.data.on('end', () => {
             console.log('AI replies: ', reply);
