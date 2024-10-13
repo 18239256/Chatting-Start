@@ -108,6 +108,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
       return "";
 
     const reg = RegExp(/\[(.*?)\]/);
+    const regg = RegExp(/\[(.*?)\]/,"g");
     const refDocs: string[] = JSON.parse(data.referenceDocs);
     return (
       <Accordion itemClasses={itemClasses}>
@@ -115,15 +116,14 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           <ul className="list-reset">
             {refDocs.map((ref) => {
               const fistStrip = ref.split("\n\n");
-              const secondStrip = fistStrip[0].split(" ");
-              const fileName = secondStrip[2].match(reg);
+              const arrRefDocInfor = fistStrip[0].match(regg);
+              const fileName = arrRefDocInfor![1].slice(1,arrRefDocInfor![1].length-1);
               if (fileName)
                 return (
-                <li key={secondStrip[1]} className="leading-loose text-base">
-                  {secondStrip[1]}
+                <li key={arrRefDocInfor![0]} className="leading-loose text-base">
                   {(/^(https?:\/\/(([a-zA-Z0-9]+-?)+[a-zA-Z0-9]+\.)+[a-zA-Z]+)(:\d+)?(\/.*)?(\?.*)?(#.*)?$/).test(fileName[1])?
                   <Link className="text-sky-500 cursor-pointer" href={fileName[1]} isExternal showAnchorIcon>{getShrinkUrl(fileName[1])}</Link>
-                  :<Link className="text-sky-500 cursor-pointer" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName[1])}>{fileName[1]}</Link>}
+                  :<Link className="text-sky-500 cursor-pointer" onClick={() => downloadDoc(data.sender.robot?.knowledgeBaseName || "", fileName)}>{arrRefDocInfor![0]} {fileName}</Link>}
                   <p>{fistStrip[1]}</p>
                 </li>);
             })}
