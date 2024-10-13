@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 
 import LoadingStyle from "../../../resources/css/loading.module.css";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
+import { FaRegCopyright } from "react-icons/fa6";
 
 interface MessageBoxProps {
   data: FullRobotMessageType;
@@ -107,7 +108,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     if (!data.referenceDocs)
       return "";
 
-    const reg = RegExp(/\[(.*?)\]/);
     const regg = RegExp(/\[(.*?)\]/,"g");
     const refDocs: string[] = JSON.parse(data.referenceDocs);
     return (
@@ -149,6 +149,17 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           <div className="text-xs text-gray-400">
             {format(new Date(data.createdAt), 'p')}
           </div>
+          {/* Todo: Add message copy action */}
+          {/* <div>
+            <button
+              onClick={() => { }}
+            >
+              <FaRegCopyright
+                size={18}
+                className="text-xs text-gray-300 hover:text-sky-600 cursor-pointer"
+              />
+            </button>
+          </div> */}
         </div>
         <div className={message}>
           <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
