@@ -14,6 +14,7 @@ import { toast } from 'react-hot-toast';
 import Modal from '@/app/components/modals/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
+import { Checkbox } from '@nextui-org/react';
 
 interface KnowledgeModalProps {
     isOpen?: boolean;
@@ -28,6 +29,7 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
   }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isUseGraph, setUseGraph] = React.useState(false);
 
     const {
         register,
@@ -40,20 +42,24 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
     } = useForm<FieldValues>({
         defaultValues: {
             name: '',
-            description: ''
+            description: '',
+            vsType:'',
         }
     });
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
 
-        const param = {
+        let param = {};
+        param = {
           knowledgeBaseDisplayName: data.name,
           knowledgeBaseRealName: `${data.name}_${curUser.id.slice(0,6)}_${new Date().getMilliseconds()}`,
           knowledgeBaseDesc: data.description,
           belongToUserId: curUser.id,
         };
-      
+        if(isUseGraph)
+          param={...param, vsType: "graph"};
+
         axios.post('/api/knowledges', param)
         .then((ret) => {
           router.refresh();
@@ -105,6 +111,13 @@ const KnowledgeModal: React.FC<KnowledgeModalProps> = ({
                 register={register}
               />
              
+            </div>
+            <div className="mt-10 flex flex-col gap-y-8">
+              <Checkbox
+                id="vsType" 
+                isSelected={isUseGraph}
+                onValueChange={setUseGraph}
+              >使用图谱</Checkbox>
             </div>
           </div>
         </div>

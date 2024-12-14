@@ -34,6 +34,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     const [confirmOpen, setConfirmOpen] = useState(false);
     const otherUser = useRobotOtherUser(data);
     const [name, setName] = useState(otherUser.robot?.name);
+    const [knowledgeBaseName,setKnowledgeBaseName] = useState(otherUser.robot?.knowledgeBaseName);
     const [description, setDescription] = useState(otherUser.robot?.description);
     const [temperature, setTemperature] = useState(otherUser.robot?.temperature || 0.8);
     const [history, setHistory] = useState(otherUser.robot?.historyRound || 5);
@@ -291,6 +292,30 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                     </time>
                                                                 </dd>
                                                             </div>
+                                                            {otherUser.robot?.knowledgeBaseName && 
+                                                            <div>
+                                                                <dt
+                                                                    className="
+                                                                        text-sm 
+                                                                        font-medium 
+                                                                        text-gray-500 
+                                                                        sm:w-40 
+                                                                        sm:flex-shrink-0
+                                                                    "
+                                                                >
+                                                                    知识库
+                                                                </dt>
+                                                                <dd
+                                                                    className="
+                                                                    mt-1 
+                                                                    text-sm 
+                                                                    text-gray-900 
+                                                                    sm:col-span-2
+                                                                    "
+                                                                >
+                                                                    {otherUser.robot?.knowledgeBaseName.split('_')[0]}
+                                                                </dd>
+                                                            </div>}
                                                             <hr />
                                                             <form>
                                                                 <div className="space-y-12">

@@ -42,7 +42,7 @@ export type OPENAIFastAPIParamType = {
   n?: number,
   max_tokens?: number,
   stop?: [],
-  stream?: true,
+  stream?: boolean,
   presence_penalty?: number,
   frequency_penalty?: number,
   top_k?: number,

@@ -19,7 +19,7 @@ import { TbDatabase } from 'react-icons/tb';
 import { Select, SelectItem, Selection, RadioGroup, Radio, cn } from '@nextui-org/react';
 import Textarea from '@/app/components/inputs/Textarea';
 import { FaDatabase, FaSearch } from 'react-icons/fa';
-import { FaResearchgate } from 'react-icons/fa6';
+import { PiGraph } from 'react-icons/pi';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -184,22 +184,22 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
             content: "p-0 border-small border-divider bg-background",
           },
         }}
-        renderValue={(items) => {
-          return items.map((item) => (
-            <div key={item.key} className="flex items-center gap-2">
-              <TbDatabase size={26} />
-              <div className="flex flex-col">
-                <span>{item.data?.displayName}</span>
-                <span className="text-default-500 text-tiny">({item.data?.description})</span>
-              </div>
-            </div>
-          ));
-        }}
+        // renderValue={(items) => {
+        //   return items.map((item) => (
+        //     <div key={item.key} className="flex items-center gap-2">
+        //       {item.data?.vsType == "normal" ?<TbDatabase size={26} /> :<PiGraph size={26}/>}
+        //       <div className="flex flex-col">
+        //         <span>{item.data?.displayName}</span>
+        //         <span className="text-default-500 text-tiny">({item.data?.description})</span>
+        //       </div>
+        //     </div>
+        //   ));
+        // }}
       >
         {(k) => (
           <SelectItem key={k.id} textValue={k.displayName}>
             <div className="flex gap-2 items-center">
-              <TbDatabase size={26} />
+              {k.vsType != "graph" ? <TbDatabase size={26} /> : <PiGraph size={26}/>}
               <div className="flex flex-col">
                 <span className="text-small">{k.displayName}</span>
                 <span className="text-tiny text-default-400">{k.description}</span>

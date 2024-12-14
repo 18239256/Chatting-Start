@@ -31,7 +31,7 @@ import React, { useMemo } from "react";
 
 import { PlusIcon } from "./resource/PlusIcon";
 import { RiDeleteBinLine, RiEyeLine } from "react-icons/ri";
-import { MdDeleteSweep } from "react-icons/md";
+import { MdDeleteSweep, MdDone, MdRedo, MdAutorenew } from "react-icons/md";
 import { ChevronDownIcon } from "./resource/ChevronDownIcon";
 import { SearchIcon } from "./resource/SearchIcon";
 import { capitalize } from "./utils";
@@ -59,6 +59,16 @@ const columns = [
         sortable: true,
     },
     {
+        key: "in_folder",
+        label: "上传",
+        sortable: true,
+    },
+    {
+        key: "in_db",
+        label: "入库",
+        sortable: true,
+    },
+    {
         key: "actions",
         label: "操作",
         sortable: false,
@@ -76,7 +86,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
 
     const router = useRouter();
 
-    const [uploadOpen, setUploadOpen] = React.useState(false);
+    const [reVector, setReVector] = React.useState(false);
     const [curFiles, setcurFiles] = React.useState<knowledgeFileArrayType[]>(files);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -198,6 +208,21 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         return;
     };
 
+    const redoVector = async (knowledgeRN: string, files: knowledgeFileArrayType[]) => {
+        let file_names: string[] = [];
+        files.forEach(f => {
+            file_names.push(f.file_name);
+        });
+        // axios.post(`/api/knowledges/redovector`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
+        //     .then((ret) => {
+        //         toast.success(`${files[0].file_name} 已经成功执行入库操作`);
+        //         setReVector(false);
+        //     })
+        //     .catch(() => toast.error('出错了!'))
+        //     // .finally(()=>router.refresh())
+        return;
+    };
+
     const removeDoc = async (knowledgeRN: string, files: knowledgeFileArrayType[]) => {
         if (confirm("确认删除选中的文档?")) {   //后续优化这个确认对话框
             let file_names: string[] = [];
@@ -236,12 +261,31 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const renderCell = React.useCallback((file: knowledgeFileArrayType, columnKey: React.Key) => {
         const cellValue = file[columnKey as keyof knowledgeFileArrayType];
         switch (columnKey) {
-            case "ext":
+            case "file_ext":
                 return (
                     <Chip className="capitalize" color={extColorMap[file.file_ext]} size="sm" variant="flat">
                         {cellValue}
                     </Chip>
                 );
+            case "in_db":
+                return (
+                    <Tooltip color={cellValue ? "success" : "danger"} content="向量化">
+                        <span className={clsx("text-lg  cursor-pointer active:opacity-50"
+                            , cellValue ? "text-success" : "text-danger"
+                            , reVector ? "pointer-events-none" : "pointer-events-auto"
+                        )} onClick={() => redoVector(knowledge.realName, [file])}>
+                            {reVector ? <MdAutorenew/> : cellValue ? <MdDone /> : <MdRedo />}
+                        </span>
+                    </Tooltip>
+                );               
+            case "in_folder":
+                return (
+                    <span className={clsx("text-lg active:opacity-50"
+                        , cellValue ? "text-success" : "text-danger"
+                    )}>
+                        {cellValue ? <MdDone /> : <MdRedo />}
+                    </span>
+                );               
             case "actions":
                 return (
                     <div className="relative flex items-center gap-2">
@@ -260,7 +304,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
             default:
                 return cellValue;
         };
-    }, [extColorMap, knowledge, removeDoc]);
+    }, [extColorMap, knowledge, reVector, removeDoc]);
 
     const onNextPage = React.useCallback(() => {
         if (page < pages) {
@@ -293,7 +337,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         setPage(1)
     }, []);
 
-    const filesSelected = (data: any) => {
+    const uploadFilesSelected = (data: any) => {
         let files = data.target.files;
         let fileLength = files.length;
         let i = 0;
@@ -417,7 +461,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                                     ))}
                                 </DropdownMenu>
                             </Dropdown>
-                            <input id="files" type="file" className="sr-only" multiple onChange={filesSelected}></input>
+                            <input id="files" type="file" className="sr-only" multiple onChange={uploadFilesSelected}></input>
                             <Button color="primary" className="bg-sky-500" endContent={<PlusIcon />} onClick={() => { document.getElementById("files")?.click() }}>
                                 添加文件
                             </Button>

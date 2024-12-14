@@ -2,9 +2,9 @@ import getCurrentUser from "../getCurrentUser";
 import axios from "axios";
 import { format } from "url";
 
-const createKnowledgeBase = async (
+const updateDocs = async (
     knowledgeBaseName: string,
-    vector_store_type: string | undefined = process.env.NEXT_PUBLIC_VECTOR_STORE_TYPE,
+    file_names: string[]
 ) => {
     try {
         let ret = {};
@@ -17,14 +17,13 @@ const createKnowledgeBase = async (
         if (knowledgeBaseName) {
             const param = {
                 knowledge_base_name: knowledgeBaseName,
-                vector_store_type: vector_store_type,
-                embed_model: process.env.NEXT_PUBLIC_EMBED_MODEL_NAME,
+                file_names: file_names,
             };
             const apiUrl = format({
                 protocol: process.env.NEXT_PUBLIC_LLM_API_PROTOCOL,
                 hostname: process.env.NEXT_PUBLIC_LLM_API_HOST,
                 port: process.env.NEXT_PUBLIC_LLM_API_PORT,
-                pathname: "/api/knowledge_base/create_knowledge_base"
+                pathname: "/api/knowledge_base/update_docs"
             });
 
             const result = await axios.post(apiUrl,param);
@@ -38,4 +37,4 @@ const createKnowledgeBase = async (
     }
 };
 
-export default createKnowledgeBase;
+export default updateDocs;

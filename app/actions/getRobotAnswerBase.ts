@@ -2,6 +2,7 @@ import { Robot, RobotMask, RobotTemplate } from "@prisma/client";
 import { OPENAIFastAPIKBParamType, OPENAIFastAPIParamType, OPENAIFastAPISearchParamType, RobotReplyType } from "../types";
 import axios from "axios";
 import { isEmpty } from "lodash";
+import getKnowledgesByName from "./getKnowledgesByName";
 
 
 
@@ -13,6 +14,7 @@ const getRobotAnswerBase = async(
     let reply: RobotReplyType ={answer:""};
     let apiUrl: string = process.env.NEXT_PUBLIC_LLM_API_URI+ robot!.robotTemp.apiUrl;
     let AIParams:OPENAIFastAPIParamType;
+
     //Insert mask infor into message history
     history.splice(0, 0, {
         role: 'system',
@@ -46,8 +48,13 @@ const getRobotAnswerBase = async(
             // score_threshold: 1,
         }
 
+        const knowItem = await getKnowledgesByName(robot.knowledgeBaseName!);
+
         console.log('Knowledge AI Param', AIParams);
-        apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/${robot.knowledgeBaseName}/chat/completions`;
+        if(knowItem?.vsType == "graph")
+            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/graph_kb/${robot.knowledgeBaseName}/chat/completions`;
+        else
+            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/local_kb/${robot.knowledgeBaseName}/chat/completions`;
 
     }else if (robot?.robotTemp.searchAbility){
         AIParams = {
@@ -85,6 +92,8 @@ const getRobotAnswerBase = async(
         response.data.on('data', (chunk:any) => {
             const chunkTxt : string = chunk.toString('utf8');
             if(chunkTxt.toLowerCase().startsWith("data:")){
+                console.log('response chunkTxt:====> \n\n', chunkTxt);
+                console.log('<====response chunkTxt end');
                 if (!isEmpty(tmpTxt)) {
                     const jsonTmp =  JSON.parse(tmpTxt);
                     if("docs" in jsonTmp)

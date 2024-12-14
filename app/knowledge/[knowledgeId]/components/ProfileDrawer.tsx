@@ -9,8 +9,9 @@ import ConfirmModal from './ConfirmModal';
 import { Knowledge } from '@prisma/client';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Tooltip } from '@nextui-org/react';
+import { Switch, Tooltip } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 
 interface ProfileDrawerProps {
     isOpen: boolean;
@@ -23,15 +24,20 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
     onClose,
     data,
 }) => {
-    const router = useRouter();
+    // const router = useRouter();
     const [isEdit, setIsEdit] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [name, setName] = useState(data.displayName);
     const [description, setDescription] = useState(data.description);
+    const [isGraphKB, setIsGraphKB] = useState(data.vsType.toLowerCase() != "normal");
 
     const createDate = useMemo(() => {
         return format(new Date(data.createdAt), 'yyyy年MM月dd');
     }, [data]);
+
+    React.useEffect(() => {
+        //Add codes for update kb vstype.
+    }, [isGraphKB]);
 
     const closeMyself = () => {
         if (name !== data.displayName || description !== data.description) {
@@ -59,7 +65,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             <ConfirmModal
                 knowledge={data}
                 isOpen={confirmOpen}
-                onClose={() => {setConfirmOpen(false);}}
+                onClose={() => { setConfirmOpen(false); }}
             />
             <Transition.Root show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-50" onClose={closeMyself}>
@@ -105,35 +111,35 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                             <div className="relative mt-6 flex-1 px-4 sm:px-6">
                                                 <div className="flex flex-col items-center">
                                                     <div className="flex gap-10 my-8 ">
-                                                        {!isEdit && 
-                                                        <Tooltip  content="编辑" className='bg-sky-500  text-gray-200'>
-                                                        <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
-                                                            <IoBuild size={20} />
-                                                        </div>
-                                                        </Tooltip>}
+                                                        {!isEdit &&
+                                                            <Tooltip content="编辑" className='bg-sky-500  text-gray-200'>
+                                                                <div onClick={() => setIsEdit(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                                    <IoBuild size={20} />
+                                                                </div>
+                                                            </Tooltip>}
                                                         {isEdit && (<>
-                                                            <Tooltip  content="重置" className='bg-sky-500  text-gray-200'>
-                                                            <div onClick={reset} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
-                                                                <IoRefreshCircle size={20} />
-                                                            </div>
+                                                            <Tooltip content="重置" className='bg-sky-500  text-gray-200'>
+                                                                <div onClick={reset} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                                    <IoRefreshCircle size={20} />
+                                                                </div>
                                                             </Tooltip>
-                                                            <Tooltip  content="保存" className='bg-sky-500  text-gray-200'>
-                                                            <div onClick={() => setIsEdit(false)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
-                                                                <IoSave size={20} />
-                                                            </div>
+                                                            <Tooltip content="保存" className='bg-sky-500  text-gray-200'>
+                                                                <div onClick={() => setIsEdit(false)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer  justify-center hover:bg-sky-500 hover:text-gray-50">
+                                                                    <IoSave size={20} />
+                                                                </div>
                                                             </Tooltip>
                                                         </>)}
                                                         {!isEdit &&
-                                                            <Tooltip  content="删除" className='bg-red-500  text-gray-200'>
-                                                            <div onClick={() => setConfirmOpen(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer justify-center hover:bg-red-500 hover:text-gray-50">
-                                                                <IoTrash size={20} />
-                                                            </div>
+                                                            <Tooltip content="删除" className='bg-red-500  text-gray-200'>
+                                                                <div onClick={() => setConfirmOpen(true)} className="w-10 h-10 bg-neutral-100 rounded-full flex items-center cursor-pointer justify-center hover:bg-red-500 hover:text-gray-50">
+                                                                    <IoTrash size={20} />
+                                                                </div>
                                                             </Tooltip>
                                                         }
                                                     </div>
                                                     <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                                                         <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
-                                                        <div>
+                                                            <div>
                                                                 <dt
                                                                     className="
                                                                     text-sm 
@@ -241,6 +247,15 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                                                 </dd>
                                                             </div>
                                                             <hr />
+                                                            <div className="col-span-full">
+                                                                <Switch
+                                                                    isDisabled
+                                                                    isSelected={isGraphKB}
+                                                                    onValueChange={setIsGraphKB}
+                                                                >
+                                                                    启用图谱
+                                                                </Switch>
+                                                            </div>
                                                         </dl>
                                                     </div>
                                                 </div>

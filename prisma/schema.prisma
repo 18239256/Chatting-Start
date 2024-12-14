@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -113,6 +113,7 @@ model Knowledge {
   image       String?
   description String?
   isShare     Boolean  @default(false)
+  vsType      String   @default("normal") ///"normal":正常知识库; "graph":知识图谱
 
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -155,7 +156,7 @@ model Robot {
   maskId String?    @db.ObjectId
   mask   RobotMask? @relation(fields: [maskId], references: [id])
 
-  wxContacts  WXContacts[]
+  wxContacts WXContacts[]
 }
 
 model RobotMask {
@@ -183,14 +184,14 @@ model Role {
 }
 
 model WXBasis {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  createdAt      DateTime @default(now())
-  termScreenName String
-  online         Boolean
-  qrUrl          String?
-  defaultAIType  String?
-  maxRoomNumber  Int?
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  createdAt       DateTime @default(now())
+  termScreenName  String
+  online          Boolean
+  qrUrl           String?
+  defaultAIType   String?
+  maxRoomNumber   Int?
   maxPersonNumber Int?
 
   ownerUserId String @unique @db.ObjectId
@@ -211,48 +212,47 @@ model WXContacts {
   wxInstanceId String  @db.ObjectId
   wxInstance   WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
 
-  isRoom        Boolean   @default(false)
-  expired       DateTime?
+  isRoom  Boolean   @default(false)
+  expired DateTime?
 
-  
-  robotId       String? @db.ObjectId
-  robot         Robot? @relation(fields: [robotId], references: [id], onDelete: Cascade)
+  robotId String? @db.ObjectId
+  robot   Robot?  @relation(fields: [robotId], references: [id], onDelete: Cascade)
 
   issueMessages WXIssueMessages[]
-  
-  groupIssueMessagesIds String[] @db.ObjectId
-  groupIssueMessages WXGroupIssueMessages[] @relation("groupsending", fields: [groupIssueMessagesIds], references: [id])
+
+  groupIssueMessagesIds String[]               @db.ObjectId
+  groupIssueMessages    WXGroupIssueMessages[] @relation("groupsending", fields: [groupIssueMessagesIds], references: [id])
 }
 
-model WXIssueMessages{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  message     String?
-  fileName    String?
+model WXIssueMessages {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  message       String?
+  fileName      String?
   isTextMessage Boolean @default(true)
-  deliveried  Boolean  @default(false)  //消息发送状态
-  
-  createdAt   DateTime @default(now())  //创建消息时间
-  deliveryAt  DateTime?                 //实际发送消息时间
-  issuedAt    DateTime @default(now())  //计划发送消息时间
+  deliveried    Boolean @default(false) //消息发送状态
 
-  recipientId String  @db.ObjectId
+  createdAt  DateTime  @default(now()) //创建消息时间
+  deliveryAt DateTime? //实际发送消息时间
+  issuedAt   DateTime  @default(now()) //计划发送消息时间
+
+  recipientId String     @db.ObjectId
   recipient   WXContacts @relation(fields: [recipientId], references: [id])
 }
 
-model WXGroupIssueMessages{
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  message     String?
-  fileName    String?
+model WXGroupIssueMessages {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  message       String?
+  fileName      String?
   isTextMessage Boolean @default(true)
-  deliveried  Boolean  @default(false)  //消息发送状态
-  
-  createdAt   DateTime @default(now())  //创建消息时间
-  deliveryAt  DateTime?                 //实际发送消息时间
-  issuedAt    DateTime @default(now())  //计划发送消息时间
+  deliveried    Boolean @default(false) //消息发送状态
 
-  recipientIds String[] @db.ObjectId
-  recipients WXContacts[] @relation("groupsending", fields: [recipientIds], references: [id])
+  createdAt  DateTime  @default(now()) //创建消息时间
+  deliveryAt DateTime? //实际发送消息时间
+  issuedAt   DateTime  @default(now()) //计划发送消息时间
+
+  recipientIds String[]     @db.ObjectId
+  recipients   WXContacts[] @relation("groupsending", fields: [recipientIds], references: [id])
 
   wxInstanceId String  @db.ObjectId
   wxInstance   WXBasis @relation(fields: [wxInstanceId], references: [id], onDelete: Cascade)
