@@ -93,7 +93,7 @@ const RobotChatModal: React.FC<RobotChatModalProps> = ({
     let param = {};
     if (getTmplObj()?.knowledgeAbility) {
       const selectKnow = knowledges.find((k) => { return k.id === Array.from(know)[0] });
-      param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName };
+      param = { ...data, robotTmpl: getTmplObj(), knowledgeBaseName: selectKnow?.realName, vsType: selectKnow?.vsType };
     } else if (getTmplObj()?.searchAbility) {
       param = { ...data, robotTmpl: getTmplObj(), searchEngineName: "bing" };
     } else

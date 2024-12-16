@@ -32,7 +32,7 @@ export type FullRobotMessageType = Message & {
 
 export type RobotReplyType={
   answer:string,
-  docs?:[],
+  docs?:[] | any,
 }
 
 export type OPENAIFastAPIParamType = {
@@ -42,7 +42,7 @@ export type OPENAIFastAPIParamType = {
   n?: number,
   max_tokens?: number,
   stop?: [],
-  stream?: boolean,
+  stream?: boolean | null,
   presence_penalty?: number,
   frequency_penalty?: number,
   top_k?: number,

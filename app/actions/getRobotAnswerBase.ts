@@ -1,6 +1,7 @@
 import { Robot, RobotMask, RobotTemplate } from "@prisma/client";
 import { OPENAIFastAPIKBParamType, OPENAIFastAPIParamType, OPENAIFastAPISearchParamType, RobotReplyType } from "../types";
 import axios from "axios";
+import OpenAI from 'openai';
 import { isEmpty } from "lodash";
 import getKnowledgesByName from "./getKnowledgesByName";
 
@@ -35,7 +36,6 @@ const getRobotAnswerBase = async(
         });
 
     if (robot?.robotTemp.knowledgeAbility) {
-        
         AIParams = {
             // query: message,
             // knowledge_base_name: robot.knowledgeBaseName || "",
@@ -52,9 +52,9 @@ const getRobotAnswerBase = async(
 
         console.log('Knowledge AI Param', AIParams);
         if(knowItem?.vsType == "graph")
-            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/graph_kb/${robot.knowledgeBaseName}/chat/completions`;
+            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/graph_kb/${robot.knowledgeBaseName}`;
         else
-            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/local_kb/${robot.knowledgeBaseName}/chat/completions`;
+            apiUrl = process.env.NEXT_PUBLIC_LLM_API_URI + robot.robotTemp.apiUrl +`/local_kb/${robot.knowledgeBaseName}`;
 
     }else if (robot?.robotTemp.searchAbility){
         AIParams = {
@@ -87,34 +87,33 @@ const getRobotAnswerBase = async(
     }
 
     return new Promise(async (resolve, reject) =>{
-        let tmpTxt:string;
-        const response = await axios.post(apiUrl, AIParams,{responseType:"stream"});
-        response.data.on('data', (chunk:any) => {
-            const chunkTxt : string = chunk.toString('utf8');
-            if(chunkTxt.toLowerCase().startsWith("data:")){
-                console.log('response chunkTxt:====> \n\n', chunkTxt);
-                console.log('<====response chunkTxt end');
-                if (!isEmpty(tmpTxt)) {
-                    const jsonTmp =  JSON.parse(tmpTxt);
-                    if("docs" in jsonTmp)
-                        reply.docs = jsonTmp.docs;
-                    else
-                        reply.answer += jsonTmp.choices![0].delta.content;
-                }
-                tmpTxt = chunkTxt.slice(6);
-            }
-            else
-                if(!chunkTxt.toLowerCase().startsWith(": ping"))
-                    tmpTxt += chunkTxt;
-        });
-        response.data.on('end', () => {
-            console.log('AI replies: ', reply);
-            resolve(reply);
+        const openai = new OpenAI({
+            baseURL:apiUrl,
+            apiKey:process.env.NEXT_PUBLIC_LLM_API_KEY,
+        })
+        type extra_body = Record<'top_k', number>;
+        const b: extra_body = {top_k: AIParams.top_k || 3};
+        
+        // Traditional call with OpenAI API
+        // const stream = await openai.chat.completions.create({
+        //     model: AIParams.model,
+        //     messages: AIParams.messages,
+        //     max_tokens: AIParams.max_tokens,
+        //     stream: AIParams.stream || true, // stream
+        //     temperature: AIParams.temperature,
+        //     top_k: AIParams.top_k,
+        // });
 
-        });
-        response.data.on('error', (error:any) => {
-            reject(error);
-        });
+        const stream = await openai.chat.completions.create({...AIParams});
+        // @ts-expect-error ignore the undocument parameters error in typescript verb.
+        for await (const chunk of stream) {
+            if("docs" in chunk){
+                reply.docs = chunk.docs;
+                continue;
+            }
+            reply.answer += chunk.choices[0].delta.content;
+        }
+        resolve(reply);
     });
 }
 

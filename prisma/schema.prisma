@@ -146,6 +146,7 @@ model Robot {
   temperature       Float?
   historyRound      Int?
   knowledgeBaseName String?
+  vsType            String?  ///"normal":正常知识库; "graph":知识图谱
   searchEngineName  String?
   topK              Int?
 

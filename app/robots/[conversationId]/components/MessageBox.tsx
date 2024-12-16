@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import LoadingStyle from "../../../resources/css/loading.module.css";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
 import { FaRegCopyright } from "react-icons/fa6";
+import AvatarWithGraphKB from "@/app/components/AvatarWithGraphKB";
 
 interface MessageBoxProps {
   data: FullRobotMessageType;
@@ -136,8 +137,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   return (
     <div className={container}>
       <div className={avatar}>
-        {Boolean(data.sender.robot?.knowledgeBaseName) ?
-          <AvatarWithKB user={data.sender} /> :
+        {Boolean(data.sender.robot?.knowledgeBaseName) ? 
+          Boolean(data.sender.robot?.knowledgeBaseName) ? <AvatarWithGraphKB user={data.sender} />
+          : <AvatarWithKB user={data.sender} /> :
           <Avatar user={data.sender} />
         }
       </div>

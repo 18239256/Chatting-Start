@@ -16,6 +16,7 @@ export async function POST(
             description,
             robotTmpl,
             knowledgeBaseName,
+            vsType,
             searchEngineName,
             ownerUserId,
         } = body;
@@ -33,6 +34,7 @@ export async function POST(
                 name,
                 description,
                 knowledgeBaseName,
+                vsType,
                 searchEngineName,
                 user:{
                     create:{

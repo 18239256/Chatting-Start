@@ -2,13 +2,13 @@
 
 import { User } from "@prisma/client";
 import Image from "next/image";
-import { FaDatabase } from "react-icons/fa";
+import { PiGraphBold } from 'react-icons/pi';
 
 interface AvatarGroupProps {
   user?: User;
 };
 
-const AvatarWithKB: React.FC<AvatarGroupProps> = ({
+const AvatarWithGraphKB: React.FC<AvatarGroupProps> = ({
   user
 }) => {
 
@@ -49,10 +49,10 @@ const AvatarWithKB: React.FC<AvatarGroupProps> = ({
             w-[21px]
             ${positionMap[2]}
           `}>
-        <FaDatabase className="h-4 w-5 text-green-600 bg-gray-100" />
+        <PiGraphBold className="h-4 w-5 text-green-600 bg-gray-100" />
       </div>
     </div>
   );
 }
 
-export default AvatarWithKB;
+export default AvatarWithGraphKB;

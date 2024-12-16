@@ -8,6 +8,7 @@ import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@n
 import format from "date-fns/format";
 import { AiFillDatabase } from "react-icons/ai";
 import { TbDatabaseShare, TbDatabase} from "react-icons/tb";
+import { PiGraph } from 'react-icons/pi';
 
 interface KnowledgeBoxProps {
   data: Knowledge,
@@ -56,7 +57,7 @@ const KnowledgeBox: React.FC<KnowledgeBoxProps> = ({
         )}
           >
             <CardHeader className="flex gap-3">
-              <TbDatabase className="h-10 w-10" />
+              {data.vsType == "graph" ? <PiGraph className="h-10 w-10" /> : <TbDatabase className="h-10 w-10" />}
               <div className="flex flex-col">
                 <p className="text-md">{data.displayName}</p>
                 <p className="text-small text-default-500">{format(new Date(data.createdAt), 'yyyy年MM月dd 创建')}</p>
