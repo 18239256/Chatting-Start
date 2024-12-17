@@ -12,3 +12,9 @@ body,
 .react-datepicker-popper {  z-index: 50 !important } 
 .react-datepicker__close-icon {right: -25px !important}
 .react-datepicker__close-icon:after { background-color:#075985 !important;height:12px !important;width: 12px !important;font-size: 8px !important;content: "x" !important;}
+
+
+.iframeContainer iframe {
+  border: none; /* Hide default border */
+  padding: 0; /* Align with surrounding content */
+}

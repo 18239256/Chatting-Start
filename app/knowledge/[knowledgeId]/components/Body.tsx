@@ -41,6 +41,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { format } from "url";
 import clsx from "clsx";
+import GraphModal from "./GraphModal";
 
 const columns = [
     {
@@ -87,6 +88,7 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
     const router = useRouter();
 
     const [reVector, setReVector] = React.useState(false);
+    const [isShowGraph, setIsShowGraph] = React.useState(false);
     const [curFiles, setcurFiles] = React.useState<knowledgeFileArrayType[]>(files);
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -213,13 +215,13 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
         files.forEach(f => {
             file_names.push(f.file_name);
         });
-        // axios.post(`/api/knowledges/redovector`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
-        //     .then((ret) => {
-        //         toast.success(`${files[0].file_name} 已经成功执行入库操作`);
-        //         setReVector(false);
-        //     })
-        //     .catch(() => toast.error('出错了!'))
-        //     // .finally(()=>router.refresh())
+        axios.post(`/api/knowledges/redovector`, { knowledgeBaseName: knowledgeRN, file_names: file_names })
+            .then((ret) => {
+                toast.success(`${files[0].file_name} 已经成功执行入库操作`);
+                setReVector(false);
+            })
+            .catch(() => toast.error('出错了!'))
+            .finally(()=>router.refresh())
         return;
     };
 
@@ -404,6 +406,11 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                         )}
                     </ModalContent>
                 </Modal>
+                <GraphModal
+                    knowledgeBaseRealName={knowledge.realName}
+                    isOpen={isShowGraph}
+                    onClose={() => setIsShowGraph(false)}
+                />
                 <div className="flex flex-col gap-4 pt-4 ">
                     <div className="flex justify-between gap-3 items-stretch">
                         <Input
@@ -440,6 +447,9 @@ const Body: React.FC<BodyProps> = ({ knowledge, files = [] }) => {
                             onValueChange={onSearchChange}
                         />
                         <div className="flex gap-3">
+                            {knowledge.vsType =="graph" && <Button color="primary" className="hidden sm:flex bg-sky-500 " onClick={() => setIsShowGraph(true)}>
+                                图谱
+                            </Button>}
                             <Dropdown>
                                 <DropdownTrigger className="hidden sm:flex">
                                     <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

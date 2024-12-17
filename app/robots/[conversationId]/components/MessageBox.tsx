@@ -18,7 +18,6 @@ import toast from "react-hot-toast";
 
 import LoadingStyle from "../../../resources/css/loading.module.css";
 import AvatarWithKB from "@/app/components/AvatarWithKB";
-import { FaRegCopyright } from "react-icons/fa6";
 import AvatarWithGraphKB from "@/app/components/AvatarWithGraphKB";
 
 interface MessageBoxProps {
@@ -138,7 +137,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     <div className={container}>
       <div className={avatar}>
         {Boolean(data.sender.robot?.knowledgeBaseName) ? 
-          Boolean(data.sender.robot?.knowledgeBaseName) ? <AvatarWithGraphKB user={data.sender} />
+          Boolean(data.sender.robot?.vsType == "graph") ? <AvatarWithGraphKB user={data.sender} />
           : <AvatarWithKB user={data.sender} /> :
           <Avatar user={data.sender} />
         }
@@ -151,17 +150,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({
           <div className="text-xs text-gray-400">
             {format(new Date(data.createdAt), 'p')}
           </div>
-          {/* Todo: Add message copy action */}
-          {/* <div>
-            <button
-              onClick={() => { }}
-            >
-              <FaRegCopyright
-                size={18}
-                className="text-xs text-gray-300 hover:text-sky-600 cursor-pointer"
-              />
-            </button>
-          </div> */}
         </div>
         <div className={message}>
           <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
