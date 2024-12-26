@@ -10,7 +10,7 @@ import getKnowledgesByName from "./getKnowledgesByName";
 const getRobotAnswerBase = async(
     robot: Robot & {robotTemp: RobotTemplate, mask: RobotMask | null} | null | undefined,
     message: string,
-    history: {role:string, content:string}[],
+    history: {role:string, content:string}[] = [],
 ) => {
     let reply: RobotReplyType ={answer:""};
     let apiUrl: string = process.env.NEXT_PUBLIC_LLM_API_URI+ robot!.robotTemp.apiUrl;
