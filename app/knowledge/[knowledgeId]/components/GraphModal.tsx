@@ -25,7 +25,14 @@ const GraphModal: React.FC<GraphModalProps> = ({
                 mb-4
               "
             >知识库 {knowledgeBaseRealName.split('_')[0]} 的图谱</h2>
-            <iframe src={process.env.NEXT_PUBLIC_LLM_API_URI+`/graph/${knowledgeBaseRealName}/`} width="100%" height="500px" allowFullScreen loading='lazy'></iframe>
+            <iframe 
+              src={process.env.NEXT_PUBLIC_LLM_API_URI+`/graph/${knowledgeBaseRealName}/`} 
+              width="100%" 
+              height="100%" 
+              allowFullScreen 
+              loading='lazy'
+              className="w-full h-full"
+            ></iframe>
         </WidenModal>
     )
 }

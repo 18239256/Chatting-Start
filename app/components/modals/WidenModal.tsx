@@ -13,7 +13,7 @@ interface ModalProps {
 const WidenModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onClose}>
+      <Dialog as="div" className="relative z-50 resize" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -71,9 +71,10 @@ const WidenModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                   w-full
                   sm:my-8 
                   sm:w-full 
-                  sm:max-w-3xl
                   sm:p-6
+                  resize
                 "
+                style={{ minWidth: '300px', minHeight: '200px' }}
               >
                 <div 
                   className="
