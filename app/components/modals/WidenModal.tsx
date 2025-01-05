@@ -70,11 +70,11 @@ const WidenModal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                   transition-all
                   w-full
                   sm:my-8 
-                  sm:w-full 
+                  sm:w-4/5 
                   sm:p-6
                   resize
                 "
-                style={{ minWidth: '300px', minHeight: '200px' }}
+                style={{ minWidth: '300px', minHeight: '200px', height: '66vh' }}
               >
                 <div 
                   className="
